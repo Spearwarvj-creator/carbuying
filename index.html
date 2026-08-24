@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Deal Sheet — Car Negotiation Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3EEE3;
+    --paper-raised:#FBF8F1;
+    --ink:#22282E;
+    --ink-soft:#585B54;
+    --tan-border:#D8CFBB;
+    --tan-border-strong:#C2B79E;
+    --green:#2F6F4F;
+    --green-bg:#E4EFE6;
+    --red:#B23A2E;
+    --red-bg:#F6E5E2;
+    --amber:#C97F1E;
+    --amber-bg:#FBEEDA;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.5;
+    padding:32px 16px 80px;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+  header{margin-bottom:28px;border-bottom:3px solid var(--ink);padding-bottom:16px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0 0 6px;
+  }
+  h1{
+    font-family:'Oswald',sans-serif;
+    font-weight:700;
+    font-size:32px;
+    letter-spacing:0.01em;
+    margin:0 0 6px;
+    text-transform:uppercase;
+  }
+  .sub{color:var(--ink-soft);font-size:15px;margin:0;max-width:560px;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .subgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;}
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--tan-border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    min-width:0;
+  }
+  .card h2{
+    font-family:'Oswald',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin:0 0 16px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--tan-border);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    background:var(--ink);
+    color:var(--paper);
+    padding:2px 6px;
+    border-radius:3px;
+    letter-spacing:0.04em;
+    white-space:nowrap;
+  }
+
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+    font-weight:500;
+  }
+  input[type="number"], select{
+    width:100%;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:16px;
+    padding:11px 10px;
+    border:1px solid var(--tan-border-strong);
+    border-radius:6px;
+    background:#fff;
+    color:var(--ink);
+    min-height:44px;
+    -webkit-appearance:none;
+    appearance:none;
+  }
+  input[type="number"]:focus, select:focus{
+    outline:none;
+    border-color:var(--ink);
+  }
+  .presets{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .preset-btn{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    padding:10px 14px;
+    border-radius:6px;
+    border:1px solid var(--tan-border-strong);
+    background:#fff;
+    color:var(--ink);
+    cursor:pointer;
+    min-height:40px;
+    flex:1 1 auto;
+    white-space:nowrap;
+  }
+  .preset-btn:hover, .preset-btn:active{background:var(--amber-bg);border-color:var(--amber);}
+
+  .stat-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:9px 0;
+    border-bottom:1px dashed var(--tan-border);
+    gap:12px;
+  }
+  .stat-row:last-child{border-bottom:none;}
+  .stat-label{font-size:13.5px;color:var(--ink-soft);}
+  .stat-value{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:16px;
+    font-weight:600;
+    text-align:right;
+    white-space:nowrap;
+  }
+  .stat-value.big{font-size:22px;}
+  .stat-value.green{color:var(--green);}
+  .stat-value.red{color:var(--red);}
+
+  .callout{
+    margin-top:14px;
+    background:var(--green-bg);
+    border:1px solid var(--green);
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:13.5px;
+  }
+  .callout.warn{background:var(--red-bg);border-color:var(--red);}
+  .callout strong{display:block;font-family:'Oswald',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px;}
+
+  .script-box{
+    background:#fff;
+    border:1px dashed var(--tan-border-strong);
+    border-radius:8px;
+    padding:14px 16px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13.5px;
+    line-height:1.65;
+    color:var(--ink);
+    white-space:pre-wrap;
+    word-break:break-word;
+    margin-bottom:10px;
+  }
+  .copy-btn{
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:500;
+    padding:11px 18px;
+    border-radius:6px;
+    border:1px solid var(--ink);
+    background:var(--ink);
+    color:var(--paper);
+    cursor:pointer;
+    min-height:44px;
+    width:100%;
+  }
+  @media (min-width:480px){
+    .copy-btn{width:auto;}
+  }
+  .copy-btn:hover{opacity:0.85;}
+  .copy-btn.copied{background:var(--green);border-color:var(--green);}
+
+  .full{grid-column:1/-1;}
+
+  footer{margin-top:30px;text-align:center;font-size:12px;color:var(--ink-soft);}
+
+  .info{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:var(--tan-border-strong);
+    color:var(--paper-raised);
+    font-size:10.5px;
+    font-family:'IBM Plex Mono',monospace;
+    margin-left:5px;
+    cursor:help;
+    flex-shrink:0;
+    vertical-align:middle;
+  }
+  .info:hover, .info:focus, .info.show{background:var(--ink);outline:none;}
+  .info .tip{
+    display:none;
+    position:absolute;
+    bottom:135%;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--ink);
+    color:var(--paper);
+    font-size:12px;
+    font-family:'Inter',sans-serif;
+    font-weight:400;
+    line-height:1.45;
+    padding:9px 11px;
+    border-radius:7px;
+    width:230px;
+    z-index:20;
+    text-align:left;
+    cursor:auto;
+  }
+  .info:hover .tip, .info:focus .tip, .info.show .tip{display:block;}
+  @media (max-width:480px){
+    .info .tip{width:180px;left:auto;right:-8px;transform:none;}
+  }
+
+  #addon-list .stat-row{align-items:center;flex-wrap:wrap;}
+  #addon-list label{flex:1 1 220px;min-width:0;display:flex;align-items:center;}
+  #addon-list input[type="checkbox"]{flex:0 0 auto;}
+  @media (max-width:480px){
+    #addon-list .stat-row{gap:8px;}
+    #addon-list input.addon-price{max-width:100%;flex:1 1 100%;}
+  }
+
+  @media (max-width:720px){
+    .grid{grid-template-columns:1fr;gap:16px;}
+  }
+  @media (max-width:560px){
+    .subgrid{grid-template-columns:1fr;gap:0;}
+  }
+  @media (max-width:480px){
+    body{padding:20px 12px 64px;}
+    h1{font-size:24px;}
+    .sub{font-size:14px;}
+    .card{padding:16px 16px;}
+    .stat-value.big{font-size:19px;}
+    .preset-btn{flex:1 1 100%;}
+    .stat-row{flex-wrap:wrap;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Buy-side worksheet</p>
+    <h1>Deal Sheet</h1>
+    <p class="sub">Enter the dealer's numbers and yours side by side. Every total updates live — use the counter script at the bottom to push back with your own math, not theirs.</p>
+  </header>
+
+  <div class="grid">
+
+    <div class="card">
+      <h2>The car <span class="tag">msrp / asking</span></h2>
+      <div class="field">
+        <label for="msrp">MSRP <span class="info" tabindex="0" data-tip="Manufacturer's Suggested Retail Price. Set by the automaker, printed on the window sticker. Not the same as what the dealer paid — dealers typically pay 3-8% below this."></span></label>
+        <input type="number" inputmode="numeric" id="msrp" value="39460" min="0" step="1">
+      </div>
+      <div class="field">
+        <label for="asking">Dealer's advertised / asking price <span class="info" tabindex="0" data-tip="What the dealer is listing the car for right now, before any negotiation. If this is above MSRP, the gap is usually an Additional Dealer Markup (ADM) — fully negotiable."></span></label>
+        <input type="number" inputmode="numeric" id="asking" value="39594" min="0" step="1">
+      </div>
+      <div class="field">
+        <label for="target">Your target vehicle price <span class="info" tabindex="0" data-tip="The vehicle price you're negotiating toward. Everything below (tax, payment, OTD) recalculates from this number."></span></label>
+        <input type="number" inputmode="numeric" id="target" value="38000" min="0" step="1">
+      </div>
+      <div class="presets">
+        <button class="preset-btn" data-target="35000">Opener $35,000</button>
+        <button class="preset-btn" data-target="37000">Fallback $37,000</button>
+        <button class="preset-btn" data-target="38000">Ceiling $38,000</button>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Discount vs MSRP</span>
+        <span class="stat-value green" id="disc-dollar">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Discount % off MSRP</span>
+        <span class="stat-value green" id="disc-pct">—</span>
+      </div>
+      <div id="adm-callout"></div>
+    </div>
+
+    <div class="card">
+      <h2>Loan terms <span class="tag">financing</span></h2>
+      <div class="field">
+        <label for="down-pct">Down payment (%) <span class="info" tabindex="0" data-tip="How much you pay upfront, as a percent of vehicle price. Doesn't need to be cash — can include trade equity."></span></label>
+        <input type="number" inputmode="decimal" id="down-pct" value="20" min="0" max="100" step="1">
+      </div>
+      <div class="field">
+        <label for="apr">APR (%) <span class="info" tabindex="0" data-tip="Annual Percentage Rate — the true yearly cost of the loan, including interest. Manufacturer-subsidized offers (like 0%) are set by the automaker, not the dealer, and usually require top-tier credit."></span></label>
+        <input type="number" inputmode="decimal" id="apr" value="0" min="0" max="30" step="0.01">
+      </div>
+      <div class="field">
+        <label for="term">Loan term (months) <span class="info" tabindex="0" data-tip="How many months you'll pay. Longer terms lower the monthly payment but usually cost more in total interest — except at 0% APR, where term length doesn't change total cost at all."></span></label>
+        <select id="term">
+          <option value="24">24</option>
+          <option value="36">36</option>
+          <option value="48">48</option>
+          <option value="60" selected>60</option>
+          <option value="72">72</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="tax">Sales tax (%) <span class="info" tabindex="0" data-tip="Combined state + county + city sales tax rate on the vehicle price. Varies by where you register the car, not where you buy it."></span></label>
+        <input type="number" inputmode="decimal" id="tax" value="9.5" min="0" max="15" step="0.01">
+      </div>
+    </div>
+
+    <div class="card full">
+      <h2>Trade-in <span class="tag">if applicable</span></h2>
+      <p class="sub" style="margin-bottom:14px;">Leave both at 0 if you have no trade-in.</p>
+      <div class="subgrid">
+        <div>
+          <div class="field">
+            <label for="trade-allowance">Trade-in allowance offered <span class="info" tabindex="0" data-tip="What the dealer is crediting you for your trade-in. Negotiate this separately from the new car's price — dealers sometimes 'give' a high trade value while quietly raising the new car's price to offset it."></span></label>
+            <input type="number" inputmode="numeric" id="trade-allowance" value="0" min="0" step="1">
+          </div>
+        </div>
+        <div>
+          <div class="field">
+            <label for="trade-payoff">Payoff owed on trade-in loan <span class="info" tabindex="0" data-tip="What you still owe your current lender on the trade-in. If this is more than the allowance, that's negative equity — it gets added to your new loan, meaning you're financing a debt on a car you no longer have."></span></label>
+            <input type="number" inputmode="numeric" id="trade-payoff" value="0" min="0" step="1">
+          </div>
+        </div>
+      </div>
+      <div class="stat-row"><span class="stat-label">Trade equity (added to financed amount if negative)</span><span class="stat-value" id="trade-equity">—</span></div>
+    </div>
+
+    <div class="card full">
+      <h2>Your total <span class="tag">based on target price</span></h2>
+      <div class="subgrid">
+        <div>
+          <div class="stat-row"><span class="stat-label">Vehicle price</span><span class="stat-value" id="out-price">—</span></div>
+          <div class="stat-row"><span class="stat-label">Sales tax</span><span class="stat-value" id="out-tax">—</span></div>
+          <div class="stat-row"><span class="stat-label">Fees + add-ons</span><span class="stat-value" id="out-fees">—</span></div>
+          <div class="stat-row"><span class="stat-label">Out-the-door total <span class="info" tabindex="0" data-tip="OTD price: the full amount you owe to drive away, including vehicle price, tax, and every fee. This is the number to negotiate — not the monthly payment."></span></span><span class="stat-value big" id="out-otd">—</span></div>
+        </div>
+        <div>
+          <div class="stat-row"><span class="stat-label">Down payment</span><span class="stat-value" id="out-down">—</span></div>
+          <div class="stat-row"><span class="stat-label">Amount financed <span class="info" tabindex="0" data-tip="The loan principal — what you're actually borrowing after your down payment, including any tax, fees, add-ons, and negative trade equity rolled in."></span></span><span class="stat-value" id="out-financed">—</span></div>
+          <div class="stat-row"><span class="stat-label">Total interest</span><span class="stat-value" id="out-interest">—</span></div>
+          <div class="stat-row"><span class="stat-label">Monthly payment</span><span class="stat-value big green" id="out-monthly">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card full">
+      <h2>F&I add-ons <span class="tag">what they'll pitch</span></h2>
+      <p class="sub" style="margin-bottom:14px;">Every item here is optional. Toggle one on to see exactly what it adds to your out-the-door price and monthly payment — most are quoted at 2-4x fair market cost.</p>
+      <div id="addon-list"></div>
+      <div class="stat-row">
+        <span class="stat-label">Add-ons total</span>
+        <span class="stat-value red" id="addon-total">$0</span>
+      </div>
+    </div>
+
+    <div class="card full">
+      <h2>Government fees, itemized <span class="tag">non-negotiable vs negotiable</span></h2>
+      <p class="sub" style="margin-bottom:14px;">Doc fee stays with the dealer and is worth questioning. Title, registration, and filing fees are usually fixed by the state.</p>
+      <div class="subgrid">
+        <div>
+          <div class="field">
+            <label for="fee-doc">Doc / dealer service fee (negotiable) <span class="info" tabindex="0" data-tip="Charged by the dealer for paperwork processing. Stays with the dealer — not a government fee. Legal everywhere, but the amount varies widely and is worth comparing to other local dealers."></span></label>
+            <input type="number" inputmode="numeric" id="fee-doc" value="134" min="0" step="1">
+          </div>
+          <div class="field">
+            <label for="fee-title">Title fee (state-set) <span class="info" tabindex="0" data-tip="A flat government charge to issue the vehicle's title. Fixed by your state — not negotiable, and identical no matter which dealer you buy from."></span></label>
+            <input type="number" inputmode="numeric" id="fee-title" value="10" min="0" step="1">
+          </div>
+        </div>
+        <div>
+          <div class="field">
+            <label for="fee-reg">Registration + decal (state-set) <span class="info" tabindex="0" data-tip="Government charge to register and plate the car, usually based on vehicle weight. Fixed by your state."></span></label>
+            <input type="number" inputmode="numeric" id="fee-reg" value="27.50" min="0" step="0.5">
+          </div>
+          <div class="field">
+            <label for="fee-efile">Electronic filing / advertising fee (question this) <span class="info" tabindex="0" data-tip="Sometimes billed separately from the doc fee for submitting paperwork electronically. The actual cost to the dealer is minimal — this is often just an extra profit line."></span></label>
+            <input type="number" inputmode="numeric" id="fee-efile" value="0" min="0" step="1">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card full">
+      <h2>Dealer reserve check <span class="tag">apr markup</span></h2>
+      <p class="sub" style="margin-bottom:14px;">Dealers can mark up the real lender rate 1-2.5% and keep the spread. If you're not on the true 0% promo, ask for the buy rate and compare it here.</p>
+      <div class="subgrid">
+        <div>
+          <div class="field">
+            <label for="quoted-apr">APR they quoted you <span class="info" tabindex="0" data-tip="The interest rate written on your finance contract — what you'd actually pay."></span></label>
+            <input type="number" inputmode="decimal" id="quoted-apr" value="0" min="0" max="30" step="0.01">
+          </div>
+        </div>
+        <div>
+          <div class="field">
+            <label for="buy-rate">Lender's actual buy rate (if known) <span class="info" tabindex="0" data-tip="The wholesale rate the bank actually approved you for, before the dealer adds their markup. You can ask the finance manager directly for this number — they're not required to volunteer it."></span></label>
+            <input type="number" inputmode="decimal" id="buy-rate" value="0" min="0" max="30" step="0.01">
+          </div>
+        </div>
+      </div>
+      <div class="stat-row"><span class="stat-label">Reserve markup cost over full term <span class="info" tabindex="0" data-tip="Dealer reserve (or finance reserve) is the spread between the buy rate and what you're quoted. The dealer keeps this as profit, paid to them by the lender."></span></span><span class="stat-value red" id="reserve-cost">—</span></div>
+      <div id="reserve-callout"></div>
+    </div>
+
+    <div class="card full">
+      <h2>Cash rebate vs. low APR <span class="tag">can't always have both</span></h2>
+      <p class="sub" style="margin-bottom:14px;">Manufacturers usually make you pick one. Compare total 5-year cost of each path.</p>
+      <div class="subgrid">
+        <div>
+          <div class="field">
+            <label for="rebate-amount">Cash rebate offered instead of low APR <span class="info" tabindex="0" data-tip="A manufacturer incentive deducted from the price, offered as an alternative to a subsidized low interest rate — usually you can't take both."></span></label>
+            <input type="number" inputmode="numeric" id="rebate-amount" value="1000" min="0" step="1">
+          </div>
+        </div>
+        <div>
+          <div class="field">
+            <label for="rebate-apr">Standard APR if you take the rebate <span class="info" tabindex="0" data-tip="The regular market interest rate you'd be offered instead of the promotional low rate, if you choose the cash rebate path."></span></label>
+            <input type="number" inputmode="decimal" id="rebate-apr" value="6.5" min="0" max="30" step="0.01">
+          </div>
+        </div>
+      </div>
+      <div class="stat-row"><span class="stat-label">Path A — your APR above, full price</span><span class="stat-value" id="path-a">—</span></div>
+      <div class="stat-row"><span class="stat-label">Path B — rebate applied, standard APR</span><span class="stat-value" id="path-b">—</span></div>
+      <div id="rebate-callout"></div>
+    </div>
+
+    <div class="card full">
+      <h2>Check their number <span class="tag">reverse-calculate</span></h2>
+      <p class="sub" style="margin-bottom:14px;">Dealer quotes you a monthly payment instead of a price? Plug it in here — this backs out the vehicle price they're actually charging, so you can compare it to your target.</p>
+      <div class="subgrid">
+        <div>
+          <div class="field">
+            <label for="their-payment">Their quoted monthly payment <span class="info" tabindex="0" data-tip="What the salesperson or finance manager told you the payment would be — before you know the actual price or rate behind it."></span></label>
+            <input type="number" inputmode="numeric" id="their-payment" value="650" min="0" step="1">
+          </div>
+          <div class="field">
+            <label for="their-apr">Their stated APR (%)</label>
+            <input type="number" inputmode="decimal" id="their-apr" value="4.9" min="0" max="30" step="0.01">
+          </div>
+        </div>
+        <div>
+          <div class="field">
+            <label for="their-term">Their stated term (months)</label>
+            <select id="their-term">
+              <option value="36">36</option>
+              <option value="48">48</option>
+              <option value="60" selected>60</option>
+              <option value="72">72</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="their-down">Down payment used ($)</label>
+            <input type="number" inputmode="numeric" id="their-down" value="7600" min="0" step="1">
+          </div>
+        </div>
+      </div>
+      <div class="stat-row"><span class="stat-label">Implied amount financed</span><span class="stat-value" id="rev-financed">—</span></div>
+      <div class="stat-row"><span class="stat-label">Implied vehicle price (before tax/fees)</span><span class="stat-value red" id="rev-price">—</span></div>
+      <div class="stat-row"><span class="stat-label">Gap vs your target price</span><span class="stat-value red" id="rev-gap">—</span></div>
+      <div id="rev-callout"></div>
+    </div>
+
+    <div class="card full">
+      <h2>Counter script <span class="tag">copy and use</span></h2>
+      <div class="script-box" id="script-out">—</div>
+      <button class="copy-btn" id="copy-btn">Copy script</button>
+    </div>
+
+  </div>
+
+  <footer>Deal Sheet — a buy-side worksheet. Numbers are estimates for negotiation prep, not a financing offer. Runs entirely in your browser — nothing is sent anywhere.</footer>
+</div>
+
+<script>
+function fmt(n){
+  if (!isFinite(n)) return '—';
+  return n.toLocaleString('en-US', {style:'currency', currency:'USD', maximumFractionDigits:0});
+}
+function pct(n){
+  if (!isFinite(n)) return '—';
+  return n.toFixed(1) + '%';
+}
+function num(id){
+  var v = parseFloat(document.getElementById(id).value);
+  return isFinite(v) ? v : 0;
+}
+
+function initInfoIcons(){
+  document.querySelectorAll('.info').forEach(function(el){
+    if (el.dataset.wired) return;
+    el.dataset.wired = '1';
+    var tip = el.getAttribute('data-tip');
+    if (tip && !el.querySelector('.tip')){
+      el.textContent = '?';
+      var tipEl = document.createElement('span');
+      tipEl.className = 'tip';
+      tipEl.textContent = tip;
+      el.appendChild(tipEl);
+    }
+    el.setAttribute('role','button');
+    el.setAttribute('aria-label','Definition: ' + tip);
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      var wasOpen = el.classList.contains('show');
+      document.querySelectorAll('.info.show').forEach(function(o){ o.classList.remove('show'); });
+      if (!wasOpen) el.classList.add('show');
+    });
+    el.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        el.click();
+      }
+    });
+  });
+  document.addEventListener('click', function(){
+    document.querySelectorAll('.info.show').forEach(function(o){ o.classList.remove('show'); });
+  });
+}
+
+function monthlyPayment(principal, aprPct, months){
+  if (months <= 0) return 0;
+  var r = (aprPct/100)/12;
+  if (r === 0) return principal / months;
+  var factor = (r * Math.pow(1+r, months)) / (Math.pow(1+r, months) - 1);
+  return principal * factor;
+}
+
+function impliedPrincipal(payment, aprPct, months){
+  if (months <= 0) return 0;
+  var r = (aprPct/100)/12;
+  if (r === 0) return payment * months;
+  var factor = (r * Math.pow(1+r, months)) / (Math.pow(1+r, months) - 1);
+  return payment / factor;
+}
+
+var ADDONS = [
+  {id:'gap', label:'GAP insurance', fair:35, dealer:700, tip:"Guaranteed Asset Protection. Covers the gap between what you owe and the car's cash value if it's totaled or stolen. Least useful with a large down payment, since there's little gap to cover. Often far cheaper through your own auto insurer."},
+  {id:'vsc', label:'Extended warranty / VSC', fair:1500, dealer:4000, tip:"Vehicle Service Contract — covers repairs after the factory warranty ends. Not the same as a manufacturer warranty. Price and coverage vary a lot; get the exact contract to read before agreeing."},
+  {id:'tirewheel', label:'Tire & wheel protection', fair:0, dealer:900, tip:"Covers replacement cost for tire/wheel damage from potholes, curbs, road debris. Usually high margin for the dealer relative to real claim risk."},
+  {id:'paint', label:'Paint / fabric protection', fair:0, dealer:600, tip:"A coating or treatment applied to paint or upholstery, marketed as protection. Rarely holds up to independent product review scrutiny relative to the price charged."},
+  {id:'vin', label:'VIN etching', fair:30, dealer:300, tip:"Laser-etches your vehicle ID number into the windows as a theft deterrent. A real product, but the DIY kit costs under $30 — the dealer's version is the same thing at a markup."},
+  {id:'nitrogen', label:'Nitrogen tire fill', fair:0, dealer:150, tip:"Nitrogen instead of regular air in your tires, marketed as more stable pressure. Real-world benefit for a daily driver is minimal."},
+  {id:'maint', label:'Prepaid maintenance', fair:600, dealer:1200, tip:"Prepays a set number of oil changes / services at this dealer's price. Only a good deal if the per-service price beats paying as you go, and if you'll actually use this dealer for service."}
+];
+
+function buildAddonList(){
+  var wrap = document.getElementById('addon-list');
+  wrap.innerHTML = ADDONS.map(function(a){
+    return '<div class="stat-row"><label style="display:flex;align-items:center;gap:10px;font-size:13.5px;cursor:pointer;">' +
+      '<input type="checkbox" class="addon-check" data-id="' + a.id + '" style="min-height:auto;width:18px;height:18px;">' +
+      a.label + '<span class="info" tabindex="0" data-tip="' + a.tip.replace(/"/g,'&quot;') + '"></span>' +
+      ' <span style="color:var(--ink-soft);font-size:12px;">(fair ~' + fmt(a.fair) + ')</span></label>' +
+      '<input type="number" inputmode="numeric" class="addon-price" data-id="' + a.id + '" value="' + a.dealer + '" min="0" step="1" style="max-width:110px;">' +
+      '</div>';
+  }).join('');
+  wrap.querySelectorAll('.addon-check, .addon-price').forEach(function(el){
+    el.addEventListener('input', recalc);
+    el.addEventListener('change', recalc);
+  });
+  initInfoIcons();
+}
+
+function addonTotal(){
+  var total = 0;
+  document.querySelectorAll('.addon-check').forEach(function(chk){
+    if (chk.checked){
+      var id = chk.getAttribute('data-id');
+      var priceEl = document.querySelector('.addon-price[data-id="' + id + '"]');
+      total += parseFloat(priceEl.value) || 0;
+    }
+  });
+  return total;
+}
+
+function recalc(){
+  var msrp = num('msrp');
+  var asking = num('asking');
+  var target = num('target');
+  var downPct = num('down-pct');
+  var apr = num('apr');
+  var term = parseInt(document.getElementById('term').value, 10);
+  var taxPct = num('tax');
+  var fees = num('fee-doc') + num('fee-title') + num('fee-reg') + num('fee-efile');
+  var addons = addonTotal();
+  document.getElementById('addon-total').textContent = fmt(addons);
+
+  var discDollar = msrp - target;
+  var discPct = msrp > 0 ? (discDollar/msrp)*100 : 0;
+  document.getElementById('disc-dollar').textContent = fmt(discDollar);
+  document.getElementById('disc-pct').textContent = pct(discPct);
+
+  var admEl = document.getElementById('adm-callout');
+  if (asking > msrp + 1){
+    var admAmount = asking - msrp;
+    admEl.innerHTML = '<div class="callout warn"><strong>Possible ADM detected</strong>Asking price is ' + fmt(admAmount) + ' above MSRP. This is likely an Additional Dealer Markup — fully dealer-controlled and negotiable, common on high-demand vehicles.</div>';
+  } else {
+    admEl.innerHTML = '';
+  }
+
+  var tradeAllowance = num('trade-allowance');
+  var tradePayoff = num('trade-payoff');
+  var tradeEquity = tradeAllowance - tradePayoff;
+  document.getElementById('trade-equity').textContent = (tradeEquity >= 0 ? '+' : '') + fmt(tradeEquity);
+  var tradeNetToFinance = tradeEquity < 0 ? -tradeEquity : 0;
+
+  var tax = target * (taxPct/100);
+  var otd = target + tax + fees + addons;
+  var down = target * (downPct/100);
+  var financed = (target - down) + tax + fees + addons + tradeNetToFinance;
+  var payment = monthlyPayment(financed, apr, term);
+  var totalPaid = payment * term;
+  var interest = totalPaid - financed;
+
+  document.getElementById('out-price').textContent = fmt(target);
+  document.getElementById('out-tax').textContent = fmt(tax);
+  document.getElementById('out-fees').textContent = fmt(fees + addons);
+  document.getElementById('out-otd').textContent = fmt(otd);
+  document.getElementById('out-down').textContent = fmt(down);
+  document.getElementById('out-financed').textContent = fmt(financed);
+  document.getElementById('out-interest').textContent = fmt(interest);
+  document.getElementById('out-monthly').textContent = fmt(payment) + '/mo';
+
+  var quotedApr = num('quoted-apr');
+  var buyRate = num('buy-rate');
+  var reservePayment = monthlyPayment(financed, quotedApr, term);
+  var buyRatePayment = monthlyPayment(financed, buyRate, term);
+  var reserveCost = (reservePayment - buyRatePayment) * term;
+  document.getElementById('reserve-cost').textContent = buyRate > 0 ? fmt(reserveCost) : '—';
+  var reserveCalloutEl = document.getElementById('reserve-callout');
+  if (buyRate > 0 && quotedApr - buyRate > 0.1){
+    reserveCalloutEl.innerHTML = '<div class="callout warn"><strong>Markup detected</strong>The dealer is quoting ' + (quotedApr - buyRate).toFixed(2) + ' points above the lender buy rate, costing roughly ' + fmt(reserveCost) + ' in extra interest over ' + term + ' months. Ask them to match the buy rate.</div>';
+  } else if (buyRate > 0){
+    reserveCalloutEl.innerHTML = '<div class="callout"><strong>No markup</strong>Your quoted rate matches the buy rate. This looks clean.</div>';
+  } else {
+    reserveCalloutEl.innerHTML = '';
+  }
+
+  var rebateAmount = num('rebate-amount');
+  var rebateApr = num('rebate-apr');
+  var pathAPayment = monthlyPayment(financed, quotedApr, term);
+  var pathATotal = down + (pathAPayment * term);
+  var financedWithRebate = financed - rebateAmount;
+  var pathBPayment = monthlyPayment(financedWithRebate, rebateApr, term);
+  var pathBTotal = down + (pathBPayment * term);
+  document.getElementById('path-a').textContent = fmt(pathATotal);
+  document.getElementById('path-b').textContent = fmt(pathBTotal);
+  var rebateCalloutEl = document.getElementById('rebate-callout');
+  var diff = pathATotal - pathBTotal;
+  if (Math.abs(diff) < 50){
+    rebateCalloutEl.innerHTML = '<div class="callout"><strong>Roughly a wash</strong>Both paths cost about the same over ' + term + ' months.</div>';
+  } else if (diff > 0){
+    rebateCalloutEl.innerHTML = '<div class="callout"><strong>Take the rebate</strong>Path B saves about ' + fmt(diff) + ' over ' + term + ' months.</div>';
+  } else {
+    rebateCalloutEl.innerHTML = '<div class="callout"><strong>Keep the low APR</strong>Path A saves about ' + fmt(-diff) + ' over ' + term + ' months.</div>';
+  }
+
+  var theirPayment = num('their-payment');
+  var theirApr = num('their-apr');
+  var theirTerm = parseInt(document.getElementById('their-term').value, 10);
+  var theirDown = num('their-down');
+
+  var revFinanced = impliedPrincipal(theirPayment, theirApr, theirTerm);
+  var revPriceBeforeTaxFees = revFinanced - tax - fees + theirDown;
+  var revGap = revPriceBeforeTaxFees - target;
+
+  document.getElementById('rev-financed').textContent = fmt(revFinanced);
+  document.getElementById('rev-price').textContent = fmt(revPriceBeforeTaxFees);
+  document.getElementById('rev-gap').textContent = (revGap >= 0 ? '+' : '') + fmt(revGap);
+
+  var calloutEl = document.getElementById('rev-callout');
+  if (revGap > 200){
+    calloutEl.innerHTML = '<div class="callout warn"><strong>Above your target</strong>Their payment implies a vehicle price roughly ' + fmt(revGap) + ' higher than what you asked for. Ask them to show the price, not just the payment.</div>';
+  } else if (revGap < -200){
+    calloutEl.innerHTML = '<div class="callout"><strong>Below your target</strong>Their payment implies a price under your target — worth confirming there is no add-on or shorter term hiding in the math.</div>';
+  } else {
+    calloutEl.innerHTML = '<div class="callout"><strong>Roughly matches</strong>Their payment lines up with your target price within a normal rounding margin.</div>';
+  }
+
+  var script = "Vehicle price: " + fmt(target) + " (that's " + pct(discPct) + " off MSRP of " + fmt(msrp) + ", a normal range for this class).\n" +
+    (asking > msrp + 1 ? "Note: asking price includes an apparent " + fmt(asking - msrp) + " ADM over MSRP — asking for that to be removed.\n" : "") +
+    "With " + pct(taxPct) + " tax and " + fmt(fees) + " in government/doc fees" + (addons > 0 ? " plus " + fmt(addons) + " in add-ons" : "") + ", my out-the-door number is " + fmt(otd) + ".\n" +
+    (tradeNetToFinance > 0 ? "Trade-in is upside down by " + fmt(tradeNetToFinance) + ", rolled into the loan.\n" : "") +
+    "Down payment: " + fmt(down) + " (" + downPct + "%). Financed amount: " + fmt(financed) + ".\n" +
+    "At " + apr + "% APR over " + term + " months, that's " + fmt(payment) + "/month, " + fmt(interest) + " total interest.\n" +
+    (addons > 0 ? "I'm declining the add-ons unless we can show they're priced fairly.\n" : "") +
+    "I'm ready to sign today at this out-the-door number.";
+  document.getElementById('script-out').textContent = script;
+}
+
+document.querySelectorAll('.preset-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.getElementById('target').value = btn.getAttribute('data-target');
+    recalc();
+  });
+});
+
+document.getElementById('copy-btn').addEventListener('click', function(){
+  var text = document.getElementById('script-out').textContent;
+  function fallbackCopy(t){
+    var ta = document.createElement('textarea');
+    ta.value = t;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+  }
+  function markCopied(){
+    var btn = document.getElementById('copy-btn');
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(function(){
+      btn.textContent = 'Copy script';
+      btn.classList.remove('copied');
+    }, 1600);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(markCopied).catch(function(){
+      fallbackCopy(text);
+      markCopied();
+    });
+  } else {
+    fallbackCopy(text);
+    markCopied();
+  }
+});
+
+document.querySelectorAll('input, select').forEach(function(el){
+  el.addEventListener('input', recalc);
+  el.addEventListener('change', recalc);
+});
+
+initInfoIcons();
+buildAddonList();
+recalc();
+</script>
+</body>
+</html>
