@@ -388,6 +388,72 @@
   .tabpanel{display:none;}
   .tabpanel.active{display:block;}
 
+  /* Horizontal swipeable card strip */
+  .scroll-hint{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin:0 0 10px;
+  }
+  .hscroll{
+    display:flex;
+    gap:14px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:2px 2px 6px;
+    margin:0 -2px;
+    scroll-padding-left:2px;
+  }
+  .hscroll::-webkit-scrollbar{display:none;}
+  .hcard{
+    flex:0 0 86%;
+    scroll-snap-align:start;
+    background:var(--paper-raised);
+    border:1px solid var(--tan-border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    min-width:0;
+  }
+  .hcard-wide{flex-basis:92%;}
+  @media (min-width:640px){
+    .hcard{flex:0 0 340px;}
+    .hcard-wide{flex:0 0 420px;}
+  }
+  .hdots{
+    display:flex;
+    justify-content:center;
+    gap:4px;
+    margin-top:2px;
+  }
+  .hdot{
+    width:28px;
+    height:28px;
+    border:none;
+    background:transparent;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .hdot::before{
+    content:'';
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--tan-border-strong);
+    transition:background 0.15s, transform 0.15s;
+  }
+  .hdot.active::before{
+    background:var(--amber);
+    transform:scale(1.3);
+  }
+  .total-pin{
+    margin-top:14px;
+    border:2px solid var(--amber);
+  }
+
   .stepnote{
     font-size:12.5px;
     color:var(--ink-soft);
@@ -554,12 +620,11 @@
 
   <div class="tabbar" role="tablist">
     <button class="tabbtn active" data-tab="deal" role="tab" aria-selected="true">1. Deal</button>
-    <button class="tabbtn" data-tab="fees" role="tab" aria-selected="false">2. Fees</button>
-    <button class="tabbtn" data-tab="check" role="tab" aria-selected="false">3. Verify</button>
-    <button class="tabbtn" data-tab="script" role="tab" aria-selected="false">4. Script</button>
+    <button class="tabbtn" data-tab="check" role="tab" aria-selected="false">2. Verify</button>
+    <button class="tabbtn" data-tab="script" role="tab" aria-selected="false">3. Script</button>
   </div>
 
-  <!-- TAB 1: DEAL -->
+  <!-- TAB 1: DEAL (merged car price + loan terms + fees + add-ons + trade-in, as a horizontal swipeable strip) -->
   <div class="tabpanel active" data-panel="deal">
     <details class="guide" open>
       <summary>New to this? Here's how to find your car's real MSRP <span class="guide-badge">start here</span></summary>
@@ -580,12 +645,14 @@
           <li><strong>Cross-check on Edmunds.com or KBB.com.</strong> Search the year, make, model, and trim — both sites list manufacturer MSRP by trim, separate from what any specific dealer is asking.</li>
         </ol>
 
-        <p style="margin-top:14px;">Once you have the real MSRP, put it in the field below — then put whatever the dealer is actually asking into "Dealer's advertised / asking price" underneath it. The gap between those two numbers is often the first thing worth asking the dealer about.</p>
+        <p style="margin-top:14px;">Once you have the real MSRP, put it in the first card below — then put whatever the dealer is actually asking into "Dealer's advertised / asking price" underneath it. The gap between those two numbers is often the first thing worth asking the dealer about.</p>
       </div>
     </details>
 
-    <div class="grid">
-      <div class="card">
+    <p class="scroll-hint">Swipe or scroll sideways to move through each part of the deal →</p>
+
+    <div class="hscroll" id="deal-hscroll">
+      <div class="hcard">
         <h2>The car <span class="tag">msrp / asking</span></h2>
         <div class="field">
           <label for="msrp">MSRP <span class="info" tabindex="0" data-tip="Manufacturer's Suggested Retail Price. Set by the automaker, printed on the window sticker. Not the same as what the dealer paid — dealers typically pay 3-8% below this."></span></label>
@@ -615,7 +682,7 @@
         <div id="adm-callout"></div>
       </div>
 
-      <div class="card">
+      <div class="hcard">
         <h2>Loan terms <span class="tag">financing</span></h2>
         <div class="field">
           <label for="down-pct">Down payment (%) <span class="info" tabindex="0" data-tip="How much you pay upfront, as a percent of vehicle price. Doesn't need to be cash — can include trade equity."></span></label>
@@ -641,59 +708,30 @@
         </div>
       </div>
 
-      <div class="card full">
-        <h2>Your total <span class="tag">based on target price</span></h2>
-        <div class="subgrid">
-          <div>
-            <div class="stat-row"><span class="stat-label">Vehicle price</span><span class="stat-value" id="out-price">—</span></div>
-            <div class="stat-row"><span class="stat-label">Sales tax</span><span class="stat-value" id="out-tax">—</span></div>
-            <div class="stat-row"><span class="stat-label">Fees + add-ons <span class="info" tabindex="0" data-tip="Set in Step 2. Includes doc/title/registration fees and any F&I add-ons you've toggled on."></span></span><span class="stat-value" id="out-fees">—</span></div>
-            <div class="stat-row"><span class="stat-label">Out-the-door total <span class="info" tabindex="0" data-tip="OTD price: the full amount you owe to drive away, including vehicle price, tax, and every fee. This is the number to negotiate — not the monthly payment."></span></span><span class="stat-value big" id="out-otd">—</span></div>
-          </div>
-          <div>
-            <div class="stat-row"><span class="stat-label">Down payment</span><span class="stat-value" id="out-down">—</span></div>
-            <div class="stat-row"><span class="stat-label">Amount financed <span class="info" tabindex="0" data-tip="The loan principal — what you're actually borrowing after your down payment, including any tax, fees, add-ons, and negative trade equity rolled in."></span></span><span class="stat-value" id="out-financed">—</span></div>
-            <div class="stat-row"><span class="stat-label">Total interest</span><span class="stat-value" id="out-interest">—</span></div>
-            <div class="stat-row"><span class="stat-label">Monthly payment</span><span class="stat-value big green" id="out-monthly">—</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB 2: FEES & ADD-ONS -->
-  <div class="tabpanel" data-panel="fees">
-    <div class="grid">
-      <div class="card full">
-        <h2>Government fees, itemized <span class="tag">non-negotiable vs negotiable</span></h2>
+      <div class="hcard">
+        <h2>Government fees <span class="tag">non-negotiable vs negotiable</span></h2>
         <p class="sub" style="margin-bottom:14px;">Doc fee stays with the dealer and is worth questioning. Title, registration, and filing fees are usually fixed by the state.</p>
-        <div class="subgrid">
-          <div>
-            <div class="field">
-              <label for="fee-doc">Doc / dealer service fee (negotiable) <span class="info" tabindex="0" data-tip="Charged by the dealer for paperwork processing. Stays with the dealer — not a government fee. Legal everywhere, but the amount varies widely and is worth comparing to other local dealers."></span></label>
-              <input type="number" inputmode="numeric" id="fee-doc" value="134" min="0" step="1">
-            </div>
-            <div class="field">
-              <label for="fee-title">Title fee (state-set) <span class="info" tabindex="0" data-tip="A flat government charge to issue the vehicle's title. Fixed by your state — not negotiable, and identical no matter which dealer you buy from."></span></label>
-              <input type="number" inputmode="numeric" id="fee-title" value="10" min="0" step="1">
-            </div>
-          </div>
-          <div>
-            <div class="field">
-              <label for="fee-reg">Registration + decal (state-set) <span class="info" tabindex="0" data-tip="Government charge to register and plate the car, usually based on vehicle weight. Fixed by your state."></span></label>
-              <input type="number" inputmode="numeric" id="fee-reg" value="27.50" min="0" step="0.5">
-            </div>
-            <div class="field">
-              <label for="fee-efile">Electronic filing / advertising fee (question this) <span class="info" tabindex="0" data-tip="Sometimes billed separately from the doc fee for submitting paperwork electronically. The actual cost to the dealer is minimal — this is often just an extra profit line."></span></label>
-              <input type="number" inputmode="numeric" id="fee-efile" value="0" min="0" step="1">
-            </div>
-          </div>
+        <div class="field">
+          <label for="fee-doc">Doc / dealer service fee (negotiable) <span class="info" tabindex="0" data-tip="Charged by the dealer for paperwork processing. Stays with the dealer — not a government fee. Legal everywhere, but the amount varies widely and is worth comparing to other local dealers."></span></label>
+          <input type="number" inputmode="numeric" id="fee-doc" value="134" min="0" step="1">
+        </div>
+        <div class="field">
+          <label for="fee-title">Title fee (state-set) <span class="info" tabindex="0" data-tip="A flat government charge to issue the vehicle's title. Fixed by your state — not negotiable, and identical no matter which dealer you buy from."></span></label>
+          <input type="number" inputmode="numeric" id="fee-title" value="10" min="0" step="1">
+        </div>
+        <div class="field">
+          <label for="fee-reg">Registration + decal (state-set) <span class="info" tabindex="0" data-tip="Government charge to register and plate the car, usually based on vehicle weight. Fixed by your state."></span></label>
+          <input type="number" inputmode="numeric" id="fee-reg" value="27.50" min="0" step="0.5">
+        </div>
+        <div class="field">
+          <label for="fee-efile">Electronic filing / advertising fee (question this) <span class="info" tabindex="0" data-tip="Sometimes billed separately from the doc fee for submitting paperwork electronically. The actual cost to the dealer is minimal — this is often just an extra profit line."></span></label>
+          <input type="number" inputmode="numeric" id="fee-efile" value="0" min="0" step="1">
         </div>
       </div>
 
-      <div class="card full">
+      <div class="hcard">
         <h2>F&amp;I add-ons <span class="tag">what they'll pitch</span></h2>
-        <p class="sub" style="margin-bottom:14px;">Every item here is optional. Toggle one on to see exactly what it adds to your out-the-door price and monthly payment — most are quoted at 2-4x fair market cost.</p>
+        <p class="sub" style="margin-bottom:14px;">Every item here is optional. Toggle one on to see exactly what it adds — most are quoted at 2-4x fair market cost.</p>
         <div id="addon-list"></div>
         <div class="stat-row">
           <span class="stat-label">Add-ons total</span>
@@ -701,29 +739,37 @@
         </div>
       </div>
 
-      <div class="card full">
+      <div class="hcard">
         <h2>Trade-in <span class="tag">if applicable</span></h2>
         <p class="sub" style="margin-bottom:14px;">Leave both at 0 if you have no trade-in.</p>
-        <div class="subgrid">
-          <div>
-            <div class="field">
-              <label for="trade-allowance">Trade-in allowance offered <span class="info" tabindex="0" data-tip="What the dealer is crediting you for your trade-in. Negotiate this separately from the new car's price — dealers sometimes 'give' a high trade value while quietly raising the new car's price to offset it."></span></label>
-              <input type="number" inputmode="numeric" id="trade-allowance" value="0" min="0" step="1">
-            </div>
-          </div>
-          <div>
-            <div class="field">
-              <label for="trade-payoff">Payoff owed on trade-in loan <span class="info" tabindex="0" data-tip="What you still owe your current lender on the trade-in. If this is more than the allowance, that's negative equity — it gets added to your new loan, meaning you're financing a debt on a car you no longer have."></span></label>
-              <input type="number" inputmode="numeric" id="trade-payoff" value="0" min="0" step="1">
-            </div>
-          </div>
+        <div class="field">
+          <label for="trade-allowance">Trade-in allowance offered <span class="info" tabindex="0" data-tip="What the dealer is crediting you for your trade-in. Negotiate this separately from the new car's price — dealers sometimes 'give' a high trade value while quietly raising the new car's price to offset it."></span></label>
+          <input type="number" inputmode="numeric" id="trade-allowance" value="0" min="0" step="1">
         </div>
-        <div class="stat-row"><span class="stat-label">Trade equity (added to financed amount if negative)</span><span class="stat-value" id="trade-equity">—</span></div>
+        <div class="field">
+          <label for="trade-payoff">Payoff owed on trade-in loan <span class="info" tabindex="0" data-tip="What you still owe your current lender on the trade-in. If this is more than the allowance, that's negative equity — it gets added to your new loan, meaning you're financing a debt on a car you no longer have."></span></label>
+          <input type="number" inputmode="numeric" id="trade-payoff" value="0" min="0" step="1">
+        </div>
+        <div class="stat-row"><span class="stat-label">Trade equity</span><span class="stat-value" id="trade-equity">—</span></div>
       </div>
+    </div>
+
+    <div class="hdots" id="deal-hdots"></div>
+
+    <div class="card full total-pin">
+      <h2>Your total <span class="tag">always visible — updates as you scroll above</span></h2>
+      <div class="stat-row"><span class="stat-label">Vehicle price</span><span class="stat-value" id="out-price">—</span></div>
+      <div class="stat-row"><span class="stat-label">Sales tax</span><span class="stat-value" id="out-tax">—</span></div>
+      <div class="stat-row"><span class="stat-label">Fees + add-ons <span class="info" tabindex="0" data-tip="Includes doc/title/registration fees and any F&I add-ons you've toggled on, from the cards above."></span></span><span class="stat-value" id="out-fees">—</span></div>
+      <div class="stat-row"><span class="stat-label">Out-the-door total <span class="info" tabindex="0" data-tip="OTD price: the full amount you owe to drive away, including vehicle price, tax, and every fee. This is the number to negotiate — not the monthly payment."></span></span><span class="stat-value big" id="out-otd">—</span></div>
+      <div class="stat-row"><span class="stat-label">Down payment</span><span class="stat-value" id="out-down">—</span></div>
+      <div class="stat-row"><span class="stat-label">Amount financed <span class="info" tabindex="0" data-tip="The loan principal — what you're actually borrowing after your down payment, including any tax, fees, add-ons, and negative trade equity rolled in."></span></span><span class="stat-value" id="out-financed">—</span></div>
+      <div class="stat-row"><span class="stat-label">Total interest</span><span class="stat-value" id="out-interest">—</span></div>
+      <div class="stat-row"><span class="stat-label">Monthly payment</span><span class="stat-value big green" id="out-monthly">—</span></div>
     </div>
   </div>
 
-  <!-- TAB 3: CHECK THEIR NUMBER -->
+  <!-- TAB 2: CHECK THEIR NUMBER -->
   <div class="tabpanel" data-panel="check">
     <div class="grid">
       <div class="card full">
@@ -811,7 +857,7 @@
   <div class="tabpanel" data-panel="script">
     <div class="card full">
       <h2>Counter script <span class="tag">copy and use</span></h2>
-      <p class="stepnote">Built live from every number you've entered across all three steps.</p>
+      <p class="stepnote">Built live from every number you've entered in Deal and Verify.</p>
       <div class="script-box" id="script-out">—</div>
       <button class="copy-btn" id="copy-btn">Copy script</button>
     </div>
@@ -837,6 +883,36 @@ function pct(n){
 function num(id){
   var v = parseFloat(document.getElementById(id).value);
   return isFinite(v) ? v : 0;
+}
+
+function setupHScroll(containerId, dotsId){
+  var container = document.getElementById(containerId);
+  var dotsWrap = document.getElementById(dotsId);
+  if (!container || !dotsWrap) return;
+  var cards = Array.prototype.slice.call(container.querySelectorAll('.hcard'));
+  dotsWrap.innerHTML = cards.map(function(c, i){
+    return '<button class="hdot' + (i === 0 ? ' active' : '') + '" data-index="' + i + '" aria-label="Go to card ' + (i+1) + '"></button>';
+  }).join('');
+  var dots = Array.prototype.slice.call(dotsWrap.querySelectorAll('.hdot'));
+
+  dots.forEach(function(dot){
+    dot.addEventListener('click', function(){
+      var idx = parseInt(dot.getAttribute('data-index'), 10);
+      cards[idx].scrollIntoView({behavior:'smooth', inline:'start', block:'nearest'});
+    });
+  });
+
+  if ('IntersectionObserver' in window){
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting && entry.intersectionRatio > 0.55){
+          var idx = cards.indexOf(entry.target);
+          dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+        }
+      });
+    }, {root: container, threshold: [0.55]});
+    cards.forEach(function(c){ observer.observe(c); });
+  }
 }
 
 function initInfoIcons(){
@@ -1117,6 +1193,8 @@ document.getElementById('reset-btn').addEventListener('click', function(){
   document.querySelectorAll('.tabpanel').forEach(function(p, i){
     p.classList.toggle('active', i === 0);
   });
+  var hscrollEl = document.getElementById('deal-hscroll');
+  if (hscrollEl) hscrollEl.scrollTo({left: 0, behavior: 'smooth'});
   window.scrollTo({top: 0, behavior: 'smooth'});
   recalc();
 });
@@ -1137,6 +1215,7 @@ document.querySelectorAll('.tabbtn').forEach(function(btn){
 
 initInfoIcons();
 buildAddonList();
+setupHScroll('deal-hscroll', 'deal-hdots');
 recalc();
 </script>
 </body>
