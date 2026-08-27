@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accessibility Statement · Deal Sheet · v2stack</title>
+<meta name="description" content="Accessibility Statement for Deal Sheet, an independent car-buying worksheet by v2stack.">
+<style>
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:600;font-display:swap;src:url('assets/fonts/oswald-latin-600-normal.woff2') format('woff2');}
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url('assets/fonts/oswald-latin-700-normal.woff2') format('woff2');}
+  @font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2');}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/inter-latin-400-normal.woff2') format('woff2');}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('assets/fonts/inter-latin-600-normal.woff2') format('woff2');}
+  :root{
+    --paper:#F3EEE3; --paper-raised:#FBF8F1; --ink:#22282E; --ink-soft:#585B54;
+    --tan-border:#D8CFBB; --amber:#C97F1E; --green:#2F6F4F;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.65;padding:32px 16px 60px;}
+  .wrap{max-width:760px;margin:0 auto;}
+  .topnav{display:flex;align-items:center;gap:10px;padding-bottom:16px;margin-bottom:8px;border-bottom:3px solid var(--ink);}
+  .topnav-mark{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;background:var(--ink);color:var(--paper);font-family:'Oswald',sans-serif;font-weight:700;font-size:12px;}
+  .topnav a{color:var(--ink);text-decoration:none;font-family:'Oswald',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;}
+  .brand{color:var(--amber);}
+  h1{font-family:'Oswald',sans-serif;font-weight:700;font-size:28px;text-transform:uppercase;margin:28px 0 6px;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);margin-bottom:28px;}
+  h2{font-family:'Oswald',sans-serif;font-weight:600;font-size:17px;text-transform:uppercase;margin:32px 0 10px;padding-top:16px;border-top:1px solid var(--tan-border);}
+  h2:first-of-type{border-top:none;padding-top:0;}
+  p{margin:0 0 12px;font-size:15px;}
+  ul{margin:0 0 12px;padding-left:22px;}
+  li{margin-bottom:6px;font-size:15px;}
+  strong{color:var(--ink);}
+  .callout{background:var(--paper-raised);border:1px solid var(--tan-border);border-left:3px solid var(--green);border-radius:6px;padding:14px 16px;margin:16px 0;font-size:14px;}
+  .back{display:inline-block;margin-top:40px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--tan-border);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="topnav">
+    <span class="topnav-mark">DS</span>
+    <a href="index.html"><span class="brand">v2stack</span> Deal Sheet</a>
+  </nav>
+
+  <h1>Accessibility Statement</h1>
+  <p class="meta">Last reviewed: August 27, 2026 · Applies to carbuying.v2stack.com</p>
+
+  <div class="callout">
+    <strong>Conformance target:</strong> Deal Sheet is designed to conform to <strong>WCAG 2.1 Level AA</strong>, the internationally recognized web accessibility standard. This page describes that target, what's been implemented toward it, and what hasn't been independently audited yet — we'd rather be precise about the difference than overclaim.
+  </div>
+
+  <h2>1. Our commitment</h2>
+  <p>Deal Sheet is meant to be usable at a car dealership, under time pressure, by people with a wide range of abilities and devices. Accessibility isn't a separate feature here — it's treated as part of getting the core tool right.</p>
+
+  <h2>2. Standard we're targeting</h2>
+  <p>We use the Web Content Accessibility Guidelines (WCAG) 2.1, Level AA, published by the W3C, as our reference standard. This is the benchmark most commonly referenced by accessibility law and litigation in the US, UK, and EU as of 2026.</p>
+
+  <h2>3. What we've built toward that standard</h2>
+  <ul>
+    <li><strong>Every input has a real, associated label</strong> — not just placeholder text — so screen readers announce what each field is for.</li>
+    <li><strong>All slider controls include an explicit <code>aria-label</code></strong>, and every slider is paired with a standard number input, so keyboard and screen-reader users have a precise, typeable alternative to dragging.</li>
+    <li><strong>Touch and click targets</strong> for buttons, tabs, and info tooltips are sized to standard minimum guidelines, not just visually small icons.</li>
+    <li><strong>Tooltips are keyboard-operable</strong> — they can be focused with Tab and activated with Enter or Space, not just triggered by mouse hover.</li>
+    <li><strong>Tabs use proper ARIA roles</strong> (<code>role="tab"</code>, <code>aria-selected</code>) so assistive technology can announce which step you're on.</li>
+    <li><strong>Color is never the only signal</strong> — warnings and callouts pair color with an icon, a label like "Markup detected," or both.</li>
+    <li><strong>The color palette</strong> was chosen for meaningful contrast between text and background rather than a decorative-only pastel scheme.</li>
+    <li><strong>No content relies on hover-only interaction</strong> — anything revealed on hover (like tooltips) is also reachable by tap or keyboard focus.</li>
+  </ul>
+
+  <h2>4. Known limitations</h2>
+  <p>We're not going to claim a perfect audit we haven't done. Specific things worth knowing:</p>
+  <ul>
+    <li>The custom scroll indicator inside long cards is a visual aid only — the underlying content remains natively scrollable by keyboard, touch, and mouse wheel regardless of whether that indicator is visible.</li>
+    <li>This statement reflects our own internal review against WCAG 2.1 AA, not a certified third-party audit. We haven't engaged an external accessibility auditor to formally test this tool.</li>
+    <li>Automated and assistive-technology testing has been limited to common tools during development, not a full matrix of screen readers, browsers, and operating systems.</li>
+  </ul>
+
+  <h2>5. Technical approach</h2>
+  <p>Deal Sheet is built with standard, semantic HTML elements (real <code>&lt;button&gt;</code>, <code>&lt;label&gt;</code>, <code>&lt;input&gt;</code>, and <code>&lt;select&gt;</code> elements) rather than custom-styled divs pretending to be interactive controls, specifically because native elements carry built-in keyboard and screen-reader support that's easy to lose when you rebuild controls from scratch.</p>
+
+  <h2>6. Feedback</h2>
+  <p>If you use assistive technology and hit a barrier anywhere in this tool, we want to know about it specifically — which page, which control, and what happened — so we can actually fix it rather than guess. Contact v2stack using the details available on the deployed site.</p>
+
+  <div class="back">
+    <a href="index.html" style="color:var(--ink);text-decoration:none;border-bottom:1px solid var(--tan-border);">← Back to Deal Sheet</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="privacy.html" style="color:var(--ink);text-decoration:none;border-bottom:1px solid var(--tan-border);">Privacy Policy</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="terms.html" style="color:var(--ink);text-decoration:none;border-bottom:1px solid var(--tan-border);">Terms of Service</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,13 +1,25 @@
 # Deal Sheet
 
-A static, single-page car-buying negotiation calculator. No backend, no API calls, no dependencies beyond a Google Fonts stylesheet — everything runs client-side in the browser.
+A static, multi-page car-buying negotiation calculator. No backend, no API calls, no third-party trackers or font CDNs — everything runs client-side in the browser, and all fonts are self-hosted.
+
+## Pages
+
+```
+index.html            the app
+privacy.html           Privacy Policy
+terms.html              Terms of Service
+accessibility.html     Accessibility Statement (WCAG 2.1 AA target)
+assets/fonts/           self-hosted Oswald, IBM Plex Mono, and Inter (WOFF2)
+```
 
 ## What it does
 
-- Computes discount $/% off MSRP, out-the-door price, financed amount, monthly payment, and total interest, live as you type.
-- Includes preset buttons for a three-stage negotiation strategy (opener / fallback / ceiling).
-- Reverse-calculates a dealer's quoted monthly payment back into an implied vehicle price, so you can check it against your own target on the spot.
-- Generates a copy-pasteable "counter script" using your live numbers.
+- Computes discount $/% off MSRP, out-the-door price, financed amount, monthly payment, and total interest, live as you type or drag a slider.
+- Presets (opener/fallback/ceiling) scale automatically off whatever MSRP you enter — works for any vehicle, not just one example.
+- Break-even calculator for "discount at a higher APR vs. your current rate" negotiations.
+- Reverse-calculates a dealer's quoted monthly payment back into an implied vehicle price.
+- Side-by-side desktop layout, stacked split-screen on mobile, with an always-visible running total.
+- Generates a copy-pasteable negotiation script from your live numbers.
 
 ## Local preview
 
@@ -19,7 +31,7 @@ npx serve .
 
 ## Deploy to Vercel
 
-This is a static site, so Vercel needs no build command or framework preset.
+This is a static, multi-page site — Vercel needs no build command or framework preset.
 
 1. Push this folder to a GitHub repo.
 2. In Vercel, "Add New Project" → import the repo.
@@ -36,16 +48,18 @@ vercel
 
 ## API keys / secrets
 
-None. This project makes no network requests beyond loading the Google Fonts stylesheet (`fonts.googleapis.com`, `fonts.gstatic.com`), and does not read, store, or transmit any data you enter — all math happens in-browser and nothing persists after you close the tab.
-
-If you later want to add persistence (saving a deal across visits) or pull live data (e.g. real-time interest rates), that would introduce a genuine need for a backend or API key at that point — not before.
+None. This project makes no network requests to any third party at all — not even for fonts, which are bundled locally specifically to avoid the GDPR issue with Google's font CDN (it transmits visitor IP addresses to Google on every page load). Nothing you enter is transmitted, stored, or logged; all math happens in-browser.
 
 ## Files
 
 ```
 deal-sheet-calculator/
-├── index.html      the entire app
-├── vercel.json      minimal static config
+├── index.html           the app
+├── privacy.html          Privacy Policy
+├── terms.html             Terms of Service
+├── accessibility.html    Accessibility Statement
+├── assets/fonts/          self-hosted font files (WOFF2)
+├── vercel.json            minimal static config
 ├── .gitignore
 └── README.md
 ```
