@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DealScreen } from "@/components/DealScreen";
+import { DealApp } from "@/components/DealApp";
 
 export const metadata: Metadata = {
   title: "Calculator",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function DealPage() {
-  return <DealScreen />;
+  return <DealApp />;
 }

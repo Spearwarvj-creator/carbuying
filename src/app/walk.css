@@ -1,0 +1,1022 @@
+/*
+ * The Walk: one question, one picture and one number per step.
+ * Same tokens and type scale as the rest of the product. Motion comes from the platform:
+ * View Transitions for step changes, @starting-style for the term cards, and sibling-index()
+ * for the payment strip. Each has a reduced-motion fallback below.
+ */
+:root {
+  /* Categorical colours for the money bar and payment strip. Yellow is not used here, it belongs to the total. */
+  --c-car: light-dark(#2a78d6, #3987e5);
+  --c-tax: light-dark(#4b6a77, #6a8b98);
+  --c-fees: light-dark(#7d5f46, #c4a688);
+  --c-extras: light-dark(#6250d6, #9085e9);
+  --c-rolled: light-dark(#a3396e, #e87ba4);
+}
+
+.walk {
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  padding: 0 16px;
+}
+.walk[data-view="door"],
+.walk[data-view="check"] {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.walk .top .seg button {
+  min-width: 44px;
+  padding: 0 10px;
+}
+.walk-main {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px 0 16px;
+}
+
+/* ---------- Headings and shared bits ---------- */
+.stagehead h1 {
+  margin: 0;
+  font-size: var(--t-xl);
+  line-height: 1.15;
+  font-weight: 700;
+  text-wrap: balance;
+}
+.stagehead .sub {
+  margin: 6px 0 0;
+  font-size: var(--t-md);
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.col-a,
+.col-b {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+/* On a phone the running summary already shows this number, so the step does not repeat it. */
+@media (max-width: 899px) {
+  .dup {
+    display: none;
+  }
+}
+.big-label {
+  margin: 0;
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.big {
+  margin: 0;
+  font-size: var(--t-3xl);
+  font-weight: 800;
+  line-height: 0.95;
+}
+.big.tot {
+  align-self: flex-start;
+  color: var(--total-fg);
+  background: var(--total-bg);
+  padding: 0 4px;
+  margin-left: -4px;
+  border-radius: 4px;
+}
+.line {
+  margin: 0;
+  font-size: var(--t-md);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+.line .num,
+.hint .num,
+.reveal .num,
+.note-flag .num,
+.stagehead .num {
+  font-size: 1.15em;
+}
+.walk .hint {
+  margin: 0;
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+.opt {
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+}
+.learn {
+  margin: 0;
+}
+
+/* Terms on tap */
+.term {
+  display: inline;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 2px;
+  cursor: help;
+}
+.termcard {
+  max-width: min(26rem, calc(100vw - 32px));
+  padding: 16px 18px;
+  border: 1.5px solid var(--edge);
+  border-radius: 14px;
+  background: var(--panel-2);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  translate: 0 8px;
+  transition: opacity 0.18s ease, translate 0.18s ease, overlay 0.18s allow-discrete, display 0.18s allow-discrete;
+}
+.termcard:popover-open {
+  opacity: 1;
+  translate: 0 0;
+}
+@starting-style {
+  .termcard:popover-open {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+.termcard .h {
+  display: block;
+  font-size: var(--t-lg);
+  line-height: 1.2;
+}
+.termcard .p {
+  display: block;
+  margin: 8px 0 0;
+  font-size: var(--t-md);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+.termcard .was {
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.termcard .ask {
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  font-size: var(--t-sm);
+}
+.termcard .btn {
+  display: block;
+  margin-top: 12px;
+}
+@media (max-width: 599px) {
+  .termcard {
+    inset: auto 8px 8px 8px;
+    margin: 0;
+    width: auto;
+    max-width: none;
+  }
+}
+/* Anchor positioning is Baseline in 2026: beside the word on wider screens. Phones keep the bottom card. */
+@media (min-width: 600px) {
+  @supports (position-area: bottom) {
+    .termcard {
+      inset: auto;
+      position-area: bottom span-right;
+      position-try-fallbacks: flip-block, flip-inline;
+      margin: 6px 0;
+    }
+  }
+}
+
+/* ---------- Number box ---------- */
+.mf {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+.mf-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+.mf label,
+.mf .lab {
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.mf .learn {
+  font-size: var(--t-sm);
+}
+.mf .box {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  min-height: 56px;
+  padding: 2px 14px;
+  border: 1.5px solid var(--edge);
+  border-radius: 10px;
+  background: var(--panel);
+}
+.mf .box:focus-within {
+  outline: 3px solid var(--total-fg);
+  outline-offset: 2px;
+}
+.mf input {
+  field-sizing: content;
+  min-width: 3ch;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--text);
+  font-size: var(--t-2xl);
+  font-weight: 700;
+  line-height: 1.1;
+}
+.mf input::placeholder {
+  color: var(--ink-2);
+  opacity: 0.7;
+}
+.mf .aff {
+  font-family: var(--font-num);
+  font-size: var(--t-xl);
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+/* ---------- Buttons ---------- */
+.go {
+  min-height: 52px;
+  padding: 0 24px;
+  border: 2px solid var(--text);
+  border-radius: 8px;
+  background: var(--text);
+  color: var(--ground);
+  font-size: var(--t-md);
+  font-weight: 700;
+}
+.go:hover:not(:disabled) {
+  background: transparent;
+  color: var(--text);
+}
+.go:disabled,
+.walk .btn:disabled,
+.wbar .btn[aria-disabled="true"] {
+  opacity: 0.45;
+}
+.walk .quiet {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 4px;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.chipset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chipbtn {
+  min-width: 52px;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1.5px solid var(--edge);
+  border-radius: 10px;
+  background: var(--panel);
+  font-size: var(--t-lg);
+  font-weight: 700;
+}
+.chipbtn[aria-pressed="true"] {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--ground);
+}
+.pick {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.pick button {
+  min-height: 60px;
+  padding: 8px 12px;
+  border: 1.5px solid var(--edge);
+  border-radius: 10px;
+  background: var(--panel);
+  font-size: var(--t-md);
+  font-weight: 700;
+}
+.pick button[aria-pressed="true"] {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--ground);
+}
+
+/* ---------- Front door ---------- */
+.door,
+.check-view {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 62rem;
+}
+.doors {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.doors button {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  min-height: 84px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--edge);
+  border-radius: 12px;
+  background: var(--panel);
+  text-align: left;
+}
+.doors button:hover {
+  border-color: var(--text);
+}
+.doors b {
+  font-size: var(--t-lg);
+}
+.doors span {
+  font-size: var(--t-md);
+  color: var(--ink-2);
+}
+
+/* ---------- Ten-second check ---------- */
+.check {
+  display: grid;
+  gap: 20px;
+}
+.check-in,
+.check-out {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.check-line {
+  margin: 0;
+  font-size: var(--t-xl);
+  line-height: 1.2;
+  font-weight: 700;
+  text-wrap: balance;
+}
+.check-line .num {
+  font-size: 1.15em;
+}
+
+/* ---------- Payment strip ---------- */
+.strip {
+  margin: 0;
+}
+.strip-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 4px;
+  max-width: 30rem;
+}
+.strip .blk {
+  aspect-ratio: 1;
+  border-radius: 3px;
+  background: var(--c-car);
+  animation: pop 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(sibling-index() * 8ms);
+}
+.strip .blk.int {
+  background: var(--up);
+}
+.strip figcaption,
+.mbar figcaption,
+.four figcaption {
+  margin-top: 8px;
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ---------- Money bar ---------- */
+.mbar {
+  margin: 0;
+}
+.mbar-row {
+  display: flex;
+  gap: 2px;
+  height: 34px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.mbar .mseg {
+  flex-basis: 0;
+  min-width: 4px;
+}
+.mseg.car,
+.sw.car {
+  background: var(--c-car);
+}
+.mseg.tax,
+.sw.tax {
+  background: var(--c-tax);
+}
+.mseg.fees,
+.sw.fees {
+  background: var(--c-fees);
+}
+.mseg.extras,
+.sw.extras {
+  background: var(--c-extras);
+}
+.mseg.rolled,
+.sw.rolled {
+  background: var(--c-rolled);
+}
+.mseg.interest,
+.sw.interest {
+  background: var(--up);
+}
+.mbar-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.mbar-key li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  font-size: var(--t-sm);
+}
+.mbar-key .sw {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+.mbar-key .v {
+  font-size: var(--t-md);
+}
+
+/* ---------- Four-box worksheet ---------- */
+.four {
+  margin: 0;
+}
+.four-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-width: 30rem;
+}
+.four .cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 84px;
+  padding: 10px 14px;
+  border: 1.5px dashed var(--edge);
+  border-radius: 10px;
+  background: var(--panel);
+}
+.four .cell.lit {
+  border-style: solid;
+  border-color: var(--text);
+}
+.four .q {
+  font-family: var(--font-num);
+  font-size: var(--t-2xl);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ink-2);
+}
+.four .l {
+  font-size: var(--t-sm);
+  font-weight: 600;
+}
+
+/* ---------- Guess, notes, summary ---------- */
+.guess {
+  padding: 2px 16px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+}
+.guess summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: var(--t-md);
+  font-weight: 700;
+  cursor: pointer;
+}
+.guess[open] summary {
+  min-height: 36px;
+}
+.guess p {
+  margin: 6px 0 10px;
+  font-size: var(--t-md);
+  line-height: 1.4;
+}
+.guess .reveal {
+  margin: 10px 0 0;
+}
+.note-flag {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1.5px solid var(--up);
+  border-radius: 10px;
+  font-size: var(--t-md);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+}
+.math {
+  margin-top: 6px;
+  font-size: var(--t-md);
+}
+.math summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+.math dl,
+.barparts dl {
+  margin: 0;
+}
+.math dl > div,
+.barparts dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+.math dd,
+.barparts dd {
+  margin: 0;
+  font-size: var(--t-lg);
+}
+.math .sum dt,
+.barparts .sum dt {
+  font-weight: 700;
+}
+.met h2 {
+  margin: 14px 0 6px;
+  font-size: var(--t-md);
+}
+.met ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: var(--t-md);
+  line-height: 1.4;
+}
+.met li + li {
+  margin-top: 6px;
+}
+
+/* ---------- Step rail ---------- */
+.rail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 0 4px;
+  view-transition-name: walk-rail;
+}
+.rail .step {
+  flex: none;
+  margin: 0;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.rail ol {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rail li {
+  flex: 1;
+}
+.rail button {
+  position: relative;
+  width: 100%;
+  height: 28px;
+}
+.rail button::before {
+  content: "";
+  position: absolute;
+  inset: 11px 0;
+  border-radius: 3px;
+  background: var(--line);
+}
+.rail button.done::before {
+  background: var(--ink-2);
+}
+.rail button.now::before {
+  background: var(--text);
+  inset: 9px 0;
+}
+.rail button:disabled {
+  cursor: default;
+}
+
+/* ---------- The running summary bar ---------- */
+.wbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 10px;
+  margin: 0 -16px;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: var(--ground);
+}
+.wbar .sum {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.wbar .lbl {
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.wbar .amt {
+  font-size: var(--t-2xl);
+  font-weight: 800;
+  line-height: 1;
+  view-transition-name: walk-total;
+}
+.parts-btn {
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--edge);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+.chev {
+  width: 10px;
+  height: 10px;
+  border-right: 2.5px solid currentcolor;
+  border-top: 2.5px solid currentcolor;
+  rotate: -45deg;
+  translate: 0 2px;
+}
+.wbar .nav {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.wbar .nav .btn {
+  min-height: 48px;
+}
+.wbar .nav:has(.btn:only-child) {
+  grid-template-columns: 1fr;
+}
+.barparts {
+  inset: auto 8px 84px 8px;
+  margin: 0;
+  max-width: none;
+  padding: 14px 16px;
+  border: 1.5px solid var(--edge);
+  border-radius: 14px;
+  background: var(--panel-2);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+.barparts h2 {
+  margin: 0 0 6px;
+  font-size: var(--t-md);
+}
+.barparts .btn {
+  margin-top: 10px;
+}
+
+@media (min-width: 360px) {
+  .wbar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    padding-block: 8px calc(8px + env(safe-area-inset-bottom));
+  }
+  .wbar .nav {
+    grid-column: auto;
+    gap: 8px;
+  }
+  .wbar .nav .btn {
+    min-width: 4.25rem;
+  }
+}
+
+.wbar .btn.primary {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--ground);
+}
+.wbar .btn.primary:hover:not(:disabled) {
+  background: transparent;
+  color: var(--text);
+}
+.need {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--up);
+}
+
+/* ---------- Wider screens ---------- */
+@media (min-width: 900px) {
+  .walk {
+    padding: 0 28px;
+  }
+  .walk-main {
+    padding: 12px 0 20px;
+  }
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(28px, 5vw, 6rem);
+    align-items: start;
+    min-height: 100%;
+  }
+  .col-a {
+    gap: 18px;
+  }
+  .stagehead h1 {
+    font-size: var(--t-2xl);
+  }
+  .big {
+    font-size: var(--t-4xl);
+  }
+  .doors {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .doors button {
+    min-height: 140px;
+  }
+  .check {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(28px, 5vw, 6rem);
+    align-items: start;
+  }
+  .strip-grid,
+  .four-grid {
+    max-width: 36rem;
+  }
+  .wbar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    margin: 0 -28px;
+    padding-inline: 28px;
+  }
+  .wbar .nav {
+    grid-column: auto;
+    grid-template-columns: auto auto;
+  }
+  .wbar .nav .btn {
+    min-width: 7rem;
+  }
+  .barparts {
+    inset: auto 28px 84px auto;
+    width: 24rem;
+  }
+}
+
+
+/* ---------- Desktop and wide: scale the same layout up so it fills the screen ---------- */
+@media (min-width: 900px) {
+  .stage {
+    align-items: center;
+    align-content: center;
+  }
+  .stagehead h1 {
+    font-size: var(--f-title);
+    line-height: 1.02;
+  }
+  .stagehead .sub {
+    font-size: var(--t-lg);
+    margin-top: 10px;
+  }
+  .big {
+    font-size: var(--f-num-xl);
+  }
+  .big-label,
+  .walk .hint {
+    font-size: var(--t-md);
+  }
+  .line {
+    font-size: var(--t-lg);
+  }
+  .mf label,
+  .mf .lab,
+  .mf .learn {
+    font-size: var(--t-md);
+  }
+  .mf .box {
+    min-height: 84px;
+    padding-inline: 20px;
+  }
+  .mf input {
+    font-size: var(--t-3xl);
+  }
+  .mf .aff {
+    font-size: var(--t-2xl);
+  }
+  .chipbtn {
+    min-width: 76px;
+    min-height: 64px;
+    font-size: var(--t-xl);
+  }
+  .pick button {
+    min-height: 88px;
+    font-size: var(--t-lg);
+  }
+  .mbar-row {
+    height: 56px;
+  }
+  .mbar-key li {
+    font-size: var(--t-md);
+  }
+  .mbar-key .v {
+    font-size: var(--t-lg);
+  }
+  .strip-grid {
+    max-width: 44rem;
+    gap: 6px;
+  }
+  .four-grid {
+    max-width: 44rem;
+  }
+  .four .cell {
+    min-height: 132px;
+  }
+  .four .q {
+    font-size: var(--t-3xl);
+  }
+  .four .l {
+    font-size: var(--t-md);
+  }
+  .strip figcaption,
+  .mbar figcaption,
+  .four figcaption {
+    font-size: var(--t-md);
+  }
+  .check-line {
+    font-size: var(--t-2xl);
+  }
+  .go {
+    min-height: 64px;
+    font-size: var(--t-lg);
+  }
+  .doors b {
+    font-size: var(--t-xl);
+  }
+  .doors span {
+    font-size: var(--t-lg);
+  }
+  .wbar .amt {
+    font-size: var(--t-3xl);
+  }
+  .wbar .lbl {
+    font-size: var(--t-md);
+  }
+  .wbar .nav .btn {
+    min-height: 56px;
+    font-size: var(--t-md);
+  }
+  .math,
+  .met ul,
+  .guess p,
+  .note-flag {
+    font-size: var(--t-lg);
+  }
+  .math dd,
+  .barparts dd {
+    font-size: var(--t-xl);
+  }
+}
+
+/* ---------- Motion: View Transitions, with a plain fallback ---------- */
+::view-transition-group(root) {
+  animation-duration: 0.2s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .strip .blk,
+  .termcard {
+    animation: none;
+    transition: none;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ---------- Small phones ---------- */
+@media (max-width: 380px) {
+  .walk .top .seg button {
+    padding: 0 8px;
+    min-width: 40px;
+  }
+  .walk .stagehead h1 {
+    font-size: var(--t-lg);
+  }
+  .big {
+    font-size: var(--t-2xl);
+  }
+  .mf input {
+    font-size: var(--t-xl);
+  }
+}
+
+/* ---------- Header on narrow screens: the theme switch shrinks to an icon ---------- */
+.tools .ico {
+  display: none;
+}
+@media (max-width: 380px) {
+  .tools .txt {
+    display: none;
+  }
+  .tools .ico {
+    display: block;
+  }
+  .tools button {
+    min-width: 40px;
+  }
+}
+@media (max-width: 599px) {
+  .app .top .tag {
+    display: none;
+  }
+}
+
+/* ---------- Phones: tighter headings and a smaller strip so a step fits the screen ---------- */
+@media (max-width: 599px) {
+  .stagehead h1 {
+    font-size: var(--t-lg);
+  }
+  .stagehead .sub {
+    font-size: var(--t-sm);
+    margin-top: 4px;
+  }
+  .strip-grid {
+    max-width: 17rem;
+    gap: 3px;
+  }
+  .four .cell {
+    min-height: 68px;
+  }
+}
+
+/* The ten-second check inside the landing page's panel stays in one column. */
+.s-readout .check {
+  grid-template-columns: minmax(0, 1fr);
+}
+.s-readout .check-line {
+  font-size: var(--t-xl);
+}
+.s-readout .strip-grid {
+  max-width: 24rem;
+}
+.s-readout .check-out {
+  gap: 10px;
+}

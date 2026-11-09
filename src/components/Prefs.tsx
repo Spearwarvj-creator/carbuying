@@ -46,8 +46,12 @@ export function Prefs() {
       <button type="button" aria-pressed={large} aria-label={en.largerText} onClick={toggleText}>
         A+
       </button>
-      <button type="button" onClick={toggleTheme}>
-        {light ? en.darkScreen : en.lightScreen}
+      <button type="button" aria-label={light ? en.darkScreen : en.lightScreen} onClick={toggleTheme}>
+        <span className="txt">{light ? en.darkScreen : en.lightScreen}</span>
+        <svg className="ico" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+          <circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
+          <path d="M10 3a7 7 0 0 1 0 14z" fill="currentColor" />
+        </svg>
       </button>
     </span>
   );

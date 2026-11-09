@@ -20,10 +20,19 @@ export const site = {
     description:
       "Enter what the car dealer says. Deal Desk shows in dollars where the money moved between two offers, and what to ask for next.",
     h1: "A lower monthly payment can still cost you more.",
-    lead: "Deal Desk takes the numbers from the dealer's worksheet. It shows, in dollars, where the money moved between two offers, and what to ask for next.",
-    primary: "Open the calculator",
+    lead: "Deal Desk asks for two numbers the dealer already said, and shows what they add up to. Then it walks you through the rest, one short step at a time, and explains each word where it appears.",
+    primary: "Start the walk",
     secondary: "See how it works",
     note: "No account. Your numbers stay on your device.",
+    checkHeading: "Try it with the payment you were quoted",
+    checkCta: "See where the money goes",
+
+    fourSquare: {
+      h2: "The dealer moves four numbers at once",
+      p1: "Some dealers work from a sheet with four boxes: the price, your trade-in, your down payment, and the monthly payment. They can move one box against another, so the whole deal changes while you watch a single number.",
+      p2: "Deal Desk moves one number at a time, and shows you what each change did to the total you pay.",
+      caption: "The four boxes on a dealer's worksheet, with the numbers left out.",
+    },
 
     readout: {
       label: "Example: the same car, two offers",
@@ -64,23 +73,31 @@ export const site = {
     },
 
     steps: {
-      h2: "Four steps at the desk",
+      h2: "Six short steps, one question each",
       items: [
         {
-          title: "Type what the dealer says",
-          body: "Price, fees and add-ons, trade-in and down payment, rate and months. Four boxes and one keypad, so a number takes a few taps.",
+          title: "What did the dealer say first?",
+          body: "A monthly payment or a price. Either way, the worksheet's four boxes are explained so you know what you are looking at.",
         },
         {
-          title: "See where the money moved",
-          body: "Enter the second offer. The change in total is split into price, fees, add-ons, trade-in, a bigger loan, the rate and the months. The pieces add up to the cent.",
+          title: "What is the full price to drive away?",
+          body: "The price, sales tax and fees together make the out-the-door price. This is the number to get in writing.",
         },
         {
-          title: "Find what it would take",
-          body: "Choose total paid, monthly payment or out-the-door price. For the offer that costs more, Deal Desk finds the exact change that would match the other one.",
+          title: "What extras did they add?",
+          body: "Extras are financed with the car, so they collect interest too. You see what they really cost.",
         },
         {
-          title: "Say it out loud",
-          body: "Copy a ready sentence that holds the numbers. Read it to the dealer, or send it to them.",
+          title: "How long is the loan, and what is the rate?",
+          body: "Each payment is one block, so you can see how many months you are signing up for, and how many of them go to interest.",
+        },
+        {
+          title: "What about your trade-in and down payment?",
+          body: "What you still owe on your old car comes out of its credit. If you owe more, the difference joins your new loan.",
+        },
+        {
+          title: "Here is your deal",
+          body: "One bar shows where every dollar goes. Then add a second offer, and Deal Desk shows what changed.",
         },
       ],
     },
@@ -127,12 +144,17 @@ export const site = {
     lead: "Every number comes from one calculator. Here is what it asks for, what it shows, and what the words mean.",
     contents: "On this page",
     sections: {
+      modes: "Two ways to use it",
       boxes: "The four boxes",
       trail: "The money trail",
       compare: "Three ways to compare",
       take: "What it would take",
       words: "Words you will hear",
     },
+    modes: [
+      "The Walk is for a first time. It asks one question at a time, shows one picture, and explains each word where it appears. It opens first, and it takes a few minutes.",
+      "The Desk is every number on one screen, for when you already know your way around, or when the dealer is changing numbers fast. Both views use the same numbers, so you can switch at any time without losing anything.",
+    ],
     boxes: {
       intro: "A deal has four parts. Each part is one box, and each box opens one keypad.",
       items: [

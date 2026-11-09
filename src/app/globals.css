@@ -1,45 +1,58 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. Dark is the default. A light screen is one switch away for
- * showroom glare. Every colour and both fonts go through these names.
- * Reasons for the non-default choices are in docs/DESIGN_NOTES.md.
+ * Design tokens. Dark is the default and light is one switch away, for showroom glare.
+ * Each colour is declared once with light-dark(), which picks a side from the page's
+ * color-scheme (dark by default, light when the root has data-theme="light").
+ * The order inside light-dark() is (light, dark). Every colour and both fonts go
+ * through these names. Reasons for the non-default choices are in docs/DESIGN_NOTES.md.
  */
 :root {
-  --ground: #0e1a1f; /* night glass: green-tinted, never pure black */
-  --panel: #15252b;
-  --panel-2: #1c3038; /* the one raised layer: the number entry sheet */
-  --line: #2e4650; /* decorative dividers */
-  --edge: #6a8b98; /* control borders, 3:1 against the ground */
-  --text: #eaf2f0;
-  --ink-2: #b4c8cc; /* tinted secondary text, never flat grey */
-  --up: #ff8a7a; /* you pay more */
-  --down: #62d8a0; /* you pay less */
-  --total-fg: #f5c400; /* the one yellow, only on the total */
-  --total-bg: transparent;
-  --on-yellow: #12161c;
+  color-scheme: dark;
+
+  --ground: light-dark(#cbdad5, #0e1a1f); /* night glass in dark, pale auto glass in light; never pure black */
+  --panel: light-dark(#f3f8f6, #15252b);
+  --panel-2: light-dark(#f9fbfa, #1c3038); /* the one raised layer: the number entry sheet */
+  --line: light-dark(#9db5ad, #2e4650); /* decorative dividers */
+  --edge: light-dark(#4b6a77, #6a8b98); /* control borders, 3:1 against the ground */
+  --text: light-dark(#12161c, #eaf2f0);
+  --ink-2: light-dark(#2b3c50, #b4c8cc); /* tinted secondary text, never flat grey */
+  --up: light-dark(#b42318, #ff8a7a); /* you pay more */
+  --down: light-dark(#1a6b3a, #62d8a0); /* you pay less */
+  --yellow: #f5c400; /* the one yellow, only for the total and the primary Done button */
+  --total-fg: light-dark(#12161c, var(--yellow)); /* the one yellow: text in dark, a yellow band with ink in light */
+  --total-bg: light-dark(var(--yellow), transparent);
+  --on-yellow: #12161c; /* ink on yellow measures 11.04 */
   --shadow: 0 -10px 30px rgb(0 0 0 / 0.45);
 
   --font-text: "Atkinson Hyperlegible Next", system-ui, sans-serif;
   --font-num: "Sofia Sans Extra Condensed", "Arial Narrow", sans-serif;
 
-  color-scheme: dark;
+  /*
+   * One type scale. Nothing sets a font size outside these names, apart from
+   * relative em values for figures inside a sentence.
+   */
+  --t-xs: 0.8125rem;
+  --t-sm: 0.9375rem;
+  --t-base: 1rem;
+  --t-md: 1.125rem;
+  --t-lg: 1.375rem;
+  --t-xl: 1.75rem;
+  --t-2xl: 2.25rem;
+  --t-3xl: 3rem;
+  --t-4xl: 4.75rem;
+  /* Fluid sizes for the site pages, which fill the screen from 320 to 3840 pixels. */
+  --f-display: clamp(3rem, 6.6vw, 7.5rem);
+  --f-title: clamp(2.5rem, 4.4vw, 5rem);
+  --f-lead: clamp(1.1875rem, 1.6vw, 1.5rem);
+  --f-num-md: clamp(1.375rem, 2.2vw, 2.125rem);
+  --f-num-lg: clamp(2.25rem, 3.6vw, 3.75rem);
+  --f-num-xl: clamp(2.5rem, 4.6vw, 5rem);
 }
 
 :root[data-theme="light"] {
-  --ground: #cbdad5; /* pale auto glass */
-  --panel: #f3f8f6;
-  --panel-2: #f9fbfa;
-  --line: #9db5ad;
-  --edge: #4b6a77;
-  --text: #12161c;
-  --ink-2: #2b3c50;
-  --up: #b42318;
-  --down: #1a6b3a;
-  --total-fg: #12161c;
-  --total-bg: #f5c400; /* ink on yellow measures 11.04 */
-  --shadow: 0 -8px 24px rgb(18 22 28 / 0.25);
   color-scheme: light;
+  --shadow: 0 -8px 24px rgb(18 22 28 / 0.25);
 }
 
 @theme inline {
@@ -69,13 +82,15 @@ body {
   background: var(--ground);
   color: var(--text);
   font-family: var(--font-text);
-  font-size: 1rem;
+  font-size: var(--t-sm);
   line-height: 1.3;
 }
 
 /* The calculator is one fixed screen and never scrolls the page. Site pages scroll normally. */
 html:has(.app),
-html:has(.app) body {
+html:has(.app) body,
+html:has(.walk),
+html:has(.walk) body {
   height: 100%;
   overflow: hidden;
 }
@@ -131,11 +146,11 @@ button {
 }
 .brand {
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: var(--t-md);
   white-space: nowrap;
 }
 .tag {
-  font-size: 0.875rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
   white-space: nowrap;
 }
@@ -149,7 +164,7 @@ button {
   border: 1.5px solid var(--edge);
   border-radius: 6px;
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   padding: 0 8px;
 }
 
@@ -175,7 +190,7 @@ button {
 }
 
 .lbl {
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 
@@ -194,16 +209,16 @@ button {
   white-space: nowrap;
 }
 .total .big {
-  font-size: 4.75rem;
+  font-size: var(--t-4xl);
   font-weight: 800;
   line-height: 0.95;
 }
 .total .cents {
-  font-size: 2.125rem;
+  font-size: var(--t-2xl);
   font-weight: 700;
 }
 .total .dash {
-  font-size: 4.75rem;
+  font-size: var(--t-4xl);
   font-weight: 800;
   line-height: 0.95;
 }
@@ -215,14 +230,14 @@ button {
 }
 .delta .v {
   display: block;
-  font-size: 1.875rem;
+  font-size: var(--t-xl);
   line-height: 1;
 }
 .delta .n {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   font-weight: 600;
   margin-top: 2px;
 }
@@ -244,7 +259,7 @@ button {
 }
 .hint {
   margin-top: 6px;
-  font-size: 1rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 
@@ -254,7 +269,7 @@ button {
 }
 .trail h2 {
   margin: 0 0 2px;
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   font-weight: 600;
   color: var(--text);
 }
@@ -266,7 +281,7 @@ button {
   height: 28px;
 }
 .row .k {
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
 }
 .bar {
   height: 12px;
@@ -288,7 +303,7 @@ button {
   background: var(--down);
 }
 .row .a {
-  font-size: 1.375rem;
+  font-size: var(--t-lg);
   text-align: right;
 }
 .row .a.up {
@@ -317,7 +332,7 @@ button {
   align-items: center;
   gap: 4px 8px;
   padding-top: 10px;
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 .seg {
@@ -330,7 +345,7 @@ button {
   white-space: nowrap;
   min-height: 36px;
   padding: 0 12px;
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   font-weight: 600;
   color: var(--ink-2);
 }
@@ -346,7 +361,7 @@ button {
   white-space: nowrap;
   min-height: 36px;
   padding: 0 4px;
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -371,11 +386,11 @@ button {
   background: var(--panel);
 }
 .field .l {
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 .field .v {
-  font-size: 2rem;
+  font-size: var(--t-xl);
   line-height: 1.05;
   white-space: nowrap;
 }
@@ -397,7 +412,7 @@ button {
 }
 .tabs button {
   height: 56px;
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   font-weight: 600;
   color: var(--ink-2);
   border-top: 3px solid transparent;
@@ -424,12 +439,12 @@ button {
 }
 .sheet h3 {
   margin: 0;
-  font-size: 1.125rem;
+  font-size: var(--t-md);
   font-weight: 700;
 }
 .sheet p {
   margin: 2px 0 0;
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 .chips {
@@ -454,12 +469,12 @@ button {
   border-color: var(--text);
 }
 .chip .l {
-  font-size: 0.8125rem;
+  font-size: var(--t-xs);
   color: var(--ink-2);
   line-height: 1.1;
 }
 .chip .v {
-  font-size: 1.25rem;
+  font-size: var(--t-md);
   line-height: 1.1;
 }
 .stepper {
@@ -473,7 +488,7 @@ button {
   height: 44px;
   border: 1.5px solid var(--edge);
   border-radius: 8px;
-  font-size: 1.5rem;
+  font-size: var(--t-lg);
   line-height: 1;
 }
 .stepper button:disabled {
@@ -483,7 +498,7 @@ button {
 .stepper .months {
   flex: 1;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: var(--t-lg);
 }
 .entry {
   display: flex;
@@ -493,7 +508,7 @@ button {
   margin: 6px 0 8px;
 }
 .entry .v {
-  font-size: 2.75rem;
+  font-size: var(--t-3xl);
   font-weight: 800;
   line-height: 1;
 }
@@ -509,8 +524,8 @@ button {
   font-weight: 600;
 }
 .btn.primary {
-  background: #f5c400;
-  border-color: #f5c400;
+  background: var(--yellow);
+  border-color: var(--yellow);
   color: var(--on-yellow);
   font-weight: 700;
 }
@@ -524,10 +539,10 @@ button {
   border-radius: 8px;
   background: var(--panel);
   border: 1px solid var(--line);
-  font-size: 1.875rem;
+  font-size: var(--t-xl);
 }
 .keys button.fn {
-  font-size: 1.125rem;
+  font-size: var(--t-md);
   font-family: var(--font-text);
   font-weight: 600;
 }
@@ -535,7 +550,7 @@ button {
 /* ---------- Secondary views (Compare, Target, Ask) ---------- */
 .view h2 {
   margin: 0 0 6px;
-  font-size: 1.0625rem;
+  font-size: var(--t-md);
   font-weight: 700;
 }
 .view + .view {
@@ -543,7 +558,7 @@ button {
 }
 .view .headline {
   margin: 8px 0 12px;
-  font-size: 1.0625rem;
+  font-size: var(--t-md);
   line-height: 1.4;
 }
 .measure {
@@ -551,14 +566,14 @@ button {
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
   flex-wrap: wrap;
 }
 .cmp {
   width: 100%;
   border-collapse: collapse;
-  font-size: 1rem;
+  font-size: var(--t-sm);
 }
 .cmp th,
 .cmp td {
@@ -576,7 +591,7 @@ button {
   font-weight: 700;
 }
 .cmp td.n {
-  font-size: 1.5rem;
+  font-size: var(--t-lg);
 }
 .mark {
   display: inline-block;
@@ -585,7 +600,7 @@ button {
   border: 1.5px solid var(--down);
   border-radius: 4px;
   font-family: var(--font-text);
-  font-size: 0.75rem;
+  font-size: var(--t-xs);
   font-weight: 700;
   color: var(--down);
   vertical-align: middle;
@@ -599,27 +614,27 @@ button {
 }
 .card b {
   display: block;
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
   font-weight: 600;
 }
 .card .big {
-  font-size: 1.0625rem;
+  font-size: var(--t-md);
   line-height: 1.4;
 }
 .askbox {
   white-space: pre-wrap;
-  font-size: 1.0625rem;
+  font-size: var(--t-md);
   line-height: 1.5;
 }
 .view .intro {
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
   margin: 0 0 4px;
 }
 .note {
   margin-top: 14px;
-  font-size: 0.8125rem;
+  font-size: var(--t-xs);
   color: var(--ink-2);
 }
 
@@ -641,23 +656,23 @@ button {
 @media (max-height: 620px) {
   .total .big,
   .total .dash {
-    font-size: 3.75rem;
+    font-size: var(--t-3xl);
   }
   .total .cents {
-    font-size: 1.75rem;
+    font-size: var(--t-xl);
   }
   .delta .v {
-    font-size: 1.625rem;
+    font-size: var(--t-xl);
   }
   .field .v {
-    font-size: 1.75rem;
+    font-size: var(--t-xl);
   }
   .field {
     min-height: 54px;
   }
   .keys button {
     height: 44px;
-    font-size: 1.625rem;
+    font-size: var(--t-xl);
   }
   .sheet p {
     display: none;
@@ -682,7 +697,7 @@ button {
     padding-top: 6px;
   }
   .entry .v {
-    font-size: 2.25rem;
+    font-size: var(--t-2xl);
   }
 }
 
@@ -703,10 +718,10 @@ button {
     padding-top: 4px;
   }
   .brand {
-    font-size: 1rem;
+    font-size: var(--t-sm);
   }
   .tag {
-    font-size: 0.75rem;
+    font-size: var(--t-xs);
   }
   .tools {
     gap: 4px;
@@ -719,13 +734,13 @@ button {
     padding: 6px 10px;
   }
   .field .v {
-    font-size: 1.625rem;
+    font-size: var(--t-xl);
   }
   .row {
     grid-template-columns: 5rem minmax(0, 1fr) auto;
   }
   .row .a {
-    font-size: 1.25rem;
+    font-size: var(--t-md);
   }
   .editing .label {
     display: none;
@@ -787,7 +802,7 @@ button {
     font-size: min(8vh, 4rem);
   }
   .field .l {
-    font-size: 1.125rem;
+    font-size: var(--t-md);
   }
   .result {
     padding: 0 0 24px;
@@ -800,13 +815,13 @@ button {
     font-size: min(8vh, 3.2vw, 4.75rem);
   }
   .lbl {
-    font-size: 1.0625rem;
+    font-size: var(--t-md);
   }
   .delta .v {
     font-size: min(7vh, 3.5rem);
   }
   .delta .n {
-    font-size: 1.0625rem;
+    font-size: var(--t-md);
   }
   .trail {
     flex: 1;
@@ -816,7 +831,7 @@ button {
     border-bottom: 0;
   }
   .trail h2 {
-    font-size: 1.0625rem;
+    font-size: var(--t-md);
   }
   .trail .row {
     flex: 1;
@@ -828,13 +843,13 @@ button {
     font-size: min(5vh, 2.5rem);
   }
   .row .k {
-    font-size: 1.1875rem;
+    font-size: var(--t-md);
   }
   .bar {
     height: min(2.2vh, 1.25rem);
   }
   .view h2 {
-    font-size: 1.125rem;
+    font-size: var(--t-md);
   }
   .sheet {
     left: auto;

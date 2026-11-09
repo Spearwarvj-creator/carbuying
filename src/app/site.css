@@ -62,7 +62,7 @@ a.brand {
 .s-brand {
   font-family: var(--font-num);
   font-weight: 800;
-  font-size: 1.875rem;
+  font-size: var(--t-xl);
   line-height: 1;
   letter-spacing: 0.01em;
   color: var(--text);
@@ -120,7 +120,7 @@ a.brand {
   background: var(--text);
   color: var(--ground);
   font-weight: 700;
-  font-size: 1.0625rem;
+  font-size: var(--t-md);
   text-decoration: none;
   text-align: center;
   transition: background-color 0.15s, color 0.15s;
@@ -141,12 +141,12 @@ a.brand {
 .s-btn-sm {
   min-height: 44px;
   padding: 0 1.125rem;
-  font-size: 1rem;
+  font-size: var(--t-sm);
 }
 .s-btn-lg {
   min-height: 64px;
   padding: 0 2.25rem;
-  font-size: 1.25rem;
+  font-size: var(--t-md);
 }
 
 /* ---------- Type ---------- */
@@ -160,25 +160,25 @@ a.brand {
   overflow-wrap: anywhere;
 }
 .s-h1 {
-  font-size: clamp(3rem, 6.6vw, 7.5rem);
+  font-size: var(--f-display);
   line-height: 0.92;
 }
 .s-h1-doc {
-  font-size: clamp(2.75rem, 5vw, 5.5rem);
+  font-size: var(--f-title);
 }
 .s-h2 {
-  font-size: clamp(2.5rem, 4.2vw, 4.75rem);
+  font-size: var(--f-title);
   line-height: 0.95;
 }
 .s-h3 {
   margin: 0 0 0.5rem;
-  font-size: 1.25rem;
+  font-size: var(--t-md);
   font-weight: 700;
 }
 .s-lead {
   margin: 1.5rem 0 0;
   max-width: 36rem;
-  font-size: clamp(1.1875rem, 1.6vw, 1.5rem);
+  font-size: var(--f-lead);
   line-height: 1.45;
   color: var(--ink-2);
   text-wrap: pretty;
@@ -186,7 +186,7 @@ a.brand {
 .s-prose {
   margin: 1rem 0 0;
   max-width: 38rem;
-  font-size: 1.125rem;
+  font-size: var(--t-md);
   line-height: 1.55;
   color: var(--ink-2);
   text-wrap: pretty;
@@ -208,12 +208,12 @@ a.brand {
 }
 .s-fine {
   margin: 1.25rem 0 0;
-  font-size: 1rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 .s-meta {
   margin: 1rem 0 0;
-  font-size: 1rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 
@@ -242,7 +242,7 @@ a.brand {
 }
 .s-readout-h {
   margin: 0 0 1.25rem;
-  font-size: 1.0625rem;
+  font-size: var(--t-md);
   font-weight: 600;
   color: var(--ink-2);
 }
@@ -262,18 +262,18 @@ a.brand {
 }
 .s-offer h3 {
   margin: 0 0 0.875rem;
-  font-size: 1.25rem;
+  font-size: var(--t-md);
   font-weight: 700;
 }
 .s-offer-m {
   display: block;
-  font-size: 1rem;
+  font-size: var(--t-sm);
   font-weight: 400;
   color: var(--ink-2);
 }
 .s-k {
   margin: 0;
-  font-size: 1rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 .s-k-total {
@@ -281,7 +281,7 @@ a.brand {
 }
 .s-v {
   display: block;
-  font-size: clamp(2.25rem, 3.6vw, 3.75rem);
+  font-size: var(--f-num-lg);
   font-weight: 700;
   line-height: 1;
 }
@@ -300,12 +300,12 @@ a.brand {
   border-radius: 4px;
 }
 .s-total-big {
-  font-size: clamp(2.5rem, 4.6vw, 5rem);
+  font-size: var(--f-num-xl);
   font-weight: 800;
   line-height: 0.95;
 }
 .s-total-cents {
-  font-size: clamp(1.375rem, 2vw, 2.25rem);
+  font-size: var(--f-num-md);
   font-weight: 700;
 }
 .s-delta {
@@ -313,7 +313,7 @@ a.brand {
   align-items: center;
   gap: 6px;
   margin: 0.5rem 0 0;
-  font-size: 1rem;
+  font-size: var(--t-sm);
   font-weight: 600;
 }
 .s-delta.down {
@@ -324,7 +324,7 @@ a.brand {
 }
 .s-base {
   margin: 0.5rem 0 0;
-  font-size: 1rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 
@@ -335,7 +335,7 @@ a.brand {
 }
 .s-moved h3 {
   margin: 0 0 0.5rem;
-  font-size: 1.0625rem;
+  font-size: var(--t-md);
   font-weight: 600;
 }
 .s-row {
@@ -346,7 +346,7 @@ a.brand {
   min-height: 2.5rem;
 }
 .s-row-k {
-  font-size: 1rem;
+  font-size: var(--t-sm);
 }
 .s-bar {
   height: 14px;
@@ -368,7 +368,7 @@ a.brand {
   background: var(--down);
 }
 .s-row-a {
-  font-size: 1.625rem;
+  font-size: var(--t-xl);
   text-align: right;
 }
 .s-row-a.up {
@@ -404,7 +404,7 @@ a.brand {
 .s-table caption {
   padding: 0 0 0.75rem;
   text-align: left;
-  font-size: 1rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 .s-table th,
@@ -415,20 +415,20 @@ a.brand {
   font-weight: 400;
 }
 .s-table thead th {
-  font-size: 1rem;
+  font-size: var(--t-sm);
   font-weight: 700;
   color: var(--text);
 }
 .s-table tbody th {
   text-align: left;
   color: var(--ink-2);
-  font-size: 1.0625rem;
+  font-size: var(--t-md);
 }
 .s-table th:first-child {
   text-align: left;
 }
 .s-table td {
-  font-size: clamp(1.375rem, 2.2vw, 2rem);
+  font-size: var(--f-num-md);
   font-weight: 700;
   line-height: 1.1;
 }
@@ -444,7 +444,7 @@ a.brand {
 }
 .s-table td.chg .same {
   font-family: var(--font-text);
-  font-size: 1rem;
+  font-size: var(--t-sm);
   font-weight: 400;
   color: var(--ink-2);
 }
@@ -477,12 +477,12 @@ a.brand {
     content: attr(data-label);
     display: block;
     font-family: var(--font-text);
-    font-size: 0.8125rem;
+    font-size: var(--t-xs);
     font-weight: 400;
     color: var(--ink-2);
   }
   .s-table td {
-    font-size: 1.25rem;
+    font-size: var(--t-md);
   }
 }
 
@@ -509,14 +509,14 @@ a.brand {
 }
 .s-steps h3 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: var(--t-lg);
   font-weight: 700;
   line-height: 1.2;
 }
 .s-steps p {
   margin: 0.5rem 0 0;
   max-width: 38rem;
-  font-size: 1.125rem;
+  font-size: var(--t-md);
   color: var(--ink-2);
   text-wrap: pretty;
 }
@@ -530,7 +530,7 @@ a.brand {
 .s-asks li {
   padding: 1rem 0;
   border-bottom: 1px solid var(--line);
-  font-size: clamp(1.375rem, 2.2vw, 2.125rem);
+  font-size: var(--f-num-md);
   line-height: 1.25;
 }
 .s-asks li:first-child {
@@ -553,7 +553,7 @@ a.brand {
 .s-list li {
   padding: 0.75rem 0;
   border-top: 1px solid var(--line);
-  font-size: 1.125rem;
+  font-size: var(--t-md);
   color: var(--ink-2);
   text-wrap: pretty;
 }
@@ -594,7 +594,7 @@ a.brand {
 }
 .s-toc h2 {
   margin: 0 0 0.5rem;
-  font-size: 1rem;
+  font-size: var(--t-sm);
   font-weight: 600;
   color: var(--ink-2);
 }
@@ -631,14 +631,14 @@ a.brand {
 }
 .s-doc-body h2 {
   margin: 0 0 0.75rem;
-  font-size: clamp(1.625rem, 2.4vw, 2.25rem);
+  font-size: var(--f-num-md);
   font-weight: 700;
   line-height: 1.15;
 }
 .s-doc-body p,
 .s-doc-body li {
   max-width: 42rem;
-  font-size: 1.125rem;
+  font-size: var(--t-md);
   line-height: 1.6;
   color: var(--ink-2);
   text-wrap: pretty;
@@ -666,13 +666,13 @@ a.brand {
 }
 .s-doc-body dt {
   font-weight: 700;
-  font-size: 1.1875rem;
+  font-size: var(--t-md);
   color: var(--text);
 }
 .s-doc-body dd {
   margin: 0.25rem 0 0;
   max-width: 42rem;
-  font-size: 1.125rem;
+  font-size: var(--t-md);
   color: var(--ink-2);
 }
 .s-doc-body .s-table {
@@ -702,13 +702,13 @@ a.brand {
   margin: 0;
   font-family: var(--font-num);
   font-weight: 800;
-  font-size: 2.5rem;
+  font-size: var(--t-2xl);
   line-height: 1;
 }
 .s-foot-blurb {
   margin: 0.75rem 0 0;
   max-width: 24rem;
-  font-size: 1.125rem;
+  font-size: var(--t-md);
   color: var(--ink-2);
 }
 .s-foot-cols {
@@ -718,7 +718,7 @@ a.brand {
 }
 .s-foot-cols h2 {
   margin: 0 0 0.5rem;
-  font-size: 1rem;
+  font-size: var(--t-sm);
   font-weight: 600;
   color: var(--ink-2);
 }
@@ -743,7 +743,7 @@ a.brand {
   margin-top: 2.5rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--line);
-  font-size: 0.9375rem;
+  font-size: var(--t-sm);
   color: var(--ink-2);
 }
 .s-foot-base p {
@@ -785,4 +785,8 @@ a.brand {
   .s-foot-cols {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.s-sec-head .s-readout {
+  margin-top: 1.75rem;
 }

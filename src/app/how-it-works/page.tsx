@@ -21,6 +21,13 @@ export default function HowItWorks() {
 
   return (
     <DocPage current="how" title={h.h1} lead={h.lead} contents={contents} contentsLabel={h.contents}>
+      <section id="modes" aria-labelledby="modes-h">
+        <h2 id="modes-h">{h.sections.modes}</h2>
+        {h.modes.map((t) => (
+          <p key={t}>{t}</p>
+        ))}
+      </section>
+
       <section id="boxes" aria-labelledby="boxes-h">
         <h2 id="boxes-h">{h.sections.boxes}</h2>
         <p>{h.boxes.intro}</p>

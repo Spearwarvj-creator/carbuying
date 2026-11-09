@@ -6,6 +6,7 @@ import "@fontsource/sofia-sans-extra-condensed/700.css";
 import "@fontsource/sofia-sans-extra-condensed/800.css";
 import "./globals.css";
 import "./site.css";
+import "./walk.css";
 
 export const metadata: Metadata = {
   title: { default: "Deal Desk", template: "%s | Deal Desk" },

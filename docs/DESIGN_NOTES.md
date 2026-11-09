@@ -69,3 +69,20 @@ The calculator is now at `/deal`. The pages around it are `/` (landing), `/how-i
 Checked: no horizontal overflow on all six site pages at 320, 375, 414, 768, 1024, 1440, 1920, 2560 and 3840 pixels wide (measured in frames of each width). The calculator main view fits without scrolling at 320 by 568, 375 by 667, 414 by 896 and 768 by 1024. Not yet run: screen reader pass, keyboard-only pass, axe, Lighthouse.
 
 Legal pages (privacy, terms, accessibility) are drafts written from PLAN.md section 5 and the current build. They need the owner's review, and a confirmed contact address, before launch.
+
+## Phase 1 of the Walk (added 2026-11-09)
+
+What changed, and why. The research behind it is in `UX_RESEARCH_AND_PLAN.md` and `LIVE_UI_RESEARCH_2026-11.md`.
+
+- **Two views of one set of numbers.** `/deal` opens the Walk on a first visit. The Desk (the grid) is one tap away in the header, and the choice is kept on the device (`src/lib/mode.ts`). Both edit the same store, so switching loses nothing.
+- **The Walk.** A front door with three entries (thinking about it, I have a quote, I am at the desk), then six steps with one question each, one picture and one number. A running summary bar stays at the bottom and shows the most complete number known so far: the out-the-door price first, the total once the loan is known. The "about to sign" door is left out until the contract checker exists.
+- **Ten-second check.** Two numbers the dealer already said (payment and months) give one fact back: what the payments add up to. It is the landing page's main interaction and the Walk's first screen on the payment path.
+- **Graphics, all informative.** Payment strip (one block per payment, a row per year, blocks in the interest colour show the share that is interest, with a written key). Money bar (car, tax and fees, extras, old loan added, interest, adding up to the total to the cent). Four-box worksheet. Every picture has a sentence and a key; none uses colour alone.
+- **Terms on tap.** Twelve terms in `src/data/strings/terms.ts`, each with a plain heading, the paperwork word, two sentences and one thing to ask. They open as real popovers beside the word (anchor positioning where available, a bottom card on phones). The verdict lists the questions for the terms the buyer opened.
+- **Engine additions** (`src/engine/breakdown.ts`, 14 tests): payments add up, cost breakdown, the real cost of extras, payment equivalents, amortisation schedule, price from payment. The breakdown is checked on 10,000 seeded deals and matches the golden example to the cent.
+- **Tokens.** Colours are declared once with `light-dark()`. One type scale: nine named steps plus six fluid sizes for the site pages (45 distinct sizes before). The categorical colours for the bar and strip have measured contrast; the fees colour was changed after a failing measurement (2.34 on the light ground).
+- **Yellow** stays reserved for the total. The Walk's Next button uses ink.
+- **Motion from the platform.** View Transitions on step changes (with the running total named so it morphs), `@starting-style` on term cards, `sibling-index()` stagger on the strip. All switch off for reduced motion.
+- **Not used, on purpose:** `contrast-color()` (the tinted ink on yellow is a chosen colour), interest invokers and `text-fit` (Chrome only), cross-document view transitions (no Firefox).
+
+Known gaps after Phase 1: a step on a 375 by 667 phone can scroll inside its own area (loan step by about 120 pixels, price step by about 57); the Desk's right column still scrolls on desktop widths; the Desk scrolls on landscape phones; the reduced-motion rules are written but I could not switch the setting in the test browser to watch them; keyboard-only, screen reader and axe passes are not done; term cards have no pictures yet; the car illustration question is open.

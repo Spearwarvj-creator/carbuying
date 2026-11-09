@@ -1,0 +1,142 @@
+/**
+ * Words in the Walk, the guided path. Plain words, sentence case, active voice.
+ * Figures are passed in from the engine and set in the numeral face by the caller.
+ */
+export const walk = {
+  mode: { label: "View", walk: "Walk", desk: "Desk", walkHint: "Step by step", deskHint: "Everything at once" },
+  back: "Back",
+  next: "Next",
+  skip: "I know this, skip",
+  startOver: "Start over",
+  stepOf: (n: number, total: number) => `Step ${n} of ${total}`,
+
+  door: {
+    title: "What are you looking at right now?",
+    sub: "Pick the one that fits. You can change your mind at any time.",
+    think: { title: "I am thinking about buying", body: "Check what a monthly payment adds up to." },
+    quote: { title: "I have a quote", body: "Walk through it, one step at a time." },
+    desk: { title: "I am at the desk", body: "Type the numbers as the dealer changes them." },
+    gridLink: "Skip the steps and open the Desk",
+  },
+
+  check: {
+    title: "What did the dealer say?",
+    paymentLabel: "Monthly payment",
+    monthsLabel: "Months",
+    downLabel: "Paid up front",
+    optional: "optional",
+    result: (total: string, months: number) => `Over ${months} months, that adds up to ${total}.`,
+    resultDown: (total: string, months: number, down: string) => `Over ${months} months, plus ${down} up front, that adds up to ${total}.`,
+    captionStrip: (months: number) => `Each block is one of your ${months} payments.`,
+    prompt: "That is what you pay in payments alone. The price of the car is only part of it.",
+    cta: "See where the money goes",
+    empty: "Enter a payment to see what it adds up to.",
+  },
+
+  stage1: {
+    title: "What did the dealer say first?",
+    sub: "Dealers often work from four numbers at once. Pick the one they started with.",
+    payment: "A monthly payment",
+    price: "A price",
+    boxes: { price: "Price", trade: "Trade-in", down: "Down payment", pay: "Monthly payment" },
+    caption: "Each box can move against another. That is why a single change is hard to see.",
+    payFields: "Tell us the payment and how many months.",
+    payAdds: "Next, let us find the full price behind that payment.",
+  },
+  stage2: {
+    title: "What is the full price to drive away?",
+    sub: "On the worksheet, look for the selling price. Tax and fees are listed apart from it.",
+    price: "Selling price",
+    tax: "Sales tax",
+    fees: "Fees",
+    feesHint: "Doc fee and any others, added together.",
+    numberLabel: "Out-the-door price",
+    barCaption: "Price, tax and fees together make the out-the-door price.",
+    parts: { car: "The car", tax: "Sales tax", fees: "Fees" },
+  },
+  stage3: {
+    title: "What extras did they add?",
+    sub: "Extras are products added to the deal, like a service contract or window etching. Add them up.",
+    addons: "Extras",
+    none: "No extras",
+    numberLabel: "Extras, with tax",
+    caption: "Extras are financed with the car, so they collect interest too. You will see how much on the last step.",
+    noneNote: "No extras on this quote. Good: nothing to question here.",
+  },
+  stage4: {
+    title: "How long is the loan, and what is the rate?",
+    sub: "These two numbers decide how much interest you pay.",
+    months: "Months",
+    apr: "Rate (APR)",
+    numberLabel: "You would pay in total",
+    interestShare: (share: number) => `About ${share} of every 100 dollars you pay in payments goes to interest.`,
+    stripCaption: (months: number, interestBlocks: number) =>
+      `${months} payments. About ${interestBlocks} of them stand for the share that is interest.`,
+    stripKey: { loan: "Paid toward the loan", interest: "Interest" },
+    mismatch: (mine: string, theirs: string) =>
+      `With these numbers the payment comes to ${mine} a month. The dealer said ${theirs}. A gap can come from fees, extras or a different rate, so ask what is in that payment.`,
+    match: (theirs: string) => `That matches the ${theirs} a month the dealer said.`,
+    needRate: "Enter the rate to see the total.",
+    guess: {
+      title: "Quick guess, if you like",
+      askLonger: (m: number) => `If the loan were ${m} months instead, would the total you pay be higher or lower?`,
+      askShorter: (m: number) => `If the loan were ${m} months instead, would the total you pay be higher or lower?`,
+      higher: "Higher",
+      same: "About the same",
+      lower: "Lower",
+      revealMore: (diff: string, pay: string, months: number) =>
+        `Higher. At ${months} months you would pay ${diff} more in total, though the payment would be ${pay} lower.`,
+      revealLess: (diff: string, pay: string, months: number) =>
+        `Lower. At ${months} months you would pay ${diff} less in total, though the payment would be ${pay} higher.`,
+      note: "There is no score. Longer loans usually cost more in total, even when the payment looks smaller.",
+    },
+  },
+  stage5: {
+    title: "What about your trade-in and down payment?",
+    sub: "Skip any that do not apply. A trade-in lowers what you borrow, and what you still owe on it comes out of that credit.",
+    down: "Down payment",
+    allowance: "Trade-in value",
+    payoff: "Still owed on it",
+    numberLabel: "The loan you borrow",
+    noTrade: "No trade-in",
+    ahead: (amount: string) => `Your trade is worth ${amount} more than you owe, so it lowers the loan.`,
+    behind: (amount: string) => `You owe ${amount} more than the trade is worth. That amount is added to your new loan, and you pay interest on it.`,
+    even: "Your trade is worth about what you owe.",
+  },
+  stage6: {
+    title: "Here is your deal",
+    totalLabel: "You would pay in total",
+    interestLine: (share: number) => `About ${share} of every 100 dollars is interest.`,
+    extrasLine: (cost: string, plus: string) => `The extras cost ${cost} over the loan, once tax and interest are counted. That is ${plus}.`,
+    paymentsEq: (n: number) => `about ${n} of your monthly payments`,
+    showMath: "Show the math",
+    parts: { car: "The car", taxFees: "Tax and fees", extras: "Extras", rolled: "Old loan added", interest: "Interest" },
+    words: "Words you met",
+    compare: "Add a second offer to compare",
+    again: "Start over",
+    desk: "Open the Desk",
+    askHeading: "Questions to ask, from the terms you opened",
+  },
+
+  need: {
+    1: "Pick where the dealer started, and enter the payment if you chose that.",
+    2: "Enter the selling price to continue.",
+    4: "Enter the rate to continue.",
+  } as Record<number, string>,
+
+  bar: {
+    open: "See the parts",
+    close: "Close",
+    nothing: "Your total will appear here as you go.",
+    partsHeading: "So far",
+    price: "Selling price",
+    tax: "Sales tax",
+    fees: "Fees",
+    extras: "Extras",
+    interest: "Interest",
+    total: "Total you pay",
+    otd: "Out-the-door price",
+  },
+
+  term: { ask: "What to ask", close: "Got it" },
+} as const;

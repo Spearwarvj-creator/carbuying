@@ -6,6 +6,7 @@ import { useDeal, type TabKey } from "@/store/deal";
 import { Boxes } from "./Boxes";
 import { EntrySheet } from "./EntrySheet";
 import { Prefs } from "./Prefs";
+import { ModeSwitch } from "./walk/WalkScreen";
 import { Result, Trail } from "./Result";
 import { AskView, CompareView, TargetView } from "./Views";
 
@@ -23,6 +24,7 @@ export function DealScreen() {
           {en.appName}
         </Link>
         <span className="tag">{example ? en.exampleTag : en.yourDealTag}</span>
+        <ModeSwitch />
         <Prefs />
       </header>
 

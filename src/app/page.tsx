@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExampleReadout } from "@/components/site/ExampleReadout";
+import { HeroCheck } from "@/components/site/HeroCheck";
+import { FourSquare } from "@/components/walk/graphics";
 import { ExampleTable } from "@/components/site/ExampleTable";
 import { SitePage } from "@/components/site/SitePage";
 import { leverLine } from "@/components/lever-line";
@@ -41,7 +43,20 @@ export default function Home() {
           </div>
           <p className="s-fine">{h.note}</p>
         </div>
-        <ExampleReadout />
+        <HeroCheck />
+      </section>
+
+      <section className="s-sec s-wrap" aria-labelledby="four-h">
+        <div className="s-sec-head">
+          <h2 id="four-h" className="s-h2">
+            {h.fourSquare.h2}
+          </h2>
+          <p className="s-prose">{h.fourSquare.p1}</p>
+          <p className="s-prose">{h.fourSquare.p2}</p>
+        </div>
+        <div className="s-sec-body">
+          <FourSquare />
+        </div>
       </section>
 
       <section className="s-sec s-wrap" aria-labelledby="story-h">
@@ -61,6 +76,7 @@ export default function Home() {
             />
           </p>
           <p className="s-prose">{h.story.p2}</p>
+          <ExampleReadout />
         </div>
         <div className="s-sec-body">
           <ExampleTable />

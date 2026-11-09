@@ -23,6 +23,10 @@ interface DealState {
   open: (box: BoxKey) => void;
   close: () => void;
   useMine: () => void;
+  /** Start the Walk with one blank quote in Offer 1. */
+  startQuote: () => void;
+  /** Copy Offer 1 into Offer 2 so a second offer can be edited and compared. */
+  addSecondOffer: () => void;
   seeExample: () => void;
   setTab: (tab: TabKey) => void;
   setMetric: (metric: Metric) => void;
@@ -46,6 +50,8 @@ export const useDeal = create<DealState>((set) => ({
   open: (box) => set({ openBox: box }),
   close: () => set((s) => ({ openBox: null, drawKey: s.drawKey + 1 })),
   useMine: () => set((s) => ({ offers: [blank(), blank()], example: false, editing: 0, openBox: "price", drawKey: s.drawKey + 1 })),
+  startQuote: () => set((s) => ({ offers: [blank(), blank()], example: false, editing: 0, openBox: null, drawKey: s.drawKey + 1 })),
+  addSecondOffer: () => set((s) => ({ offers: [s.offers[0], { ...s.offers[0] }], example: false, editing: 1, openBox: null, tab: "deal", drawKey: s.drawKey + 1 })),
   seeExample: () => set((s) => ({ offers: EXAMPLE_OFFERS, example: true, editing: 1, openBox: null, drawKey: s.drawKey + 1 })),
   setTab: (tab) => set({ tab, openBox: null }),
   setMetric: (metric) => set({ metric }),
