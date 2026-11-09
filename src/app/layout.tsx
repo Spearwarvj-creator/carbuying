@@ -7,6 +7,7 @@ import "@fontsource/sofia-sans-extra-condensed/800.css";
 import "./globals.css";
 import "./site.css";
 import "./walk.css";
+import { Providers } from "@/components/ui/Providers";
 
 export const metadata: Metadata = {
   title: { default: "Deal Desk", template: "%s | Deal Desk" },
@@ -29,7 +30,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: prefsScript }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { Nums } from "@/components/Nums";
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
+import { Btn } from "@/components/ui/Btn";
+import { Segmented } from "@/components/ui/Segmented";
 import { walk } from "@/data/strings/walk";
 import { formatWhole, paymentsAddUp } from "@/engine";
 import { MoneyField } from "./MoneyField";
@@ -10,15 +13,7 @@ import { PaymentStrip } from "./graphics";
 export const MONTH_CHOICES = [36, 48, 60, 72, 84] as const;
 
 export function MonthChips({ value, onChange, label }: { value: number; onChange: (m: number) => void; label: string }) {
-  return (
-    <div className="chipset" role="group" aria-label={label}>
-      {MONTH_CHOICES.map((m) => (
-        <button key={m} type="button" className="chipbtn num" aria-pressed={value === m} onClick={() => onChange(m)}>
-          {m}
-        </button>
-      ))}
-    </div>
-  );
+  return <Segmented variant="chips" label={label} value={value} onChange={onChange} options={MONTH_CHOICES.map((m) => ({ value: m, label: m }))} />;
 }
 
 export interface CheckValues {
@@ -36,12 +31,15 @@ export function TenSecondCheck({
   onChange,
   onContinue,
   showDown = true,
+  compact = false,
   ctaLabel,
 }: {
   initial?: Partial<CheckValues>;
   onChange?: (v: CheckValues) => void;
   onContinue?: (v: CheckValues) => void;
   showDown?: boolean;
+  /** Only the figure, without the strip and the hint. Used inside a step that has its own pictures. */
+  compact?: boolean;
   ctaLabel?: string;
 }) {
   const t = walk.check;
@@ -84,28 +82,25 @@ export function TenSecondCheck({
         )}
       </div>
 
-      <div className="check-out" aria-live="polite">
+      <div className="check-out">
         {ready ? (
           <>
             <p className="check-line">
-              <Nums
-                text={
-                  down > 0
-                    ? t.resultDown(formatWhole(total), months, formatWhole(down))
-                    : t.result(formatWhole(total), months)
-                }
-              />
+              <Nums text={down > 0 ? t.resultDown(months, formatWhole(down)) : t.result(months)} />
             </p>
-            <PaymentStrip months={months} caption={t.captionStrip(months)} />
-            <p className="hint">{t.prompt}</p>
+            <p className="check-total num" aria-live="polite">
+              <AnimatedNumber value={total} format={formatWhole} />
+            </p>
+            {!compact && <PaymentStrip months={months} caption={t.captionStrip(months)} />}
+            {!compact && <p className="hint">{t.prompt}</p>}
           </>
         ) : (
           <p className="hint">{t.empty}</p>
         )}
         {onContinue && (
-          <button type="button" className="go" disabled={!ready} onClick={() => onContinue({ pay, months, down })}>
+          <Btn variant="primary" arrow aria-disabled={!ready} disabled={!ready} onClick={() => onContinue({ pay, months, down })}>
             {ctaLabel ?? t.cta}
-          </button>
+          </Btn>
         )}
       </div>
     </div>

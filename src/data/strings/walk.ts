@@ -5,6 +5,7 @@
 export const walk = {
   mode: { label: "View", walk: "Walk", desk: "Desk", walkHint: "Step by step", deskHint: "Everything at once" },
   back: "Back",
+  stepNames: ["Start", "Price", "Extras", "Loan", "Trade-in", "Your deal"] as readonly string[],
   next: "Next",
   skip: "I know this, skip",
   startOver: "Start over",
@@ -17,6 +18,7 @@ export const walk = {
     quote: { title: "I have a quote", body: "Walk through it, one step at a time." },
     desk: { title: "I am at the desk", body: "Type the numbers as the dealer changes them." },
     gridLink: "Skip the steps and open the Desk",
+    reassure: ["No account", "Numbers stay on your device"] as readonly string[],
   },
 
   check: {
@@ -25,8 +27,8 @@ export const walk = {
     monthsLabel: "Months",
     downLabel: "Paid up front",
     optional: "optional",
-    result: (total: string, months: number) => `Over ${months} months, that adds up to ${total}.`,
-    resultDown: (total: string, months: number, down: string) => `Over ${months} months, plus ${down} up front, that adds up to ${total}.`,
+    result: (months: number) => `Over ${months} months, that adds up to`,
+    resultDown: (months: number, down: string) => `Over ${months} months, plus ${down} up front, that adds up to`,
     captionStrip: (months: number) => `Each block is one of your ${months} payments.`,
     prompt: "That is what you pay in payments alone. The price of the car is only part of it.",
     cta: "See where the money goes",
@@ -37,7 +39,9 @@ export const walk = {
     title: "What did the dealer say first?",
     sub: "Dealers often work from four numbers at once. Pick the one they started with.",
     payment: "A monthly payment",
+    paymentSub: "Like 522 a month",
     price: "A price",
+    priceSub: "Like 31,500 for the car",
     boxes: { price: "Price", trade: "Trade-in", down: "Down payment", pay: "Monthly payment" },
     caption: "Each box can move against another. That is why a single change is hard to see.",
     payFields: "Tell us the payment and how many months.",

@@ -501,11 +501,14 @@ a.brand {
 .s-steps li:first-child {
   padding-top: 0;
 }
-.s-step-n {
-  font-size: clamp(3.5rem, 6vw, 6rem);
-  font-weight: 800;
-  line-height: 0.85;
-  color: var(--ink-2);
+.s-steps .s-step-ico {
+  width: clamp(3.25rem, 5vw, 5rem);
+  height: clamp(3.25rem, 5vw, 5rem);
+  border-radius: clamp(14px, 1.6vw, 22px);
+}
+.s-steps .s-step-ico svg {
+  width: 48%;
+  height: 48%;
 }
 .s-steps h3 {
   margin: 0;
@@ -789,4 +792,31 @@ a.brand {
 
 .s-sec-head .s-readout {
   margin-top: 1.75rem;
+}
+
+
+/* Sections ease in as they scroll into view. Scroll-driven animation runs on the compositor with no
+ * script. It plays once, from the section's first edge to a little way in, and uses translate (not
+ * transform) so nothing is left holding a containing block. Off for reduced motion. */
+@supports (animation-timeline: view()) {
+  .s-sec-head,
+  .s-sec-body,
+  .s-close {
+    animation: s-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 5% entry 40%;
+  }
+}
+@keyframes s-reveal {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .s-sec-head,
+  .s-sec-body,
+  .s-close {
+    animation: none;
+  }
 }

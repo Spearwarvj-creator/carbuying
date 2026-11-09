@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 import { Nums } from "@/components/Nums";
 import { TERMS } from "@/data/strings/terms";
 import { walk } from "@/data/strings/walk";
@@ -17,9 +17,14 @@ import {
 import { setMode } from "@/lib/mode";
 import { useDeal } from "@/store/deal";
 import { useWalk } from "@/store/walk";
-import { withTransition } from "@/lib/view-transition";
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
+import { Btn } from "@/components/ui/Btn";
+import { Disclosure } from "@/components/ui/Disclosure";
+import { CalendarIcon, FlagIcon, PlusBoxIcon, ReceiptIcon, SwapIcon, TagIcon, WalletIcon } from "@/components/ui/icons";
+import { Segmented } from "@/components/ui/Segmented";
+import { Slider } from "@/components/ui/Slider";
 import { MonthChips, TenSecondCheck } from "./Check";
-import { FourSquare, MoneyBar, PaymentStrip, type BarPart } from "./graphics";
+import { FourSquare, MoneyBar, PaymentStrip, ShareRing, StepBadge, type BarPart } from "./graphics";
 import { MoneyField } from "./MoneyField";
 import { Term } from "./Term";
 
@@ -41,12 +46,29 @@ export function canContinue(stage: number, startedWith: string | null, quotedPay
   return true;
 }
 
-function StageHead({ title, sub }: { title: string; sub?: string }) {
+type Tone = "car" | "tax" | "fees" | "extras" | "rolled" | "interest";
+
+function StageHead({ title, sub, icon, tone }: { title: string; sub?: string; icon?: ReactNode; tone?: Tone }) {
   return (
     <header className="stagehead">
-      <h1>{title}</h1>
-      {sub && <p className="sub">{sub}</p>}
+      {icon && <StepBadge icon={icon} tone={tone ?? "car"} />}
+      <div>
+        <h1>{title}</h1>
+        {sub && <p className="sub">{sub}</p>}
+      </div>
     </header>
+  );
+}
+
+/** The big number on the right of a step. It counts to its new value; the label names it. */
+function Readout({ label, value, tot, dup }: { label: ReactNode; value: number; tot?: boolean; dup?: boolean }) {
+  return (
+    <div className={`readout${dup ? " dup" : ""}`}>
+      <p className="big-label">{label}</p>
+      <p className={`big num${tot ? " tot" : ""}`}>
+        <AnimatedNumber value={value} format={formatWhole} />
+      </p>
+    </div>
   );
 }
 
@@ -64,15 +86,17 @@ export function Stage1() {
   return (
     <>
       <div className="col-a">
-        <StageHead title={t.title} sub={t.sub} />
-        <div className="pick" role="group" aria-label={t.title}>
-          <button type="button" aria-pressed={startedWith === "payment"} onClick={() => setStartedWith("payment")}>
-            {t.payment}
-          </button>
-          <button type="button" aria-pressed={startedWith === "price"} onClick={() => setStartedWith("price")}>
-            {t.price}
-          </button>
-        </div>
+        <StageHead title={t.title} sub={t.sub} icon={<ReceiptIcon size={26} />} tone="car" />
+        <Segmented
+          variant="cards"
+          label={t.title}
+          value={startedWith}
+          onChange={setStartedWith}
+          options={[
+            { value: "payment", label: t.payment, sub: t.paymentSub, icon: <WalletIcon size={28} /> },
+            { value: "price", label: t.price, sub: t.priceSub, icon: <TagIcon size={28} /> },
+          ]}
+        />
         <p className="learn">
           <Term k="fourSquare" />
         </p>
@@ -80,6 +104,8 @@ export function Stage1() {
           <>
             <p className="hint">{t.payFields}</p>
             <TenSecondCheck
+              compact
+              showDown={false}
               initial={{ pay: quotedPay, months: checkMonths, down: checkDown }}
               onChange={(v) => {
                 setQuote(v.pay, v.months, v.down);
@@ -109,18 +135,13 @@ export function Stage2() {
   return (
     <>
       <div className="col-a">
-        <StageHead title={t.title} sub={t.sub} />
+        <StageHead title={t.title} sub={t.sub} icon={<TagIcon size={26} />} tone="car" />
         <MoneyField label={t.price} prefix="$" value={o.price} onChange={(n) => set({ price: n })} autoFocus />
         <MoneyField label={t.tax} suffix="%" decimals={2} max={20} value={o.taxRate * 100} onChange={(n) => set({ taxRate: n / 100 })} />
         <MoneyField label={t.fees} prefix="$" value={o.fees} onChange={(n) => set({ fees: n })} hint={t.feesHint} learn={<Term k="docFee" />} />
       </div>
       <div className="col-b">
-        <p className="big-label">
-          <Term k="outTheDoor">{t.numberLabel}</Term>
-        </p>
-        <p className="big num dup" aria-live="polite">
-          {o.price > 0 ? formatWhole(d.otd) : "$0"}
-        </p>
+        <Readout label={<Term k="outTheDoor">{t.numberLabel}</Term>} value={o.price > 0 ? d.otd : 0} dup />
         {o.price > 0 && <MoneyBar parts={parts} showShare={false} />}
         <p className="hint">{t.barCaption}</p>
       </div>
@@ -141,7 +162,7 @@ export function Stage3() {
   return (
     <>
       <div className="col-a">
-        <StageHead title={t.title} sub={t.sub} />
+        <StageHead title={t.title} sub={t.sub} icon={<PlusBoxIcon size={26} />} tone="extras" />
         <MoneyField
           key={o.addons === 0 ? "none" : "has"}
           label={t.addons}
@@ -151,16 +172,13 @@ export function Stage3() {
           onChange={(n) => set({ addons: n })}
           autoFocus
         />
-        <button type="button" className="quiet" onClick={() => set({ addons: 0 })}>
+        <Btn variant="quiet" onClick={() => set({ addons: 0 })}>
           {t.none}
-        </button>
+        </Btn>
         {o.addons === 0 && <p className="hint">{t.noneNote}</p>}
       </div>
       <div className="col-b">
-        <p className="big-label">{t.numberLabel}</p>
-        <p className="big num" aria-live="polite">
-          {formatWhole(b.extrasCents / 100)}
-        </p>
+        <Readout label={t.numberLabel} value={b.extrasCents / 100} />
         <MoneyBar parts={parts} showShare={false} />
         <p className="hint">{t.caption}</p>
       </div>
@@ -191,7 +209,7 @@ export function Stage4() {
   return (
     <>
       <div className="col-a">
-        <StageHead title={t.title} sub={t.sub} />
+        <StageHead title={t.title} sub={t.sub} icon={<CalendarIcon size={26} />} tone="tax" />
         <div className="mf">
           <div className="mf-head">
             <span className="lab">{t.months}</span>
@@ -214,17 +232,28 @@ export function Stage4() {
           }}
           autoFocus
         />
+        <Slider
+          label={t.apr}
+          min={0}
+          max={25}
+          step={0.25}
+          value={o.apr}
+          format={(n) => `${n} percent`}
+          onChange={(n) => {
+            set({ apr: n });
+            setRateEntered(true);
+          }}
+        />
         {ready && (
-          <details className="guess">
-            <summary>{t.guess.title}</summary>
+          <Disclosure title={t.guess.title} className="guess">
             <p>{o.months <= 60 ? t.guess.askLonger(altMonths) : t.guess.askShorter(altMonths)}</p>
-            <div className="chipset">
-              {(["higher", "same", "lower"] as const).map((g) => (
-                <button key={g} type="button" className="chipbtn" aria-pressed={guess === g} onClick={() => setGuess(g)}>
-                  {t.guess[g]}
-                </button>
-              ))}
-            </div>
+            <Segmented
+              variant="chips"
+              label={t.guess.title}
+              value={guess}
+              onChange={setGuess}
+              options={(["higher", "same", "lower"] as const).map((g) => ({ value: g, label: t.guess[g] }))}
+            />
             {guess && (
               <p className="reveal" aria-live="polite">
                 <Nums
@@ -237,14 +266,11 @@ export function Stage4() {
                 <span className="hint">{t.guess.note}</span>
               </p>
             )}
-          </details>
+          </Disclosure>
         )}
       </div>
       <div className="col-b">
-        <p className="big-label dup">{t.numberLabel}</p>
-        <p className="big num tot dup" aria-live="polite">
-          {ready ? formatWhole(d.total) : "$0"}
-        </p>
+        <Readout label={t.numberLabel} value={ready ? d.total : 0} tot dup />
         {ready ? (
           <>
             <PaymentStrip months={o.months} interestBlocks={interestBlocks} caption={t.stripCaption(o.months, interestBlocks)} />
@@ -269,7 +295,7 @@ export function Stage5() {
   return (
     <>
       <div className="col-a">
-        <StageHead title={t.title} sub={t.sub} />
+        <StageHead title={t.title} sub={t.sub} icon={<SwapIcon size={26} />} tone="fees" />
         <MoneyField
           label={t.down}
           learn={<Term k="downPayment" />}
@@ -294,17 +320,12 @@ export function Stage5() {
           value={o.tradePayoff}
           onChange={(n) => set({ tradePayoff: n })}
         />
-        <button type="button" className="quiet" onClick={() => set({ tradeAllowance: 0, tradePayoff: 0 })}>
+        <Btn variant="quiet" onClick={() => set({ tradeAllowance: 0, tradePayoff: 0 })}>
           {t.noTrade}
-        </button>
+        </Btn>
       </div>
       <div className="col-b">
-        <p className="big-label">
-          <Term k="amountFinanced">{t.numberLabel}</Term>
-        </p>
-        <p className="big num" aria-live="polite">
-          {formatWhole(d.fin)}
-        </p>
+        <Readout label={<Term k="amountFinanced">{t.numberLabel}</Term>} value={d.fin} />
         {hasTrade && (
           <p className="hint">
             <Nums text={equity > 0 ? t.ahead(formatWhole(equity)) : equity < 0 ? t.behind(formatWhole(-equity)) : t.even} />{" "}
@@ -335,11 +356,9 @@ export function Stage6() {
   ];
 
   function startOver() {
-    withTransition(() => {
-      useDeal.getState().startQuote();
-      useWalk.getState().reset();
-      useWalk.getState().go("door");
-    });
+    useDeal.getState().startQuote();
+    useWalk.getState().reset();
+    useWalk.getState().go("door");
   }
   function second() {
     useDeal.getState().addSecondOffer();
@@ -349,11 +368,8 @@ export function Stage6() {
   return (
     <>
       <div className="col-a">
-        <StageHead title={t.title} />
-        <p className="big-label">{t.totalLabel}</p>
-        <p className="big num tot" aria-live="polite">
-          {formatWhole(d.total)}
-        </p>
+        <StageHead title={t.title} icon={<FlagIcon size={26} />} tone="interest" />
+        <Readout label={t.totalLabel} value={d.total} tot />
         <p className="line">
           <Nums text={t.interestLine(share)} />
         </p>
@@ -373,21 +389,21 @@ export function Stage6() {
             </p>
           ))}
         <div className="actions">
-          <button type="button" className="go" onClick={second}>
+          <Btn variant="primary" arrow onClick={second}>
             {t.compare}
-          </button>
-          <button type="button" className="quiet" onClick={startOver}>
+          </Btn>
+          <Btn variant="quiet" onClick={startOver}>
             {t.again}
-          </button>
-          <button type="button" className="quiet" onClick={() => setMode("desk")}>
+          </Btn>
+          <Btn variant="quiet" onClick={() => setMode("desk")}>
             {t.desk}
-          </button>
+          </Btn>
         </div>
       </div>
       <div className="col-b">
+        <ShareRing share={share} label={t.parts.interest} />
         <MoneyBar parts={parts} />
-        <details className="math">
-          <summary>{t.showMath}</summary>
+        <Disclosure title={t.showMath} className="math">
           <dl>
             {parts
               .filter((p) => p.cents > 0)
@@ -402,7 +418,7 @@ export function Stage6() {
               <dd className="num">{whole(d.totalCents)}</dd>
             </div>
           </dl>
-        </details>
+        </Disclosure>
         {seen.length > 0 && (
           <section className="met">
             <h2>{t.askHeading}</h2>

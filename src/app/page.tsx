@@ -5,6 +5,7 @@ import { HeroCheck } from "@/components/site/HeroCheck";
 import { FourSquare } from "@/components/walk/graphics";
 import { ExampleTable } from "@/components/site/ExampleTable";
 import { SitePage } from "@/components/site/SitePage";
+import { CalendarIcon, FlagIcon, PlusBoxIcon, ReceiptIcon, SwapIcon, TagIcon } from "@/components/ui/icons";
 import { leverLine } from "@/components/lever-line";
 import { Nums } from "@/components/Nums";
 import { en } from "@/data/strings/en";
@@ -13,6 +14,16 @@ import { formatCents, LEVERS, toCents } from "@/engine";
 import { getExample } from "@/lib/example";
 
 const h = site.home;
+
+/** One icon and colour per step, matching the step's badge inside the calculator. */
+const STEP_ART = [
+  { icon: <ReceiptIcon size={30} />, tone: "car" },
+  { icon: <TagIcon size={30} />, tone: "car" },
+  { icon: <PlusBoxIcon size={30} />, tone: "extras" },
+  { icon: <CalendarIcon size={30} />, tone: "tax" },
+  { icon: <SwapIcon size={30} />, tone: "fees" },
+  { icon: <FlagIcon size={30} />, tone: "interest" },
+] as const;
 
 export const metadata: Metadata = {
   title: { absolute: h.title },
@@ -92,8 +103,8 @@ export default function Home() {
         <ol className="s-sec-body s-steps">
           {h.steps.items.map((step, i) => (
             <li key={step.title}>
-              <span className="s-step-n num" aria-hidden="true">
-                {i + 1}
+              <span className={`badge badge-${STEP_ART[i % STEP_ART.length].tone} s-step-ico`} aria-hidden="true">
+                {STEP_ART[i % STEP_ART.length].icon}
               </span>
               <div>
                 <h3>{step.title}</h3>
