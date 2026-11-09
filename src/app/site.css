@@ -1,0 +1,788 @@
+/*
+ * Site pages: landing, how it works, about, privacy, terms, accessibility.
+ * Same tokens as the calculator (see globals.css), so no colour appears here by value.
+ * Layout rule: one shared left edge and padding, main blocks fill their grid
+ * columns, and above 1920px the whole page scales with the viewport so a 4K
+ * screen shows the same layout, larger, not a strip with empty sides.
+ */
+
+/* The calculator link in the tool header is now a link; keep it looking like the old label. */
+a.brand {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- Scale on very wide screens ---------- */
+@media (min-width: 1920px) {
+  html:has(.site) {
+    font-size: calc(100vw / 120);
+  }
+  html[data-text="large"]:has(.site) {
+    font-size: calc(100vw / 120 * 1.18);
+  }
+}
+
+.site {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+}
+.site main {
+  flex: 1;
+}
+.s-wrap {
+  padding-inline: clamp(16px, 4vw, 4.5rem);
+}
+
+.s-skip {
+  position: absolute;
+  left: 8px;
+  top: -80px;
+  z-index: 20;
+  padding: 10px 14px;
+  background: var(--text);
+  color: var(--ground);
+  font-weight: 700;
+  border-radius: 6px;
+}
+.s-skip:focus {
+  top: 8px;
+}
+
+/* ---------- Header ---------- */
+.s-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 4rem;
+  border-bottom: 1px solid var(--line);
+}
+.s-brand {
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: 1.875rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.s-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 1.75rem);
+}
+.s-navlink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.s-navlink:hover,
+.s-navlink[aria-current="page"] {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 2px;
+}
+.s-short {
+  display: none;
+}
+@media (max-width: 719px) {
+  .s-navlink,
+  .s-prefs {
+    display: none;
+  }
+}
+@media (max-width: 479px) {
+  .s-long {
+    display: none;
+  }
+  .s-short {
+    display: inline;
+  }
+}
+
+/* ---------- Buttons: one solid, one outline. Yellow stays reserved for the total. ---------- */
+.s-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 1.5rem;
+  border: 2px solid var(--text);
+  border-radius: 8px;
+  background: var(--text);
+  color: var(--ground);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  text-decoration: none;
+  text-align: center;
+  transition: background-color 0.15s, color 0.15s;
+}
+.s-btn:hover {
+  background: transparent;
+  color: var(--text);
+}
+.s-btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--edge);
+}
+.s-btn-ghost:hover {
+  border-color: var(--text);
+  background: var(--panel);
+}
+.s-btn-sm {
+  min-height: 44px;
+  padding: 0 1.125rem;
+  font-size: 1rem;
+}
+.s-btn-lg {
+  min-height: 64px;
+  padding: 0 2.25rem;
+  font-size: 1.25rem;
+}
+
+/* ---------- Type ---------- */
+.s-h1,
+.s-h2 {
+  font-family: var(--font-num);
+  font-weight: 800;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.s-h1 {
+  font-size: clamp(3rem, 6.6vw, 7.5rem);
+  line-height: 0.92;
+}
+.s-h1-doc {
+  font-size: clamp(2.75rem, 5vw, 5.5rem);
+}
+.s-h2 {
+  font-size: clamp(2.5rem, 4.2vw, 4.75rem);
+  line-height: 0.95;
+}
+.s-h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.s-lead {
+  margin: 1.5rem 0 0;
+  max-width: 36rem;
+  font-size: clamp(1.1875rem, 1.6vw, 1.5rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.s-prose {
+  margin: 1rem 0 0;
+  max-width: 38rem;
+  font-size: 1.125rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.s-prose a,
+.s-doc-body a {
+  color: var(--text);
+  text-underline-offset: 3px;
+}
+.s-prose .num,
+.s-lead .num,
+.s-doc-body p .num,
+.s-doc-body li .num,
+.s-doc-body dd .num,
+.s-meta .num,
+.s-asks .num {
+  font-size: 1.14em;
+  color: var(--text);
+}
+.s-fine {
+  margin: 1.25rem 0 0;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+.s-meta {
+  margin: 1rem 0 0;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+
+/* ---------- Landing: hero ---------- */
+.s-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 6rem);
+  min-height: calc(100dvh - 4rem);
+  padding-block: clamp(28px, 6vh, 5rem);
+}
+.s-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 2rem;
+}
+
+/* The example readout: real engine output, same classes of meaning as the calculator. */
+.s-readout {
+  border: 1.5px solid var(--edge);
+  border-radius: 14px;
+  background: var(--panel);
+  padding: clamp(16px, 2.2vw, 2.25rem);
+}
+.s-readout-h {
+  margin: 0 0 1.25rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.s-offers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.s-offer {
+  min-width: 0;
+}
+.s-offer + .s-offer {
+  border-left: 1px solid var(--line);
+  padding-left: clamp(14px, 2.2vw, 2.25rem);
+}
+.s-offer:first-child {
+  padding-right: clamp(14px, 2.2vw, 2.25rem);
+}
+.s-offer h3 {
+  margin: 0 0 0.875rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.s-offer-m {
+  display: block;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+.s-k {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+.s-k-total {
+  margin-top: 0.875rem;
+}
+.s-v {
+  display: block;
+  font-size: clamp(2.25rem, 3.6vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1;
+}
+.s-total {
+  display: inline-flex;
+  align-items: baseline;
+  max-width: 100%;
+  color: var(--text);
+  white-space: nowrap;
+}
+.s-offer:nth-child(2) .s-total {
+  color: var(--total-fg);
+  background: var(--total-bg);
+  padding: 0 4px;
+  margin-left: -4px;
+  border-radius: 4px;
+}
+.s-total-big {
+  font-size: clamp(2.5rem, 4.6vw, 5rem);
+  font-weight: 800;
+  line-height: 0.95;
+}
+.s-total-cents {
+  font-size: clamp(1.375rem, 2vw, 2.25rem);
+  font-weight: 700;
+}
+.s-delta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.s-delta.down {
+  color: var(--down);
+}
+.s-delta.up {
+  color: var(--up);
+}
+.s-base {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+
+.s-moved {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+.s-moved h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+.s-row {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 2.5rem;
+}
+.s-row-k {
+  font-size: 1rem;
+}
+.s-bar {
+  height: 14px;
+  background: var(--ground);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.s-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  transform-origin: left;
+  animation: draw 0.9s 0.15s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.s-bar.up i {
+  background: var(--up);
+}
+.s-bar.down i {
+  background: var(--down);
+}
+.s-row-a {
+  font-size: 1.625rem;
+  text-align: right;
+}
+.s-row-a.up {
+  color: var(--up);
+}
+.s-row-a.down {
+  color: var(--down);
+}
+@media (prefers-reduced-motion: reduce) {
+  .s-bar i {
+    animation: none;
+  }
+}
+
+/* ---------- Landing: sections ---------- */
+.s-sec {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(24px, 5vw, 6rem);
+  padding-block: clamp(48px, 9vw, 7rem);
+  border-top: 1px solid var(--line);
+}
+.s-sec-body {
+  min-width: 0;
+  margin: 0;
+}
+
+/* The comparison table. On a phone each row stacks, with the labels kept. */
+.s-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.s-table caption {
+  padding: 0 0 0.75rem;
+  text-align: left;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+.s-table th,
+.s-table td {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  font-weight: 400;
+}
+.s-table thead th {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.s-table tbody th {
+  text-align: left;
+  color: var(--ink-2);
+  font-size: 1.0625rem;
+}
+.s-table th:first-child {
+  text-align: left;
+}
+.s-table td {
+  font-size: clamp(1.375rem, 2.2vw, 2rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+.s-table tr.strong th {
+  color: var(--text);
+  font-weight: 700;
+}
+.s-table td.chg.up {
+  color: var(--up);
+}
+.s-table td.chg.down {
+  color: var(--down);
+}
+.s-table td.chg .same {
+  font-family: var(--font-text);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+@media (max-width: 640px) {
+  .s-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .s-table tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 10px;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .s-table th,
+  .s-table td {
+    border-bottom: 0;
+    padding: 0;
+    text-align: left;
+  }
+  .s-table tbody th {
+    grid-column: 1 / -1;
+    padding-bottom: 2px;
+  }
+  .s-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-family: var(--font-text);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+  .s-table td {
+    font-size: 1.25rem;
+  }
+}
+
+/* Steps: a real sequence, so the numbers are earned. */
+.s-steps {
+  list-style: none;
+  padding: 0;
+}
+.s-steps li {
+  display: grid;
+  grid-template-columns: clamp(3.25rem, 6vw, 6rem) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.s-steps li:first-child {
+  padding-top: 0;
+}
+.s-step-n {
+  font-size: clamp(3.5rem, 6vw, 6rem);
+  font-weight: 800;
+  line-height: 0.85;
+  color: var(--ink-2);
+}
+.s-steps h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.s-steps p {
+  margin: 0.5rem 0 0;
+  max-width: 38rem;
+  font-size: 1.125rem;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* The asks: the real lines the calculator writes. */
+.s-asks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.s-asks li {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: clamp(1.375rem, 2.2vw, 2.125rem);
+  line-height: 1.25;
+}
+.s-asks li:first-child {
+  padding-top: 0;
+}
+.s-asks .num {
+  font-size: 1.1em;
+}
+
+.s-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 4vw, 4rem);
+}
+.s-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.s-list li {
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--line);
+  font-size: 1.125rem;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.s-close {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+  padding-block: clamp(56px, 10vw, 9rem);
+  border-top: 1px solid var(--line);
+}
+.s-h1-close {
+  max-width: 18ch;
+}
+@media (min-width: 900px) {
+  .s-close {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+/* ---------- Text pages (How it works, About, legal) ---------- */
+.s-doc {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(24px, 5vw, 6rem);
+  padding-block: clamp(32px, 6vw, 5rem) clamp(48px, 8vw, 7rem);
+}
+.s-doc-side {
+  align-self: start;
+  position: sticky;
+  top: 1.5rem;
+}
+.s-toc {
+  margin-top: 2rem;
+}
+.s-toc h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.s-toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.s-toc a {
+  display: block;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+}
+.s-toc a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.s-doc-body {
+  min-width: 0;
+}
+.s-doc-body section {
+  padding-top: 2rem;
+  margin-top: 2rem;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 1rem;
+}
+.s-doc-body section:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.s-doc-body h2 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.625rem, 2.4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+.s-doc-body p,
+.s-doc-body li {
+  max-width: 42rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.s-doc-body p {
+  margin: 0.75rem 0 0;
+}
+.s-doc-body ul {
+  margin: 0.75rem 0 0;
+  padding-left: 1.25rem;
+}
+.s-doc-body li + li {
+  margin-top: 0.5rem;
+}
+.s-doc-body dl {
+  margin: 1rem 0 0;
+}
+.s-doc-body dl > div {
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+}
+.s-doc-body dl > div:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.s-doc-body dt {
+  font-weight: 700;
+  font-size: 1.1875rem;
+  color: var(--text);
+}
+.s-doc-body dd {
+  margin: 0.25rem 0 0;
+  max-width: 42rem;
+  font-size: 1.125rem;
+  color: var(--ink-2);
+}
+.s-doc-body .s-table {
+  margin-top: 1rem;
+}
+.s-doc-body .s-btn {
+  margin-top: 1.5rem;
+  color: var(--ground);
+  text-decoration: none;
+}
+.s-doc-body .s-btn:hover {
+  color: var(--text);
+}
+
+/* ---------- Footer ---------- */
+.s-foot {
+  margin-top: auto;
+  padding-block: clamp(32px, 5vw, 4rem) 2rem;
+  border-top: 1px solid var(--line);
+}
+.s-foot-top {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(24px, 5vw, 6rem);
+}
+.s-foot-brand {
+  margin: 0;
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: 2.5rem;
+  line-height: 1;
+}
+.s-foot-blurb {
+  margin: 0.75rem 0 0;
+  max-width: 24rem;
+  font-size: 1.125rem;
+  color: var(--ink-2);
+}
+.s-foot-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+.s-foot-cols h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.s-foot-cols ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.s-foot-cols a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--text);
+  font-weight: 600;
+  text-underline-offset: 4px;
+}
+.s-foot-base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 2rem;
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+.s-foot-base p {
+  margin: 0;
+}
+
+/* ---------- Narrower screens: one column ---------- */
+@media (max-width: 899px) {
+  .s-hero {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .s-sec,
+  .s-doc,
+  .s-foot-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .s-doc-side {
+    position: static;
+  }
+  .s-two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 520px) {
+  .s-offers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .s-offer + .s-offer {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+  }
+  .s-offer:first-child {
+    padding-right: 0;
+  }
+  .s-foot-cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,110 @@
+import { z } from "zod";
+import { payment, totalInterest } from "./amortize";
+import { toCents } from "./money";
+
+/**
+ * One dealer offer, in dollars. taxRate is a fraction (0.07 means 7%).
+ * The buyer enters the tax rate from their own worksheet.
+ *
+ * Tax = taxRate x (price + taxed add-ons + taxed fees), minus the trade-in
+ * allowance when the buyer's state taxes only the difference (never below zero).
+ */
+export const OfferSchema = z.object({
+  price: z.number().gt(0).max(10_000_000),
+  fees: z.number().min(0).max(1_000_000),
+  addons: z.number().min(0).max(1_000_000),
+  down: z.number().min(0).max(10_000_000),
+  apr: z.number().min(0).max(40),
+  months: z
+    .number()
+    .int()
+    .min(12)
+    .max(96)
+    .refine((m) => m % 12 === 0, "Term must be a multiple of 12 months"),
+  taxRate: z.number().min(0).max(0.2),
+  tradeAllowance: z.number().min(0).max(10_000_000).default(0),
+  tradePayoff: z.number().min(0).max(10_000_000).default(0),
+  feesTaxed: z.boolean().default(false),
+  addonsTaxed: z.boolean().default(true),
+  taxDifferenceOnly: z.boolean().default(false),
+});
+
+export type Offer = z.infer<typeof OfferSchema>;
+
+/** Fields the caller must give. The rest take the defaults above. */
+export type OfferInput = Pick<Offer, "price" | "fees" | "addons" | "down" | "apr" | "months" | "taxRate"> &
+  Partial<Omit<Offer, "price" | "fees" | "addons" | "down" | "apr" | "months" | "taxRate">>;
+
+export function makeOffer(input: OfferInput): Offer {
+  return {
+    tradeAllowance: 0,
+    tradePayoff: 0,
+    feesTaxed: false,
+    addonsTaxed: true,
+    taxDifferenceOnly: false,
+    ...input,
+  };
+}
+
+export interface Deal {
+  offer: Offer;
+  tax: number;
+  /** Out-the-door price: price + tax + fees + add-ons. */
+  otd: number;
+  /** Trade-in allowance minus payoff. Negative equity is negative. */
+  equity: number;
+  /** Amount financed. Never below zero. */
+  fin: number;
+  /** Out-the-door price minus down payment and trade equity, before the zero floor. */
+  finRaw: number;
+  pay: number;
+  /** Down payment plus every monthly payment. */
+  total: number;
+  interest: number;
+  otdCents: number;
+  payCents: number;
+  totalCents: number;
+  interestCents: number;
+  finCents: number;
+  taxCents: number;
+}
+
+export function computeDeal(offer: Offer): Deal {
+  const taxedBase =
+    offer.price +
+    (offer.addonsTaxed ? offer.addons : 0) +
+    (offer.feesTaxed ? offer.fees : 0) -
+    (offer.taxDifferenceOnly ? offer.tradeAllowance : 0);
+  const tax = offer.taxRate * Math.max(taxedBase, 0);
+  const otd = offer.price + tax + offer.fees + offer.addons;
+  const equity = offer.tradeAllowance - offer.tradePayoff;
+  const finRaw = otd - offer.down - equity;
+  const fin = Math.max(finRaw, 0);
+  const pay = payment(fin, offer.apr, offer.months);
+  const total = offer.down + pay * offer.months;
+  const interest = totalInterest(fin, offer.apr, offer.months);
+  return {
+    offer,
+    tax,
+    otd,
+    equity,
+    fin,
+    finRaw,
+    pay,
+    total,
+    interest,
+    otdCents: toCents(otd),
+    payCents: toCents(pay),
+    totalCents: toCents(total),
+    interestCents: toCents(interest),
+    finCents: toCents(fin),
+    taxCents: toCents(tax),
+  };
+}
+
+/** Returns a list of plain-language problems, empty when the offer is valid. */
+export function checkOffer(offer: Offer): string[] {
+  const parsed = OfferSchema.safeParse(offer);
+  if (parsed.success) return [];
+  return parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`);
+}

@@ -1,0 +1,54 @@
+"use client";
+
+import { useSyncExternalStore } from "react";
+import { en } from "@/data/strings/en";
+
+function save(key: string, value: string) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* private window or blocked storage: the switch still works for this visit */
+  }
+}
+
+function subscribe(notify: () => void) {
+  const observer = new MutationObserver(notify);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-text", "data-theme"] });
+  return () => observer.disconnect();
+}
+
+const isLarge = () => document.documentElement.dataset.text === "large";
+const isLight = () => document.documentElement.dataset.theme === "light";
+
+/**
+ * Larger text and a light screen. The saved choice is applied before the first
+ * paint by a small script in the layout; the page root attributes are the source
+ * of truth, so these buttons only read and change them.
+ */
+export function Prefs() {
+  const large = useSyncExternalStore(subscribe, isLarge, () => false);
+  const light = useSyncExternalStore(subscribe, isLight, () => false);
+
+  function toggleText() {
+    if (large) delete document.documentElement.dataset.text;
+    else document.documentElement.dataset.text = "large";
+    save("dd-text", large ? "normal" : "large");
+  }
+
+  function toggleTheme() {
+    if (light) delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = "light";
+    save("dd-theme", light ? "dark" : "light");
+  }
+
+  return (
+    <span className="tools">
+      <button type="button" aria-pressed={large} aria-label={en.largerText} onClick={toggleText}>
+        A+
+      </button>
+      <button type="button" onClick={toggleTheme}>
+        {light ? en.darkScreen : en.lightScreen}
+      </button>
+    </span>
+  );
+}

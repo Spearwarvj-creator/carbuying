@@ -1,0 +1,182 @@
+[
+  {
+    "vin": "1HGCM82633A004352",
+    "nhtsaErrorCode": "0",
+    "nhtsaErrorText": "0 - VIN decoded clean. Check Digit (9th position) is correct",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "1HGCM82633A004353",
+    "nhtsaErrorCode": "1",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "1HGCM826XPG853932",
+    "nhtsaErrorCode": "4,14",
+    "nhtsaErrorText": "4 - VIN corrected, error in one position only (indicated by ! in Suggested VIN), multiple matches found; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "5YJ3E1EA2RG281876",
+    "nhtsaErrorCode": "1,4,14",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 4 - VIN corrected, error in one position only (indicated by ! in Suggested VIN), multiple matches found; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "1FTFW1ET1SD261230",
+    "nhtsaErrorCode": "0,14",
+    "nhtsaErrorText": "0 - VIN decoded clean. Check Digit (9th position) is correct; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "JTDKB20U5JG118549",
+    "nhtsaErrorCode": "1,5,14",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "WBA3A5C50PF268307",
+    "nhtsaErrorCode": "5,14",
+    "nhtsaErrorText": "5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "3VWDX7AJXJC577360",
+    "nhtsaErrorCode": "3,14",
+    "nhtsaErrorText": "3 - VIN corrected, error in one position (assuming Check Digit is correct); 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "1G1YY22G0NA517651",
+    "nhtsaErrorCode": "4,14",
+    "nhtsaErrorText": "4 - VIN corrected, error in one position only (indicated by ! in Suggested VIN), multiple matches found; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "2T1BURHE3JD365759",
+    "nhtsaErrorCode": "1,4,14",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 4 - VIN corrected, error in one position only (indicated by ! in Suggested VIN), multiple matches found; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "KMHD35LE6SB167589",
+    "nhtsaErrorCode": "8",
+    "nhtsaErrorText": "8 - No detailed data available currently",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "5NPE24AF8NH552461",
+    "nhtsaErrorCode": "1,5,14",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "1C4RJFAGXMG578736",
+    "nhtsaErrorCode": "0",
+    "nhtsaErrorText": "0 - VIN decoded clean. Check Digit (9th position) is correct",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "JN1AZ4EH2NB617212",
+    "nhtsaErrorCode": "1,3,14",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 3 - VIN corrected, error in one position (assuming Check Digit is correct); 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "WVWZZZ1J4RA878160",
+    "nhtsaErrorCode": "5,14",
+    "nhtsaErrorText": "5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "4T1BF1FK6NH385731",
+    "nhtsaErrorCode": "1,8",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 8 - No detailed data available currently",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "1HGCM8263KC266701",
+    "nhtsaErrorCode": "3,14",
+    "nhtsaErrorText": "3 - VIN corrected, error in one position (assuming Check Digit is correct); 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "5YJ3E1EA0KH181842",
+    "nhtsaErrorCode": "1,2,14",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 2 - VIN corrected, error in one position; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "1FTFW1ET0NC880427",
+    "nhtsaErrorCode": "3,14",
+    "nhtsaErrorText": "3 - VIN corrected, error in one position (assuming Check Digit is correct); 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "JTDKB20U7ND674804",
+    "nhtsaErrorCode": "1,8",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 8 - No detailed data available currently",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "WBA3A5C59NJ315263",
+    "nhtsaErrorCode": "8",
+    "nhtsaErrorText": "8 - No detailed data available currently",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "3VWDX7AJ4PG956571",
+    "nhtsaErrorCode": "1,8",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 8 - No detailed data available currently",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "1G1YY22G8RB750662",
+    "nhtsaErrorCode": "5,14",
+    "nhtsaErrorText": "5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "2T1BURHE8JE850796",
+    "nhtsaErrorCode": "1,4,14",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 4 - VIN corrected, error in one position only (indicated by ! in Suggested VIN), multiple matches found; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "KMHD35LE5LC422292",
+    "nhtsaErrorCode": "4,14",
+    "nhtsaErrorText": "4 - VIN corrected, error in one position only (indicated by ! in Suggested VIN), multiple matches found; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "5NPE24AF4JG337464",
+    "nhtsaErrorCode": "1,2,14",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 2 - VIN corrected, error in one position; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "1C4RJFAG2PG334762",
+    "nhtsaErrorCode": "0,14",
+    "nhtsaErrorText": "0 - VIN decoded clean. Check Digit (9th position) is correct; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "JN1AZ4EH9RK012941",
+    "nhtsaErrorCode": "1,8",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 8 - No detailed data available currently",
+    "nhtsaCheckDigitOk": false
+  },
+  {
+    "vin": "WVWZZZ1J1RD006436",
+    "nhtsaErrorCode": "5,14",
+    "nhtsaErrorText": "5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.",
+    "nhtsaCheckDigitOk": true
+  },
+  {
+    "vin": "4T1BF1FK5PF872875",
+    "nhtsaErrorCode": "1,8",
+    "nhtsaErrorText": "1 - Check Digit (9th position) does not calculate properly; 8 - No detailed data available currently",
+    "nhtsaCheckDigitOk": false
+  }
+]

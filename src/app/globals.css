@@ -1,0 +1,867 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Dark is the default. A light screen is one switch away for
+ * showroom glare. Every colour and both fonts go through these names.
+ * Reasons for the non-default choices are in docs/DESIGN_NOTES.md.
+ */
+:root {
+  --ground: #0e1a1f; /* night glass: green-tinted, never pure black */
+  --panel: #15252b;
+  --panel-2: #1c3038; /* the one raised layer: the number entry sheet */
+  --line: #2e4650; /* decorative dividers */
+  --edge: #6a8b98; /* control borders, 3:1 against the ground */
+  --text: #eaf2f0;
+  --ink-2: #b4c8cc; /* tinted secondary text, never flat grey */
+  --up: #ff8a7a; /* you pay more */
+  --down: #62d8a0; /* you pay less */
+  --total-fg: #f5c400; /* the one yellow, only on the total */
+  --total-bg: transparent;
+  --on-yellow: #12161c;
+  --shadow: 0 -10px 30px rgb(0 0 0 / 0.45);
+
+  --font-text: "Atkinson Hyperlegible Next", system-ui, sans-serif;
+  --font-num: "Sofia Sans Extra Condensed", "Arial Narrow", sans-serif;
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --ground: #cbdad5; /* pale auto glass */
+  --panel: #f3f8f6;
+  --panel-2: #f9fbfa;
+  --line: #9db5ad;
+  --edge: #4b6a77;
+  --text: #12161c;
+  --ink-2: #2b3c50;
+  --up: #b42318;
+  --down: #1a6b3a;
+  --total-fg: #12161c;
+  --total-bg: #f5c400; /* ink on yellow measures 11.04 */
+  --shadow: 0 -8px 24px rgb(18 22 28 / 0.25);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-panel: var(--panel);
+  --color-ink: var(--text);
+  --color-ink-2: var(--ink-2);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --font-sans: var(--font-text);
+  --font-num: var(--font-num);
+}
+
+html[data-text="large"] {
+  font-size: 118%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+/* The calculator is one fixed screen and never scrolls the page. Site pages scroll normally. */
+html:has(.app),
+html:has(.app) body {
+  height: 100%;
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--total-fg);
+  outline-offset: 2px;
+}
+:root[data-theme="light"] :focus-visible {
+  outline-color: var(--text);
+}
+
+/* Numerals: always the condensed face, tabular and lining. Atkinson's zero is slashed, so money never uses it. */
+.num {
+  font-family: var(--font-num);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  letter-spacing: 0.01em;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Phone: one column, never scrolls on the main view ---------- */
+.app {
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  padding: 0 16px;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 44px;
+}
+.brand {
+  font-weight: 700;
+  font-size: 1.125rem;
+  white-space: nowrap;
+}
+.tag {
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.tools {
+  display: flex;
+  gap: 6px;
+}
+.tools button {
+  min-width: 44px;
+  height: 36px;
+  border: 1.5px solid var(--edge);
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0 8px;
+}
+
+.cols {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+}
+.colB {
+  order: 1;
+}
+.colA {
+  order: 2;
+  flex: 1;
+  min-height: 0;
+}
+.colC {
+  display: none;
+}
+.panel {
+  display: none;
+}
+
+.lbl {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+
+.result {
+  padding: 2px 0 10px;
+  border-bottom: 1px solid var(--line);
+}
+.total {
+  display: inline-flex;
+  align-items: baseline;
+  color: var(--total-fg);
+  background: var(--total-bg);
+  padding: 0 4px;
+  margin-left: -4px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.total .big {
+  font-size: 4.75rem;
+  font-weight: 800;
+  line-height: 0.95;
+}
+.total .cents {
+  font-size: 2.125rem;
+  font-weight: 700;
+}
+.total .dash {
+  font-size: 4.75rem;
+  font-weight: 800;
+  line-height: 0.95;
+}
+.deltas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+.delta .v {
+  display: block;
+  font-size: 1.875rem;
+  line-height: 1;
+}
+.delta .n {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.delta.down .n,
+.delta.down .v {
+  color: var(--down);
+}
+.delta.up .n,
+.delta.up .v {
+  color: var(--up);
+}
+.delta.flat .n {
+  color: var(--ink-2);
+}
+.arr {
+  width: 12px;
+  height: 12px;
+  flex: none;
+}
+.hint {
+  margin-top: 6px;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+
+.trail {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.trail h2 {
+  margin: 0 0 2px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.row {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+}
+.row .k {
+  font-size: 0.9375rem;
+}
+.bar {
+  height: 12px;
+  background: var(--panel);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  transform-origin: left;
+  animation: draw 0.9s 0.05s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.bar.up i {
+  background: var(--up);
+}
+.bar.down i {
+  background: var(--down);
+}
+.row .a {
+  font-size: 1.375rem;
+  text-align: right;
+}
+.row .a.up {
+  color: var(--up);
+}
+.row .a.down {
+  color: var(--down);
+}
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar i {
+    animation: none;
+  }
+}
+
+.editing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  padding-top: 10px;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+.seg {
+  display: inline-flex;
+  border: 1.5px solid var(--edge);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.seg button {
+  white-space: nowrap;
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.seg button[aria-pressed="true"] {
+  background: var(--total-bg);
+  background: var(--text);
+  color: var(--ground);
+}
+.editing .spacer {
+  flex: 1;
+}
+.link {
+  white-space: nowrap;
+  min-height: 36px;
+  padding: 0 4px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 8px 0 10px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  border: 1.5px solid var(--edge);
+  border-radius: 8px;
+  padding: 6px 12px;
+  min-height: 64px;
+  background: var(--panel);
+}
+.field .l {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+.field .v {
+  font-size: 2rem;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.field[aria-expanded="true"] {
+  border-color: var(--total-fg);
+  box-shadow: 0 0 0 2px var(--total-fg);
+}
+:root[data-theme="light"] .field[aria-expanded="true"] {
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line);
+  margin: 0 -16px;
+  padding: 0 8px;
+}
+.tabs button {
+  height: 56px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  border-top: 3px solid transparent;
+}
+.tabs button[aria-current="page"] {
+  color: var(--text);
+  border-top-color: var(--total-fg);
+}
+:root[data-theme="light"] .tabs button[aria-current="page"] {
+  border-top-color: var(--text);
+}
+
+/* ---------- Number entry sheet: the one raised layer ---------- */
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: var(--panel-2);
+  border-radius: 14px 14px 0 0;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  box-shadow: var(--shadow);
+}
+.sheet h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.sheet p {
+  margin: 2px 0 0;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+.chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.chip {
+  flex: 1;
+  min-height: 44px;
+  padding: 2px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.chip[aria-pressed="true"] {
+  border-color: var(--text);
+}
+.chip .l {
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  line-height: 1.1;
+}
+.chip .v {
+  font-size: 1.25rem;
+  line-height: 1.1;
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.stepper button {
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--edge);
+  border-radius: 8px;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.stepper button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.stepper .months {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+}
+.entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 6px 0 8px;
+}
+.entry .v {
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.entry .actions {
+  display: flex;
+  gap: 8px;
+}
+.btn {
+  height: 44px;
+  padding: 0 16px;
+  border: 1.5px solid var(--edge);
+  border-radius: 8px;
+  font-weight: 600;
+}
+.btn.primary {
+  background: #f5c400;
+  border-color: #f5c400;
+  color: var(--on-yellow);
+  font-weight: 700;
+}
+.keys {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.keys button {
+  height: 50px;
+  border-radius: 8px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  font-size: 1.875rem;
+}
+.keys button.fn {
+  font-size: 1.125rem;
+  font-family: var(--font-text);
+  font-weight: 600;
+}
+
+/* ---------- Secondary views (Compare, Target, Ask) ---------- */
+.view h2 {
+  margin: 0 0 6px;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+.view + .view {
+  margin-top: 22px;
+}
+.view .headline {
+  margin: 8px 0 12px;
+  font-size: 1.0625rem;
+  line-height: 1.4;
+}
+.measure {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  flex-wrap: wrap;
+}
+.cmp {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+.cmp th,
+.cmp td {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-weight: 400;
+  text-align: right;
+}
+.cmp th:first-child {
+  text-align: left;
+  color: var(--ink-2);
+}
+.cmp thead th {
+  color: var(--text);
+  font-weight: 700;
+}
+.cmp td.n {
+  font-size: 1.5rem;
+}
+.mark {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 6px;
+  border: 1.5px solid var(--down);
+  border-radius: 4px;
+  font-family: var(--font-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--down);
+  vertical-align: middle;
+}
+.card {
+  border: 1.5px solid var(--edge);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--panel);
+  margin-top: 8px;
+}
+.card b {
+  display: block;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  font-weight: 600;
+}
+.card .big {
+  font-size: 1.0625rem;
+  line-height: 1.4;
+}
+.askbox {
+  white-space: pre-wrap;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+.view .intro {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  margin: 0 0 4px;
+}
+.note {
+  margin-top: 14px;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
+@media (max-width: 899px) {
+  .cols[data-tab="compare"] .colA,
+  .cols[data-tab="compare"] .colB,
+  .cols[data-tab="target"] .colA,
+  .cols[data-tab="target"] .colB,
+  .cols[data-tab="ask"] .colA,
+  .cols[data-tab="ask"] .colB {
+    display: none;
+  }
+  .cols:not([data-tab="deal"]) .panel {
+    display: block;
+    padding: 8px 0 16px;
+  }
+}
+
+@media (max-height: 620px) {
+  .total .big,
+  .total .dash {
+    font-size: 3.75rem;
+  }
+  .total .cents {
+    font-size: 1.75rem;
+  }
+  .delta .v {
+    font-size: 1.625rem;
+  }
+  .field .v {
+    font-size: 1.75rem;
+  }
+  .field {
+    min-height: 54px;
+  }
+  .keys button {
+    height: 44px;
+    font-size: 1.625rem;
+  }
+  .sheet p {
+    display: none;
+  }
+  .tabs button {
+    height: 50px;
+  }
+  .top {
+    height: 38px;
+  }
+  .result {
+    padding-bottom: 6px;
+  }
+  .row {
+    height: 26px;
+  }
+  .fields {
+    padding: 6px 0 8px;
+    gap: 8px;
+  }
+  .editing {
+    padding-top: 6px;
+  }
+  .entry .v {
+    font-size: 2.25rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .tail {
+    display: none;
+  }
+  .top {
+    gap: 4px;
+  }
+  .trail {
+    padding: 4px 0;
+  }
+  .deltas {
+    margin-top: 4px;
+  }
+  .editing {
+    padding-top: 4px;
+  }
+  .brand {
+    font-size: 1rem;
+  }
+  .tag {
+    font-size: 0.75rem;
+  }
+  .tools {
+    gap: 4px;
+  }
+  .tools button {
+    padding: 0 6px;
+    min-width: 40px;
+  }
+  .field {
+    padding: 6px 10px;
+  }
+  .field .v {
+    font-size: 1.625rem;
+  }
+  .row {
+    grid-template-columns: 5rem minmax(0, 1fr) auto;
+  }
+  .row .a {
+    font-size: 1.25rem;
+  }
+  .editing .label {
+    display: none;
+  }
+}
+
+/* ---------- Desktop and wide: everything at once ---------- */
+@media (min-width: 900px) {
+  .app {
+    grid-template-rows: auto minmax(0, 1fr);
+    padding: 0 28px;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: minmax(300px, 1fr) minmax(0, 1.7fr) minmax(0, 1.2fr);
+    flex-direction: row;
+    overflow: hidden;
+  }
+  .colA {
+    order: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .colB {
+    order: 2;
+    display: flex;
+    flex-direction: column;
+  }
+  .colC {
+    order: 3;
+    display: block;
+    overflow-y: auto;
+  }
+  .cols > div {
+    padding: 12px 28px;
+    border-left: 1px solid var(--line);
+    min-height: 0;
+  }
+  .cols > div.colA {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .mobile-only,
+  .tabs {
+    display: none !important;
+  }
+  .fields {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
+    flex: 1;
+    min-height: 0;
+    padding: 8px 0 12px;
+    gap: 14px;
+  }
+  .field {
+    padding: 10px 20px;
+  }
+  .field .v {
+    font-size: min(8vh, 4rem);
+  }
+  .field .l {
+    font-size: 1.125rem;
+  }
+  .result {
+    padding: 0 0 24px;
+  }
+  .total .big,
+  .total .dash {
+    font-size: min(20vh, 8vw, 11.875rem);
+  }
+  .total .cents {
+    font-size: min(8vh, 3.2vw, 4.75rem);
+  }
+  .lbl {
+    font-size: 1.0625rem;
+  }
+  .delta .v {
+    font-size: min(7vh, 3.5rem);
+  }
+  .delta .n {
+    font-size: 1.0625rem;
+  }
+  .trail {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 0;
+  }
+  .trail h2 {
+    font-size: 1.0625rem;
+  }
+  .trail .row {
+    flex: 1;
+    height: auto;
+    max-height: 7.5rem;
+    grid-template-columns: 11rem minmax(0, 1fr) auto;
+  }
+  .row .a {
+    font-size: min(5vh, 2.5rem);
+  }
+  .row .k {
+    font-size: 1.1875rem;
+  }
+  .bar {
+    height: min(2.2vh, 1.25rem);
+  }
+  .view h2 {
+    font-size: 1.125rem;
+  }
+  .sheet {
+    left: auto;
+    right: 28px;
+    bottom: auto;
+    top: 56px;
+    width: 26rem;
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgb(0 0 0 / 0.5);
+  }
+  .sheet p {
+    display: block;
+  }
+}
+
+@media (min-width: 2200px) {
+  html {
+    font-size: 125%;
+  }
+  html[data-text="large"] {
+    font-size: 145%;
+  }
+}
+
+/* Figures inside written sentences use the numeral face, a little larger so they match the text height. */
+.trail h2 .num,
+.view .headline .num,
+.card .big .num {
+  font-size: 1.15em;
+}
