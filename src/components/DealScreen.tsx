@@ -21,6 +21,7 @@ export function DealScreen() {
       <AppHeader tag={example ? en.exampleTag : en.yourDealTag} />
 
       <main className="cols" data-tab={tab}>
+        <h1 className="sr-only">{en.deskHeading}</h1>
         <div className="colB">
           <Result />
           <Trail />

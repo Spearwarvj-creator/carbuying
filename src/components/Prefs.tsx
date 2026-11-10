@@ -43,7 +43,7 @@ export function Prefs() {
 
   return (
     <span className="tools">
-      <button type="button" aria-pressed={large} aria-label={en.largerText} onClick={toggleText}>
+      <button type="button" aria-pressed={large} aria-label={`A+ ${en.largerText.toLowerCase()}`} onClick={toggleText}>
         A+
       </button>
       <button type="button" aria-label={light ? en.darkScreen : en.lightScreen} onClick={toggleTheme}>

@@ -25,7 +25,7 @@ export const site = {
     lead: "Make the loan longer. Watch the payment fall and the total climb.",
     primary: "Start the walk",
     secondary: "See how it works",
-    note: "No account. Your numbers stay on your device.",
+    note: "A car-deal calculator. No account, and your numbers stay on your device.",
 
     road: {
       label: "Loan length",
@@ -203,6 +203,22 @@ export const site = {
       body: "Recalls, crash ratings and vehicle details come from the National Highway Traffic Safety Administration. Fuel economy comes from fueleconomy.gov. Each one is named where it is shown.",
     },
     cta: "Open the calculator",
+  },
+
+  notFound: {
+    title: "Page not found",
+    h1: "That page is not here.",
+    lead: "The link may be old or mistyped. The calculator and the guides are one tap away.",
+    primary: "Open the calculator",
+    secondary: "Go to the home page",
+  },
+
+  error: {
+    title: "Something went wrong",
+    h1: "Something went wrong on our side.",
+    lead: "Your numbers are safe on your device. Try again, or start from the home page.",
+    retry: "Try again",
+    home: "Go to the home page",
   },
 
   footer: {

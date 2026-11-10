@@ -1532,6 +1532,7 @@
   .walk *,
   .sheet,
   .sheet-overlay,
+  .menu-pop,
   .termcard {
     animation-duration: 0.001ms !important;
     animation-delay: 0ms !important;
@@ -1839,5 +1840,71 @@
 @media (max-width: 719px) {
   .s-menu {
     display: block;
+  }
+}
+
+/* ---------- Number boxes: one comfortable width, not a box that shrinks to its digits ---------- */
+.mf {
+  width: 100%;
+}
+.mf .box {
+  width: min(100%, 22rem);
+}
+.mf input {
+  field-sizing: fixed;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+.col-a .slider {
+  width: min(100%, 22rem);
+}
+.nw {
+  white-space: nowrap;
+}
+
+/* The three numbers a buyer asks about first, under the total on the last step. */
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin: 0;
+}
+.facts > div {
+  display: grid;
+  gap: 2px;
+}
+.facts dt {
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.facts dd {
+  margin: 0;
+  font-size: var(--t-2xl);
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* Tablets held upright: one column, but centred and roomier, so the step does not sit at the top of a tall empty screen. */
+@media (min-width: 600px) and (max-width: 899px) and (min-height: 760px) {
+  .walk-page {
+    display: grid;
+    align-content: center;
+  }
+  .stage {
+    gap: 32px;
+  }
+  .col-a {
+    gap: 20px;
+  }
+  .col-b {
+    gap: 18px;
+    padding: 28px;
+  }
+  .stagehead h1 {
+    font-size: var(--t-2xl);
+  }
+  .stagehead .sub {
+    font-size: var(--t-lg);
   }
 }

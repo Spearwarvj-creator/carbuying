@@ -48,12 +48,17 @@ export function canContinue(stage: number, startedWith: string | null, quotedPay
 
 type Tone = "car" | "tax" | "fees" | "extras" | "rolled" | "interest";
 
+/** A hyphenated word such as "trade-in" never breaks at its hyphen, so a heading does not end a line with "trade-". */
+function keepHyphenated(text: string): ReactNode {
+  return text.split(/(\S+-\S+)/).map((part, i) => (i % 2 ? <span key={i} className="nw">{part}</span> : part));
+}
+
 function StageHead({ title, sub, icon, tone }: { title: string; sub?: string; icon?: ReactNode; tone?: Tone }) {
   return (
     <header className="stagehead">
       {icon && <StepBadge icon={icon} tone={tone ?? "car"} />}
       <div>
-        <h1>{title}</h1>
+        <h1>{keepHyphenated(title)}</h1>
         {sub && <p className="sub">{sub}</p>}
       </div>
     </header>
@@ -61,12 +66,12 @@ function StageHead({ title, sub, icon, tone }: { title: string; sub?: string; ic
 }
 
 /** The big number on the right of a step. It counts to its new value; the label names it. */
-function Readout({ label, value, tot, dup }: { label: ReactNode; value: number; tot?: boolean; dup?: boolean }) {
+function Readout({ label, value, tot, dup, empty }: { label: ReactNode; value: number; tot?: boolean; dup?: boolean; empty?: boolean }) {
   return (
     <div className={`readout${dup ? " dup" : ""}`}>
       <p className="big-label">{label}</p>
       <p className={`big num${tot ? " tot" : ""}`}>
-        <AnimatedNumber value={value} format={formatWhole} />
+        {empty ? <>$&mdash;</> : <AnimatedNumber value={value} format={formatWhole} />}
       </p>
     </div>
   );
@@ -141,7 +146,7 @@ export function Stage2() {
         <MoneyField label={t.fees} prefix="$" value={o.fees} onChange={(n) => set({ fees: n })} hint={t.feesHint} learn={<Term k="docFee" />} />
       </div>
       <div className="col-b">
-        <Readout label={<Term k="outTheDoor">{t.numberLabel}</Term>} value={o.price > 0 ? d.otd : 0} dup />
+        <Readout label={<Term k="outTheDoor">{t.numberLabel}</Term>} value={o.price > 0 ? d.otd : 0} empty={o.price <= 0} dup />
         {o.price > 0 && <MoneyBar parts={parts} showShare={false} />}
         <p className="hint">{t.barCaption}</p>
       </div>
@@ -270,7 +275,7 @@ export function Stage4() {
         )}
       </div>
       <div className="col-b">
-        <Readout label={t.numberLabel} value={ready ? d.total : 0} tot dup />
+        <Readout label={t.numberLabel} value={ready ? d.total : 0} empty={!ready} tot dup />
         {ready ? (
           <>
             <PaymentStrip months={o.months} interestBlocks={interestBlocks} caption={t.stripCaption(o.months, interestBlocks)} />
@@ -279,7 +284,10 @@ export function Stage4() {
             </p>
           </>
         ) : (
-          <p className="hint">{t.needRate}</p>
+          <>
+            <PaymentStrip months={o.months} />
+            <p className="hint">{t.needRate}</p>
+          </>
         )}
       </div>
     </>
@@ -292,6 +300,14 @@ export function Stage5() {
   const { o, d, set } = useQuote();
   const equity = d.equity;
   const hasTrade = o.tradeAllowance > 0 || o.tradePayoff > 0;
+  // What the new loan and the money you put in cover. Parts share one scale, so a bigger down payment shrinks the loan on screen.
+  const owedAdded = equity < 0 ? toCents(-equity) : 0;
+  const parts: BarPart[] = [
+    { key: "car", label: t.parts.borrow, cents: Math.max(toCents(d.fin) - owedAdded, 0) },
+    { key: "rolled", label: t.parts.owed, cents: owedAdded },
+    { key: "fees", label: t.parts.down, cents: toCents(o.down) },
+    { key: "tax", label: t.parts.trade, cents: equity > 0 ? toCents(equity) : 0 },
+  ];
   return (
     <>
       <div className="col-a">
@@ -326,6 +342,7 @@ export function Stage5() {
       </div>
       <div className="col-b">
         <Readout label={<Term k="amountFinanced">{t.numberLabel}</Term>} value={d.fin} />
+        {o.price > 0 && <MoneyBar parts={parts} showShare={false} />}
         {hasTrade && (
           <p className="hint">
             <Nums text={equity > 0 ? t.ahead(formatWhole(equity)) : equity < 0 ? t.behind(formatWhole(-equity)) : t.even} />{" "}
@@ -370,6 +387,20 @@ export function Stage6() {
       <div className="col-a">
         <StageHead title={t.title} icon={<FlagIcon size={26} />} tone="interest" />
         <Readout label={t.totalLabel} value={d.total} tot />
+        <dl className="facts">
+          <div>
+            <dt>{t.facts.pay}</dt>
+            <dd className="num">{formatCents(d.payCents)}</dd>
+          </div>
+          <div>
+            <dt>{t.facts.months}</dt>
+            <dd className="num">{o.months}</dd>
+          </div>
+          <div>
+            <dt>{t.facts.rate}</dt>
+            <dd className="num">{o.apr}%</dd>
+          </div>
+        </dl>
         <p className="line">
           <Nums text={t.interestLine(share)} />
         </p>

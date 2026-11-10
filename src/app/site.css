@@ -825,3 +825,63 @@ a.brand {
 .s-prefs .tools button {
   height: 44px;
 }
+
+/* ---------- Not found and error pages ---------- */
+.nf {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 1.25rem;
+  min-height: calc(100dvh - 4rem - 12rem);
+  padding-block: clamp(40px, 8vw, 6rem);
+}
+.nf-h {
+  margin: 0;
+  max-width: 14ch;
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: clamp(2.75rem, 7vw, 6.25rem);
+  line-height: 0.9;
+  text-wrap: balance;
+}
+.nf-lead {
+  margin: 0;
+  max-width: 40ch;
+  font-size: var(--t-lg);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+.nf-cta .s-btn {
+  gap: 0.6rem;
+}
+.nf-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.nf-row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(5px, 0.8vw, 12px);
+  width: 100%;
+  margin-top: clamp(16px, 3vw, 3rem);
+}
+.nf-tile {
+  display: block;
+  aspect-ratio: 2.1;
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, var(--c-car) 55%, white);
+  background: linear-gradient(165deg, color-mix(in oklab, var(--c-car) 92%, white), color-mix(in oklab, var(--c-car) 58%, var(--ground)));
+}
+.nf-tile[data-gap="true"] {
+  border: 1.5px dashed var(--edge);
+  background: transparent;
+}
+@media (max-width: 639px) {
+  .nf-row {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .nf-cta .s-btn {
+    flex: 1 1 100%;
+  }
+}

@@ -272,6 +272,7 @@
     bottom: 12px;
   }
   .road-sky {
+    mask-image: linear-gradient(to bottom, transparent, #000 30%);
     background:
       radial-gradient(60% 40% at 70% 36%, color-mix(in oklab, var(--yellow) 16%, transparent), transparent 70%),
       radial-gradient(50% 40% at 0% 0%, color-mix(in oklab, var(--c-car) 18%, transparent), transparent 72%);
@@ -667,6 +668,7 @@
 }
 .trust-more a {
   color: var(--text);
+  text-decoration: underline;
   text-underline-offset: 3px;
 }
 

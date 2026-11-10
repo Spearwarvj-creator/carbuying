@@ -106,10 +106,12 @@ export const walk = {
     ahead: (amount: string) => `Your trade is worth ${amount} more than you owe, so it lowers the loan.`,
     behind: (amount: string) => `You owe ${amount} more than the trade is worth. That amount is added to your new loan, and you pay interest on it.`,
     even: "Your trade is worth about what you owe.",
+    parts: { borrow: "You borrow", owed: "Old loan added", down: "Your down payment", trade: "Trade-in credit" },
   },
   stage6: {
     title: "Here is your deal",
     totalLabel: "You would pay in total",
+    facts: { pay: "Monthly payment", months: "Months", rate: "Rate" },
     interestLine: (share: number) => `About ${share} of every 100 dollars is interest.`,
     extrasLine: (cost: string, plus: string) => `The extras cost ${cost} over the loan, once tax and interest are counted. That is ${plus}.`,
     paymentsEq: (n: number) => `about ${n} of your monthly payments`,

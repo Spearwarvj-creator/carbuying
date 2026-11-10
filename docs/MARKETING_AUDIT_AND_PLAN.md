@@ -50,3 +50,25 @@ Seen as a first-time visitor at 1440x900 and 390x844.
 
 Checked: no sideways scroll on 6 pages at 12 widths (320 to 2560), tsc, eslint, 64 tests, production build.
 Still open: Desk middle column ends with blank space on tall windows; phone door leaves blank space above the footer; axe, keyboard-only and screen reader passes.
+
+## Round 3 audit: accessibility, every Walk step, error pages (2026-11-09)
+
+axe-core 4 (from node_modules, served temporarily from `public/`, then removed) run on 7 pages x dark and light x phone and desktop, then on every Walk step.
+
+| Finding | Fix |
+| --- | --- |
+| "A+" button: visible text not in its accessible name (WCAG 2.5.3). On every page. | Name is now "A+ larger text". |
+| Link in the landing trust note told apart by colour only. | Underlined. |
+| Desk total used `aria-label` on a bare `div`; Desk had no level-one heading; a screen-reader note sat outside any landmark. | `role="img"` on the total, a hidden h1 for the Desk, note moved into `main`. |
+| Default Next 404: black, unbranded, no header or way home. No error page. | `not-found.tsx` and `error.tsx` in the site frame, with a row of tiles with one missing. |
+| Number boxes shrank to their digits (about 64 px) and sat in a stack of tiny boxes. | One comfortable width (22rem, full width on phones). |
+| Step 4 before a rate: a big empty panel with a yellow "$0". Step 5: a panel holding one number. | Step 4 shows the payment blocks and "$—" until a rate is entered; step 5 shows a bar of loan, down payment and trade-in credit. |
+| Last step showed the total but not the monthly payment, months or rate. | Three facts under the total. |
+| Heading broke at "trade-" / "in". | Hyphenated words never break at the hyphen. |
+| Tablet (820 x 1100): a step sat at the top of a tall empty screen. | Centred and roomier in that band. |
+| Hero did not say what the product is. | "A car-deal calculator." added to the line under the buttons. |
+| Hard edge where the hero's blue wash began on tablet and phone. | Faded with a mask. |
+| Menu popover ignored reduced motion. | Covered. |
+
+Result: axe reports no violations on the pages and steps above. Keyboard: tab order on the landing page is skip link, brand, links, switches, calculator, hero buttons, with a 3 px focus ring on each. No sideways scroll with large text and light screen on 6 pages at 4 widths.
+Not covered: a real screen reader, real reduced-motion setting, Safari and Firefox, a physical phone.

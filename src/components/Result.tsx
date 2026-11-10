@@ -32,7 +32,7 @@ export function Result() {
   return (
     <div className="result">
       <div className="lbl">{t.totalLabel}</div>
-      <div className="total" aria-label={formatCents(d2.totalCents)}>
+      <div className="total" role="img" aria-label={formatCents(d2.totalCents)}>
         <span className="big num" aria-hidden="true">
           {big.dollars}
         </span>

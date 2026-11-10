@@ -294,6 +294,9 @@ export function WalkScreen() {
       <AppHeader />
       {view === "stage" && <Rail />}
       <main className="walk-main" id="main">
+        <p className="sr-only">
+          <Nums text={en.note} />
+        </p>
         {/* Enter only: the new step slides in from the side the buyer is heading toward. No exit animation, so there is no blank gap between steps. */}
         <motion.div
           key={`${view}-${stage}`}
@@ -312,9 +315,6 @@ export function WalkScreen() {
         </motion.div>
       </main>
       {view === "stage" ? <BottomBar /> : <AppFooter />}
-      <p className="sr-only">
-        <Nums text={en.note} />
-      </p>
     </div>
   );
 }

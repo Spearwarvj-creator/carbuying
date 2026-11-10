@@ -7,6 +7,7 @@ export const en = {
   exampleTag: "Example deal",
   yourDealTag: "Your deal",
   largerText: "Larger text",
+  deskHeading: "The Desk: your deal, side by side",
   lightScreen: "Light",
   darkScreen: "Dark",
 
