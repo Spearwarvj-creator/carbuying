@@ -374,6 +374,7 @@ export function Stage6() {
   const { o, d } = useQuote();
   const seen = useWalk((s) => s.seen);
   const quotedPay = useWalk((s) => s.quotedPay);
+  const vehicle = useDeal((s) => s.vehicle);
   const b = costBreakdown(o);
   const share = d.totalCents > 0 ? Math.round((b.interestCents / d.totalCents) * 100) : 0;
   const extrasReal = extrasRealCostCents(o);
@@ -401,6 +402,13 @@ export function Stage6() {
       <div className="col-a">
         <StageHead title={t.title} icon={<FlagIcon size={26} />} tone="interest" />
         <Readout label={t.totalLabel} value={d.total} tot />
+        {vehicle && (
+          <p className="line">
+            {vehicle.year} {vehicle.make} {vehicle.model}
+            {vehicle.trim ? ` ${vehicle.trim}` : ""}
+            {vehicle.annualFuelCost ? `. ${ai.finder.fuelLine(formatWhole(vehicle.annualFuelCost / 12))}` : ""}
+          </p>
+        )}
         <dl className="facts">
           <div>
             <dt>{t.facts.pay}</dt>

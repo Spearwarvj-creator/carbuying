@@ -17,6 +17,7 @@ import { useDeal } from "@/store/deal";
 import { STAGES, useWalk } from "@/store/walk";
 import { TenSecondCheck } from "./Check";
 import { QuickFill } from "./QuickFill";
+import { VehicleFinder } from "./VehicleFinder";
 import { ai } from "@/data/strings/ai";
 import { applySavedDeal } from "@/lib/extract/apply";
 import { clearDeal, useSavedDeal } from "@/lib/saved";
@@ -113,8 +114,26 @@ function Door() {
             }
           />
         </motion.li>
+        <motion.li variants={rise} initial="hidden" animate="show" custom={2}>
+          <VehicleFinder
+            trigger={
+              <button type="button" className="doorbtn">
+                <span className="door-art">
+                  <SceneCar />
+                </span>
+                <span className="door-text">
+                  <b>{ai.finder.open}</b>
+                  <span>{ai.finder.openSub}</span>
+                </span>
+                <span className="door-go" aria-hidden="true">
+                  <ArrowIcon size={22} />
+                </span>
+              </button>
+            }
+          />
+        </motion.li>
         {doors.map((d, i) => (
-          <motion.li key={d.id} variants={rise} initial="hidden" animate="show" custom={i + 2}>
+          <motion.li key={d.id} variants={rise} initial="hidden" animate="show" custom={i + 3}>
             <button type="button" className="doorbtn" onClick={() => pick(d.id)}>
               <span className="door-art">{d.scene}</span>
               <span className="door-text">

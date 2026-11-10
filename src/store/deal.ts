@@ -6,11 +6,24 @@ export type NumKey = "price" | "taxRate" | "fees" | "addons" | "down" | "tradeAl
 export type BoxKey = "price" | "fees" | "down" | "loan";
 export type TabKey = "deal" | "compare" | "target" | "ask";
 
+/** The car the buyer looked up. It is shown with the deal; nothing about the price comes from it. */
+export interface VehicleLabel {
+  year: number;
+  make: string;
+  model: string;
+  trim?: string;
+  /** EPA estimate of a year of fuel, in dollars, when the car was found there. */
+  annualFuelCost?: number | null;
+  mpg?: number | null;
+}
+
 const blank = (): Offer => makeOffer({ price: 0, fees: 0, addons: 0, down: 0, apr: 0, months: 60, taxRate: 0 });
 
 interface DealState {
   offers: [Offer, Offer];
   example: boolean;
+  vehicle: VehicleLabel | null;
+  setVehicle: (v: VehicleLabel | null) => void;
   /** The example has been changed, so it is no longer the untouched sample. It is still not the buyer's own deal. */
   edited: boolean;
   /** Which offer the boxes edit: 0 is Offer 1, 1 is Offer 2. */
@@ -37,6 +50,8 @@ interface DealState {
 export const useDeal = create<DealState>((set) => ({
   offers: EXAMPLE_OFFERS,
   example: true,
+  vehicle: null,
+  setVehicle: (vehicle) => set({ vehicle }),
   edited: false,
   editing: 1,
   openBox: null,

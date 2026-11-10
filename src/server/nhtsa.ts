@@ -79,12 +79,17 @@ export async function listMakes(): Promise<string[]> {
 
 export async function listModels(make: string, year: number): Promise<string[]> {
   const key = `models:${make.toLowerCase()}:${year}`;
-  const data = await cached(key, DAY, () =>
-    fetchJson<{ Results?: Array<{ Model_Name?: string }> }>(
-      `${VPIC}/GetModelsForMakeYear/make/${enc(make)}/modelyear/${year}?format=json`,
+  // The plain list also returns motorcycles, so ask for cars, trucks and SUVs/minivans separately and join them.
+  const lists = await cached(key, DAY, () =>
+    Promise.all(
+      ["car", "truck", "mpv"].map((type) =>
+        fetchJson<{ Results?: Array<{ Model_Name?: string }> }>(
+          `${VPIC}/GetModelsForMakeYear/make/${enc(make)}/modelyear/${year}/vehicleType/${type}?format=json`,
+        ),
+      ),
     ),
   );
-  const names = (data.Results ?? []).map((r) => str(r.Model_Name)).filter(Boolean);
+  const names = lists.flatMap((d) => (d.Results ?? []).map((r) => str(r.Model_Name)).filter(Boolean));
   return [...new Set(names)].sort((a, b) => a.localeCompare(b));
 }
 

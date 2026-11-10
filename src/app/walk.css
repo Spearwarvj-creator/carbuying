@@ -2354,3 +2354,74 @@
     padding-top: 8px;
   }
 }
+
+/* ---------- Look up a car ---------- */
+.vcard {
+  display: grid;
+  gap: 6px;
+}
+.vcard h3 {
+  margin: 10px 0 0;
+  font-size: var(--t-md);
+}
+.vcard p {
+  margin: 0;
+}
+.vcard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+.vcard-grid div {
+  padding: 8px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+}
+.vcard-grid dt {
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.vcard-grid dd {
+  margin: 0;
+  font-size: var(--t-xl);
+  font-weight: 800;
+}
+.vcard-ask {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+.vcard a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.vf-input,
+.vf-field select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 1.5px solid var(--edge);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: var(--t-lg);
+}
+.vf-input {
+  font-family: var(--font-num);
+  letter-spacing: 0.08em;
+}
+.vf-input:focus-visible,
+.vf-field select:focus-visible {
+  outline: 3px solid var(--total-fg);
+  outline-offset: 2px;
+}
+.vf-field {
+  display: grid;
+  gap: 4px;
+}
+.vf-field span {
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}

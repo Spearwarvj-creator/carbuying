@@ -14,19 +14,12 @@ import { useListen } from "@/lib/listen";
 import { setMode } from "@/lib/mode";
 import { useDeal } from "@/store/deal";
 import { ContractCheck } from "./ContractCheck";
+import { VehicleCard } from "./VehicleCard";
+import { lookupVin, type VehicleInfo } from "@/lib/vehicle";
 
 const q = walk.quick;
 const ph = ai.photo;
 type Kind = keyof typeof ph.kinds;
-
-interface Vehicle {
-  vin: string;
-  year: number;
-  make: string;
-  model: string;
-  trim?: string;
-  recalls: number | null;
-}
 
 /** Shrinks a photo before it leaves the phone: at most 1600 px on the long side, as a JPEG. This also drops the photo's location data. */
 async function shrink(file: File): Promise<string> {
@@ -59,7 +52,7 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
   const [note, setNote] = useState("");
   const [found, setFound] = useState<Detected | null>(null);
   const [contract, setContract] = useState<Detected | null>(null);
-  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
+  const [vehicle, setVehicle] = useState<VehicleInfo | null>(null);
   const [slot, setSlot] = useState<0 | 1>(1);
   const [busy, setBusy] = useState(false);
   const base = useRef("");
@@ -89,18 +82,9 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
   }
 
   async function lookUp(vin: string) {
-    const res = await fetch(`/api/vin?vin=${vin}`);
-    const data = (await res.json()) as { status?: string; vehicle?: { year: number; make: string; model: string; trim?: string } };
-    if (!res.ok || !data.vehicle) return setNote(ai.vehicle.bad);
-    const v = data.vehicle;
-    let recalls: number | null = null;
-    try {
-      const r = await fetch(`/api/recalls?year=${v.year}&make=${encodeURIComponent(v.make)}&model=${encodeURIComponent(v.model)}`);
-      if (r.ok) recalls = ((await r.json()) as { count: number }).count;
-    } catch {
-      /* the recall count is extra; the vehicle is shown without it */
-    }
-    setVehicle({ vin, year: v.year, make: v.make, model: v.model, trim: v.trim, recalls });
+    const r = await lookupVin(vin);
+    if ("error" in r) return setNote(r.error);
+    setVehicle(r);
   }
 
   async function onPhotos(files: FileList | null) {
@@ -160,7 +144,7 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
   }
 
   const showingResult = Boolean(found || contract || vehicle);
-  const heading = found ? q.reviewTitle : contract ? ai.contract.title : vehicle ? ai.vehicle.title : q.title;
+  const heading = found ? q.reviewTitle : contract ? ai.contract.title : vehicle ? ai.finder.title : q.title;
 
   return (
     <Dialog.Root
@@ -324,20 +308,12 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
           )}
 
           {vehicle && (
-            <div className="qf-body">
-              <p className="qf-vehicle">
-                <b>
-                  {vehicle.year} {vehicle.make} {vehicle.model}
-                </b>
-                {vehicle.trim && <span> {vehicle.trim}</span>}
-              </p>
-              <p className="hint">VIN {vehicle.vin}</p>
-              {vehicle.recalls !== null && <p>{ai.vehicle.recalls(vehicle.recalls)}</p>}
-              <p className="hint">{ai.vehicle.note}</p>
+            <>
+              <VehicleCard info={vehicle} />
               <Btn variant="ghost" onClick={() => setVehicle(null)}>
                 {q.again}
               </Btn>
-            </div>
+            </>
           )}
         </Dialog.Content>
       </Dialog.Portal>
