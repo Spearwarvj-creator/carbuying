@@ -8,6 +8,7 @@ import { AppFooter } from "./AppFooter";
 import { AppHeader } from "./AppHeader";
 import { Result, Trail } from "./Result";
 import { AskView, CompareView, TargetView } from "./Views";
+import { DealChecks } from "./walk/DealChecks";
 
 const TABS: TabKey[] = ["deal", "compare", "target", "ask"];
 
@@ -16,6 +17,7 @@ export function DealScreen() {
   const setTab = useDeal((s) => s.setTab);
   const example = useDeal((s) => s.example);
   const edited = useDeal((s) => s.edited);
+  const offer = useDeal((s) => s.offers[s.editing]);
 
   return (
     <div className="app">
@@ -26,6 +28,7 @@ export function DealScreen() {
         <div className="colB">
           <Result />
           <Trail />
+          <DealChecks offer={offer} />
         </div>
         <div className="colA">
           <Boxes />

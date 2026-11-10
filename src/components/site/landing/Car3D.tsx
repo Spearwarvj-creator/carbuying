@@ -10,7 +10,7 @@ import { useEffect, useRef } from "react";
  * Three.js is loaded only after the page is idle, so it never touches first paint.
  * Reduced motion draws one still frame. Drawing stops while the car is off screen or the tab is hidden.
  */
-export function Car3D({ months, onReady }: { months: number; onReady: () => void }) {
+export function Car3D({ months, onReady, onFail }: { months: number; onReady: () => void; onFail: () => void }) {
   const box = useRef<HTMLDivElement>(null);
   const impulse = useRef<() => void>(() => {});
   const first = useRef(true);
@@ -28,14 +28,20 @@ export function Car3D({ months, onReady }: { months: number; onReady: () => void
     const el = box.current;
     if (!el) return;
     const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    if (!window.matchMedia("(min-width: 600px)").matches || conn?.saveData) return;
+    if (!window.matchMedia("(min-width: 600px)").matches || conn?.saveData) {
+      onFail();
+      return;
+    }
 
     let disposed = false;
     let stop = () => {};
 
     async function start(host: HTMLDivElement) {
       const probe = document.createElement("canvas");
-      if (!(probe.getContext("webgl2") || probe.getContext("webgl"))) return;
+      if (!(probe.getContext("webgl2") || probe.getContext("webgl"))) {
+        onFail();
+        return;
+      }
 
       const [THREE, { GLTFLoader }, { LineSegments2 }, { LineSegmentsGeometry }, { LineMaterial }] = await Promise.all([
         import("three"),
@@ -342,9 +348,10 @@ export function Car3D({ months, onReady }: { months: number; onReady: () => void
       void start(el).catch((e) => {
         // The line drawing stays; say why in the console so a broken model or a lost context is not silent.
         console.warn("Car3D: staying with the line drawing.", e);
+        onFail();
       });
     const hasIdle = "requestIdleCallback" in window;
-    const handle = hasIdle ? window.requestIdleCallback(run, { timeout: 2000 }) : window.setTimeout(run, 600);
+    const handle = hasIdle ? window.requestIdleCallback(run, { timeout: 500 }) : window.setTimeout(run, 100);
 
     return () => {
       disposed = true;
@@ -352,7 +359,7 @@ export function Car3D({ months, onReady }: { months: number; onReady: () => void
       else clearTimeout(handle);
       stop();
     };
-    // onReady is stable by construction (a state setter); the effect must run once.
+    // onReady and onFail are stable by construction (state setters); the effect must run once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

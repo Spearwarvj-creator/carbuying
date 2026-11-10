@@ -4,6 +4,8 @@ import { en } from "@/data/strings/en";
 import { formatWhole, type Offer } from "@/engine";
 import { useDeal, type BoxKey } from "@/store/deal";
 import { BOX_ORDER } from "./field-config";
+import { QuickFill } from "./walk/QuickFill";
+import { walk } from "@/data/strings/walk";
 
 function boxValue(box: BoxKey, o: Offer): string {
   switch (box) {
@@ -41,6 +43,14 @@ export function Boxes() {
             {en.offer2}
           </button>
         </div>
+        <QuickFill
+          target="desk"
+          trigger={
+            <button type="button" className="link">
+              {walk.quick.openShort}
+            </button>
+          }
+        />
         <span className="spacer" />
         <button type="button" className="link" onClick={example ? startMine : seeExample}>
           {example ? en.useMine : en.seeExample}

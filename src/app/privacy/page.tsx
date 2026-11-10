@@ -28,14 +28,26 @@ export default function Privacy() {
         <h2 id="device-h">What stays on your device</h2>
         <ul>
           <li>The numbers you enter. They are held in the page while it is open and are never sent to us.</li>
-          <li>Your choice of light screen, larger text, and whether you last used the Walk or the Desk. These three settings are saved in your browser so the page looks the same next time. They are the only things saved.</li>
-          <li>Your ZIP code, when ZIP lookup arrives. The table that turns a ZIP code into a city and state is part of the page, so the ZIP code is never sent to a server.</li>
+          <li>Your choice of light screen, larger text, and whether you last used the Walk or the Desk. These three settings are saved in your browser so the page looks the same next time.</li>
+          <li>A deal you choose to save. The button says &ldquo;Save on this device&rdquo;; it is kept in your browser only, never sent anywhere, and you can delete it. Nothing is saved unless you press it.</li>
+          <li>Your ZIP code, if you type one to see your state&rsquo;s sales tax. The table that turns a ZIP code into a city and state is part of the page, so the ZIP code is never sent to a server.</li>
         </ul>
       </section>
 
       <section id="leaves" aria-labelledby="leaves-h">
         <h2 id="leaves-h">What leaves your device</h2>
-        <p>Nothing from the calculator does.</p>
+        <p>Nothing from the calculator does. Two optional helpers do, and only when you use them:</p>
+        <ul>
+          <li>
+            <b>Photos of paperwork.</b> A worksheet, a lender letter, the pages of a contract (up to four) or the car&rsquo;s VIN label. Each photo is shrunk on your phone, then sent to our server and on to an AI reader that returns the numbers it can see. It is not stored, and the request is not logged. Cover your name, address and signature first. You check every number before it is used.
+          </li>
+          <li>
+            <b>Explain this, reword the ask, and practise.</b> When you use these, the text of the check you tapped, your question, and the deal&rsquo;s figures go to our server and on to an AI model through OpenRouter to write the answer. The model writes words only: every number it may use comes from the calculator, and an answer that brings a number of its own is thrown away. Nothing is stored and requests are not logged. Anything an AI wrote is marked as AI-written. Without the helper switched on, the standard text shows instead.
+          </li>
+          <li>
+            <b>Talking.</b> The microphone button uses your browser&rsquo;s own speech service. In Chrome and Safari that service may send your voice to the browser maker (Google or Apple) to turn it into text; Deal Desk does not receive the audio. If you would rather not, type the numbers, or use the microphone key on your keyboard.
+          </li>
+        </ul>
         <p>
           When vehicle lookup arrives, a VIN, or a year, make and model, will go to our server. The server asks the public vehicle services of the
           US government (NHTSA for vehicle details, recalls and crash ratings, and the Department of Energy for fuel economy) and returns the answer.
@@ -64,7 +76,7 @@ export default function Privacy() {
 
       <section id="cookies" aria-labelledby="cookies-h">
         <h2 id="cookies-h">Cookies and storage</h2>
-        <p>Deal Desk sets no cookies. It uses your browser&rsquo;s storage for the three settings above (names: dd-theme, dd-text, dd-mode) and nothing else. Clearing your browser&rsquo;s site data removes them.</p>
+        <p>Deal Desk sets no cookies. It uses your browser&rsquo;s storage for the three settings above (names: dd-theme, dd-text, dd-mode) and, only if you press Save, one saved deal (dd-saved). Nothing else. Clearing your browser&rsquo;s site data removes them.</p>
       </section>
 
       <section id="changes" aria-labelledby="changes-h">

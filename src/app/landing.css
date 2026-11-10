@@ -140,6 +140,12 @@
 .road-car[data-3d="on"] .hero-car {
   visibility: hidden;
 }
+/* On wide screens the drawing is not shown while the 3D car loads; it returns only if the 3D car cannot run. */
+@media (min-width: 600px) {
+  .road-car[data-3d="wait"] .hero-car {
+    visibility: hidden;
+  }
+}
 @keyframes wheel {
   to {
     transform: rotate(360deg);

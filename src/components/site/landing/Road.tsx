@@ -28,8 +28,10 @@ export function Road({ principal, apr, down }: { principal: number; apr: number;
   const [months, setMonths] = useState(BASE);
   const touched = useRef(false);
   // The line drawing is the car until the 3D one has drawn its first frame.
-  const [car3d, setCar3d] = useState(false);
-  const on3d = useCallback(() => setCar3d(true), []);
+  // "wait" while the 3D car loads (the drawing is hidden on wide screens so two cars never show), "fallback" when it cannot.
+  const [car3d, setCar3d] = useState<"wait" | "on" | "fallback">("wait");
+  const on3d = useCallback(() => setCar3d("on"), []);
+  const off3d = useCallback(() => setCar3d("fallback"), []);
 
   const pay = payment(principal, apr, months);
   const paid = pay * months;
@@ -89,9 +91,9 @@ export function Road({ principal, apr, down }: { principal: number; apr: number;
             </div>
           ))}
         </motion.div>
-        <span className="road-car" data-3d={car3d ? "on" : "off"}>
+        <span className="road-car" data-3d={car3d}>
           <HeroCar />
-          <Car3D months={months} onReady={on3d} />
+          <Car3D months={months} onReady={on3d} onFail={off3d} />
           <span className="road-tag road-tag-far">{r.paidOff}</span>
         </span>
         <span className="road-tag road-tag-near">{r.today}</span>

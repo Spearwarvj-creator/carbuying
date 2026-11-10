@@ -7,7 +7,7 @@ import { AppFooter } from "@/components/AppFooter";
 import { AppHeader } from "@/components/AppHeader";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { Btn } from "@/components/ui/Btn";
-import { ArrowIcon, BackIcon, CheckIcon, ListIcon, LockIcon, SceneCar, SceneDesk, SceneQuote } from "@/components/ui/icons";
+import { ArrowIcon, BackIcon, CameraIcon, CheckIcon, ListIcon, LockIcon, MicIcon, SceneCar, SceneDesk, SceneQuote } from "@/components/ui/icons";
 import { Sheet } from "@/components/ui/Sheet";
 import { en } from "@/data/strings/en";
 import { walk } from "@/data/strings/walk";
@@ -16,6 +16,10 @@ import { setMode } from "@/lib/mode";
 import { useDeal } from "@/store/deal";
 import { STAGES, useWalk } from "@/store/walk";
 import { TenSecondCheck } from "./Check";
+import { QuickFill } from "./QuickFill";
+import { ai } from "@/data/strings/ai";
+import { applySavedDeal } from "@/lib/extract/apply";
+import { clearDeal, useSavedDeal } from "@/lib/saved";
 import { Stage1, Stage2, Stage3, Stage4, Stage5, Stage6, canContinue, useQuote } from "./Stages";
 
 /** Items rise in one after another. One orchestrated moment on arrival, then the page is still. */
@@ -42,6 +46,8 @@ function Door() {
     }
   };
 
+  const saved = useSavedDeal();
+
   const doors = [
     { id: "check", scene: <SceneCar />, ...t.think },
     { id: "quote", scene: <SceneQuote />, ...t.quote },
@@ -65,8 +71,50 @@ function Door() {
         </ul>
       </motion.header>
       <ul className="doors">
+        {saved && (
+          <motion.li variants={rise} initial="hidden" animate="show" custom={0}>
+            <div className="savedcard">
+              <button type="button" className="quickbtn" onClick={() => applySavedDeal(saved)}>
+                <span className="door-text">
+                  <b>{ai.saved.resume}</b>
+                  <span>{ai.saved.resumeSub}</span>
+                </span>
+                <span className="door-go" aria-hidden="true">
+                  <ArrowIcon size={22} />
+                </span>
+              </button>
+              <button
+                type="button"
+                className="link"
+                onClick={clearDeal}
+              >
+                {ai.saved.clear}
+              </button>
+            </div>
+          </motion.li>
+        )}
+        <motion.li variants={rise} initial="hidden" animate="show" custom={1}>
+          <QuickFill
+            target="walk"
+            trigger={
+              <button type="button" className="quickbtn">
+                <span className="quick-ico" aria-hidden="true">
+                  <CameraIcon size={26} />
+                  <MicIcon size={26} />
+                </span>
+                <span className="door-text">
+                  <b>{walk.quick.open}</b>
+                  <span>{walk.quick.openSub}</span>
+                </span>
+                <span className="door-go" aria-hidden="true">
+                  <ArrowIcon size={22} />
+                </span>
+              </button>
+            }
+          />
+        </motion.li>
         {doors.map((d, i) => (
-          <motion.li key={d.id} variants={rise} initial="hidden" animate="show" custom={i + 1}>
+          <motion.li key={d.id} variants={rise} initial="hidden" animate="show" custom={i + 2}>
             <button type="button" className="doorbtn" onClick={() => pick(d.id)}>
               <span className="door-art">{d.scene}</span>
               <span className="door-text">

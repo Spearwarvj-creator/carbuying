@@ -7,6 +7,9 @@ import { useDeal } from "@/store/deal";
 import { useAnalysis } from "./analysis";
 import { leverLine } from "./lever-line";
 import { Nums } from "./Nums";
+import { Btn } from "./ui/Btn";
+import { ReadAloud } from "./walk/ReadAloud";
+import { ai } from "@/data/strings/ai";
 
 const METRICS: Metric[] = ["total", "pay", "otd"];
 
@@ -155,11 +158,31 @@ export function buildAsk(take: Take, loser: Offer): string {
 export function AskView() {
   const { ready, take, d1, d2 } = useAnalysis();
   const [copied, setCopied] = useState(false);
+  const [reworded, setReworded] = useState<{ base: string; text: string } | null>(null);
+  const [rewording, setRewording] = useState(false);
+  const [toneNote, setToneNote] = useState("");
   const a = en.ask;
   if (!ready || !take) return <section className="view"><h2>{a.heading}</h2><p className="hint">{en.result.empty}</p></section>;
   if (take.tie) return <section className="view"><h2>{a.heading}</h2><p className="hint">{a.nothing}</p></section>;
 
-  const text = buildAsk(take, take.loser === "a" ? d1.offer : d2.offer);
+  const standard = buildAsk(take, take.loser === "a" ? d1.offer : d2.offer);
+  const text = reworded && reworded.base === standard ? reworded.text : standard;
+  async function reword(tone: "polite" | "firm" | "short" | "text", lang: "en" | "es" = "en") {
+    if (tone === "polite" && lang === "en") return setReworded(null);
+    setRewording(true);
+    setToneNote("");
+    try {
+      const res = await fetch("/api/draft", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: standard, tone, lang }) });
+      if (!res.ok) return setToneNote(ai.tone.kept);
+      const a = (await res.json()) as { text: string; source: "ai" | "template" };
+      setReworded({ base: standard, text: a.text });
+      setToneNote(a.source === "ai" ? ai.tone.ai : ai.tone.kept);
+    } catch {
+      setToneNote(ai.tone.kept);
+    } finally {
+      setRewording(false);
+    }
+  }
   async function copy() {
     try {
       await navigator.clipboard.writeText(text);
@@ -176,10 +199,27 @@ export function AskView() {
       <div className="card">
         <p className="askbox" style={{ margin: 0 }}>{text}</p>
       </div>
-      <p style={{ margin: "10px 0 0" }}>
+      <div className="tonebox" role="group" aria-label={ai.tone.label}>
+        <span className="label">{ai.tone.label}</span>
+        {(["polite", "firm", "short", "text"] as const).map((k) => (
+          <Btn key={k} variant="ghost" onClick={() => reword(k)} aria-disabled={rewording}>
+            {ai.tone.options[k]}
+          </Btn>
+        ))}
+        <Btn variant="ghost" onClick={() => reword("polite", "es")} aria-disabled={rewording}>
+          {ai.tone.es}
+        </Btn>
+      </div>
+      {toneNote && (
+        <p className="hint" role="status">
+          {rewording ? ai.tone.working : toneNote}
+        </p>
+      )}
+      <p style={{ margin: "10px 0 0", display: "flex", gap: 8, flexWrap: "wrap" }}>
         <button type="button" className="btn primary" onClick={copy}>
           {copied ? a.copied : a.copy}
         </button>
+        <ReadAloud text={text} />
       </p>
     </section>
   );

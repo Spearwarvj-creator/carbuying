@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Nums } from "@/components/Nums";
 import { TERMS } from "@/data/strings/terms";
 import { walk } from "@/data/strings/walk";
@@ -27,6 +27,13 @@ import { MonthChips, TenSecondCheck } from "./Check";
 import { FourSquare, MoneyBar, PaymentStrip, ShareRing, StepBadge, type BarPart } from "./graphics";
 import { MoneyField } from "./MoneyField";
 import { Term } from "./Term";
+import { DealChecks } from "./DealChecks";
+import { PracticeSheet } from "./PracticeSheet";
+import { ReadAloud } from "./ReadAloud";
+import { SaveDeal } from "./SaveDeal";
+import { ZipTax } from "./ZipTax";
+import { ai } from "@/data/strings/ai";
+import { dealSummary } from "@/lib/summary";
 
 /** The first offer, the one the Walk edits. */
 export function useQuote() {
@@ -132,6 +139,7 @@ export function Stage1() {
 export function Stage2() {
   const t = walk.stage2;
   const { o, d, set } = useQuote();
+  const [taxKey, setTaxKey] = useState(0);
   const parts: BarPart[] = [
     { key: "car", label: t.parts.car, cents: toCents(o.price) },
     { key: "tax", label: t.parts.tax, cents: d.taxCents },
@@ -142,7 +150,13 @@ export function Stage2() {
       <div className="col-a">
         <StageHead title={t.title} sub={t.sub} icon={<TagIcon size={26} />} tone="car" />
         <MoneyField label={t.price} prefix="$" value={o.price} onChange={(n) => set({ price: n })} autoFocus />
-        <MoneyField label={t.tax} suffix="%" decimals={2} max={20} value={o.taxRate * 100} onChange={(n) => set({ taxRate: n / 100 })} hint={t.taxHint} />
+        <MoneyField key={`tax${taxKey}`} label={t.tax} suffix="%" decimals={2} max={20} value={o.taxRate * 100} onChange={(n) => set({ taxRate: n / 100 })} hint={t.taxHint} />
+        <ZipTax
+          onUse={(pct) => {
+            set({ taxRate: pct / 100 });
+            setTaxKey((k) => k + 1);
+          }}
+        />
         <MoneyField label={t.fees} prefix="$" value={o.fees} onChange={(n) => set({ fees: n })} hint={t.feesHint} learn={<Term k="docFee" />} />
       </div>
       <div className="col-b">
@@ -420,6 +434,19 @@ export function Stage6() {
             </p>
           ))}
         <div className="actions">
+          <ReadAloud text={`${t.totalLabel}: ${whole(d.totalCents)}. ${dealSummary(o, quotedPay).text}`} />
+          <PracticeSheet
+            offer={o}
+            quotedPay={quotedPay}
+            trigger={
+              <Btn variant="ghost" type="button">
+                {ai.practice.open}
+              </Btn>
+            }
+          />
+        </div>
+        <SaveDeal offer={o} quotedPay={quotedPay} />
+        <div className="actions">
           <Btn variant="primary" arrow onClick={second}>
             {t.compare}
           </Btn>
@@ -434,6 +461,7 @@ export function Stage6() {
       <div className="col-b">
         <ShareRing share={share} label={t.parts.interest} />
         <MoneyBar parts={parts} />
+        <DealChecks offer={o} quotedPay={quotedPay} />
         <Disclosure title={t.showMath} className="math">
           <dl>
             {parts
