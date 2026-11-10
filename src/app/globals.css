@@ -32,7 +32,7 @@
    * One type scale. Nothing sets a font size outside these names, apart from
    * relative em values for figures inside a sentence.
    */
-  --t-xs: 0.8125rem;
+  --t-xs: 0.875rem;
   --t-sm: 0.9375rem;
   --t-base: 1rem;
   --t-md: 1.125rem;
@@ -160,7 +160,7 @@ button {
 }
 .tools button {
   min-width: 44px;
-  height: 36px;
+  height: 44px;
   border: 1.5px solid var(--edge);
   border-radius: 6px;
   font-weight: 600;
@@ -343,7 +343,7 @@ button {
 }
 .seg button {
   white-space: nowrap;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 12px;
   font-size: var(--t-sm);
   font-weight: 600;
@@ -359,7 +359,7 @@ button {
 }
 .link {
   white-space: nowrap;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 4px;
   font-size: var(--t-sm);
   font-weight: 600;

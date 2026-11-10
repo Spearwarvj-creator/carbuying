@@ -63,6 +63,8 @@ export const site = {
       ],
       phone: {
         paymentsLabel: "Monthly payments",
+        yearLabel: "A year of monthly payments",
+        extrasKey: { rest: "Your other payments", extras: "Paid for the extras" },
         owe: "You still owe",
         credit: "Trade-in credit",
         realCost: (n: string) => `Costs about ${n} payments`,
@@ -226,7 +228,7 @@ export const site = {
     pages: "Pages",
     legal: "Legal",
     screen: "Screen",
-    project: "Deal Desk is a v2stack project.",
+    project: "Deal Desk is a v2stack project. The 3D car is a CC0 model by Kenney (kenney.nl).",
     note: "Estimates from the numbers you enter. Not financial or legal advice.",
     links: {
       calculator: "Calculator",

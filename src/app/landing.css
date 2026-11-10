@@ -120,6 +120,26 @@
 .road-car .wheel {
   animation: wheel 5s linear infinite;
 }
+/* The 3D car draws over a taller box than the line drawing needs, rising from the same road line. */
+.car3d {
+  position: absolute;
+  left: -14%;
+  right: -4%;
+  bottom: -76%;
+  height: 230%;
+  pointer-events: none;
+}
+.car3d-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Whatever light reaches the left edge of the box fades out, so the headlight never ends in a hard line. */
+  mask-image: linear-gradient(to right, transparent 0, #000 22%);
+}
+/* An instant swap, not a cross-fade: two cars on screen for even a moment reads as a glitch. The drawing keeps its space. */
+.road-car[data-3d="on"] .hero-car {
+  visibility: hidden;
+}
 @keyframes wheel {
   to {
     transform: rotate(360deg);
@@ -590,6 +610,7 @@
   }
   .story-steps > li {
     display: grid;
+    justify-content: stretch;
     gap: 18px;
     min-height: 0;
     padding: 28px 0;

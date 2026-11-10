@@ -5,6 +5,7 @@
 export const en = {
   appName: "Deal Desk",
   exampleTag: "Example deal",
+  exampleEditedTag: "Example deal, changed",
   yourDealTag: "Your deal",
   largerText: "Larger text",
   deskHeading: "The Desk: your deal, side by side",

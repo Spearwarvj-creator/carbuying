@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "@/components/site/SitePage";
 import { HopFour } from "@/components/site/landing/HopFour";
-import { ArrowIcon, CalcIcon, CheckIcon, ClockIcon, SparkIcon, SunIcon, TypeIcon, UserIcon, UsersIcon, ListIcon } from "@/components/ui/icons";
+import { ArrowIcon, CalcIcon, CheckIcon, ClockIcon, SparkIcon, SunIcon, TypeIcon, UserIcon, UsersIcon } from "@/components/ui/icons";
 import { StepBadge } from "@/components/walk/graphics";
 import { site } from "@/data/strings/site";
 import "../info.css";
@@ -120,10 +120,7 @@ export default function About() {
           {a.data.h2}
         </h2>
         <div className="ch-body">
-          <p className="lead2 with-ico">
-            <ListIcon size={22} />
-            {a.data.body}
-          </p>
+          <p className="lead2">{a.data.body}</p>
         </div>
       </section>
 

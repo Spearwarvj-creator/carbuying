@@ -32,12 +32,12 @@ export default function Accessibility() {
             />
           </li>
           <li>Colour is never the only signal. Every change carries a plus or minus sign and a drawn arrow.</li>
-          <li>Money is set in a numeral face with a plain zero, so a zero is never confused with a slashed one.</li>
+          <li>Money figures are set in a numeral face with a plain zero. Running text uses Atkinson Hyperlegible, whose zero is slashed on purpose so it is never mistaken for the letter O.</li>
           <li>
-            <Nums text="The main controls, the number boxes, keypad keys and buttons, are at least 44 pixels tall." />
+            <Nums text="The main controls, the number boxes, keypad keys and buttons, are at least 44 pixels tall. Links inside text and in the footer are at least 24 by 24 pixels, the WCAG 2.2 minimum." />
           </li>
           <li>The number keypad also works from a physical keyboard, and the focus outline is thick and always visible.</li>
-          <li>One animation, the bars drawing in, and it is switched off when your device asks for reduced motion.</li>
+          <li>Motion is used to show what changed: numbers counting, bars and blocks filling in, steps sliding, a small 3D car on the home page. All of it is switched off, or drawn as a still picture, when your device asks for reduced motion. The 3D car is decoration and is hidden from screen readers.</li>
           <li>No time limits, no pop-ups, no sounds.</li>
         </ul>
       </section>
@@ -45,14 +45,14 @@ export default function Accessibility() {
       <section id="tested" aria-labelledby="tested-h">
         <h2 id="tested-h">What we have tested</h2>
         <p>
-          <Nums text="The calculator screen has been checked at phone sizes from 320 by 568 pixels and on desktop, and it does not scroll sideways. We have not yet finished testing with screen readers or a full keyboard-only pass, and we have not yet run an automated accessibility audit. We will list the results here when they are done." />
+          <Nums text="Every page and every step of the calculator has been checked with an automated audit (axe-core 4) on the dark and light screens at phone and desktop widths, with no violations found on 9 November 2026. Pages have been checked at widths from 320 to 2560 pixels, with larger text on and the light screen on, and do not scroll sideways. The order of the first controls on the home page has been tried with the keyboard. We have not yet tested with a screen reader or finished a full keyboard-only pass of the calculator. We will list the results here when they are done." />
         </p>
         <p>A high contrast switch is planned.</p>
       </section>
 
       <section id="tell" aria-labelledby="tell-h">
         <h2 id="tell-h">Tell us about a problem</h2>
-        <p>If something is hard to read or use, tell us through the contact page at v2stack.com. Say what you were trying to do and what device you used, and we will fix it.</p>
+        <p>If something is hard to read or use, tell us through the <a href="https://v2stack.com/contact">contact page at v2stack.com</a>. Say what you were trying to do and what device you used, and we will fix it.</p>
       </section>
     </DocPage>
   );

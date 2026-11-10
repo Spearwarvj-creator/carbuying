@@ -13,7 +13,18 @@ import { walk } from "@/data/strings/walk";
  * The blocks pop in left to right in about half a second, so the count is felt, not just seen.
  * Blocks drawn in the interest colour show the share of the payments that is interest.
  */
-export function PaymentStrip({ months, interestBlocks = 0, caption }: { months: number; interestBlocks?: number; caption?: string }) {
+export function PaymentStrip({
+  months,
+  interestBlocks = 0,
+  caption,
+  keys,
+}: {
+  months: number;
+  interestBlocks?: number;
+  caption?: string;
+  /** Names for the two colours, when the coloured blocks are not interest (for example, the cost of extras). */
+  keys?: { loan: string; interest: string };
+}) {
   const reduce = useReducedMotion();
   const blocks = Math.max(0, Math.round(months));
   const interest = Math.min(Math.max(Math.round(interestBlocks), 0), blocks);
@@ -37,11 +48,11 @@ export function PaymentStrip({ months, interestBlocks = 0, caption }: { months: 
         <ul className="mbar-key strip-key">
           <li>
             <span className="sw car" aria-hidden="true" />
-            <span className="k">{walk.stage4.stripKey.loan}</span>
+            <span className="k">{keys?.loan ?? walk.stage4.stripKey.loan}</span>
           </li>
           <li>
             <span className="sw interest" aria-hidden="true" />
-            <span className="k">{walk.stage4.stripKey.interest}</span>
+            <span className="k">{keys?.interest ?? walk.stage4.stripKey.interest}</span>
           </li>
         </ul>
       )}

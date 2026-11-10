@@ -885,3 +885,11 @@ a.brand {
     flex: 1 1 100%;
   }
 }
+
+/* Links inside the legal text are underlined, so they are never told apart by colour alone. */
+.s-doc-body p a,
+.s-doc-body li a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

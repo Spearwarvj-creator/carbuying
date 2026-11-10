@@ -11,6 +11,8 @@ const blank = (): Offer => makeOffer({ price: 0, fees: 0, addons: 0, down: 0, ap
 interface DealState {
   offers: [Offer, Offer];
   example: boolean;
+  /** The example has been changed, so it is no longer the untouched sample. It is still not the buyer's own deal. */
+  edited: boolean;
   /** Which offer the boxes edit: 0 is Offer 1, 1 is Offer 2. */
   editing: 0 | 1;
   openBox: BoxKey | null;
@@ -35,6 +37,7 @@ interface DealState {
 export const useDeal = create<DealState>((set) => ({
   offers: EXAMPLE_OFFERS,
   example: true,
+  edited: false,
   editing: 1,
   openBox: null,
   drawKey: 0,
@@ -44,15 +47,15 @@ export const useDeal = create<DealState>((set) => ({
     set((s) => {
       const next: [Offer, Offer] = [s.offers[0], s.offers[1]];
       next[s.editing] = { ...next[s.editing], [key]: value };
-      return { offers: next, example: false };
+      return { offers: next, edited: true };
     }),
   setEditing: (which) => set({ editing: which }),
   open: (box) => set({ openBox: box }),
   close: () => set((s) => ({ openBox: null, drawKey: s.drawKey + 1 })),
-  useMine: () => set((s) => ({ offers: [blank(), blank()], example: false, editing: 0, openBox: "price", drawKey: s.drawKey + 1 })),
-  startQuote: () => set((s) => ({ offers: [blank(), blank()], example: false, editing: 0, openBox: null, drawKey: s.drawKey + 1 })),
-  addSecondOffer: () => set((s) => ({ offers: [s.offers[0], { ...s.offers[0] }], example: false, editing: 1, openBox: null, tab: "deal", drawKey: s.drawKey + 1 })),
-  seeExample: () => set((s) => ({ offers: EXAMPLE_OFFERS, example: true, editing: 1, openBox: null, drawKey: s.drawKey + 1 })),
+  useMine: () => set((s) => ({ offers: [blank(), blank()], example: false, edited: false, editing: 0, openBox: "price", drawKey: s.drawKey + 1 })),
+  startQuote: () => set((s) => ({ offers: [blank(), blank()], example: false, edited: false, editing: 0, openBox: null, drawKey: s.drawKey + 1 })),
+  addSecondOffer: () => set((s) => ({ offers: [s.offers[0], { ...s.offers[0] }], example: false, edited: false, editing: 1, openBox: null, tab: "deal", drawKey: s.drawKey + 1 })),
+  seeExample: () => set((s) => ({ offers: EXAMPLE_OFFERS, example: true, edited: false, editing: 1, openBox: null, drawKey: s.drawKey + 1 })),
   setTab: (tab) => set({ tab, openBox: null }),
   setMetric: (metric) => set({ metric }),
 }));

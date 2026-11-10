@@ -53,6 +53,7 @@ export const walk = {
     price: "Selling price",
     tax: "Sales tax",
     fees: "Fees",
+    taxHint: "From the worksheet. At zero, no tax is counted yet.",
     feesHint: "Doc fee and any others, added together.",
     numberLabel: "Out-the-door price",
     barCaption: "Price, tax and fees together make the out-the-door price.",

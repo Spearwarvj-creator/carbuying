@@ -15,10 +15,11 @@ export function DealScreen() {
   const tab = useDeal((s) => s.tab);
   const setTab = useDeal((s) => s.setTab);
   const example = useDeal((s) => s.example);
+  const edited = useDeal((s) => s.edited);
 
   return (
     <div className="app">
-      <AppHeader tag={example ? en.exampleTag : en.yourDealTag} />
+      <AppHeader tag={example ? (edited ? en.exampleEditedTag : en.exampleTag) : en.yourDealTag} />
 
       <main className="cols" data-tab={tab}>
         <h1 className="sr-only">{en.deskHeading}</h1>

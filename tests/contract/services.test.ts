@@ -62,4 +62,17 @@ describe("EPA fuel economy", () => {
     expect(r.combined).toBeGreaterThan(20);
     expect(r.annualFuelCost).toBeGreaterThan(500);
   });
+
+  it("finds a model the EPA names differently (the safety agency's Civic is the EPA's Civic 4Dr)", async () => {
+    const r = await getMpg("Honda", "Civic", 2020);
+    expect(r.found).toBe(true);
+    expect(r.options.length).toBeGreaterThan(0);
+    expect(r.combined).toBeGreaterThan(20);
+  });
+
+  it("answers found: false, not an error, for a model it does not know", async () => {
+    const r = await getMpg("Honda", "Not A Real Model", 2020);
+    expect(r.found).toBe(false);
+    expect(r.options).toEqual([]);
+  });
 });

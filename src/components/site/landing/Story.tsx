@@ -56,7 +56,12 @@ function Scene({ i, d }: { i: number; d: StoryData }) {
       return (
         <div className="sc">
           <span className="sc-label">{p.realCost(d.extrasPayments)}</span>
-          <PaymentStrip months={12} interestBlocks={Number(d.extrasPayments.split(".")[0]) || 0} caption={p.paymentsLabel} />
+          <PaymentStrip
+            months={12}
+            interestBlocks={Number(d.extrasPayments.split(".")[0]) || 0}
+            caption={p.yearLabel}
+            keys={{ loan: p.extrasKey.rest, interest: p.extrasKey.extras }}
+          />
         </div>
       );
     case 3:

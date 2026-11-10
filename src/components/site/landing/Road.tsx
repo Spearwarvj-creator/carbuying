@@ -1,11 +1,12 @@
 "use client";
 
 import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { Slider } from "@/components/ui/Slider";
 import { site } from "@/data/strings/site";
 import { formatWhole, payment } from "@/engine";
+import { Car3D } from "./Car3D";
 import { HeroCar } from "./HeroCar";
 
 const r = site.home.road;
@@ -26,6 +27,9 @@ export function Road({ principal, apr, down }: { principal: number; apr: number;
   const reduce = useReducedMotion();
   const [months, setMonths] = useState(BASE);
   const touched = useRef(false);
+  // The line drawing is the car until the 3D one has drawn its first frame.
+  const [car3d, setCar3d] = useState(false);
+  const on3d = useCallback(() => setCar3d(true), []);
 
   const pay = payment(principal, apr, months);
   const paid = pay * months;
@@ -85,8 +89,9 @@ export function Road({ principal, apr, down }: { principal: number; apr: number;
             </div>
           ))}
         </motion.div>
-        <span className="road-car">
+        <span className="road-car" data-3d={car3d ? "on" : "off"}>
           <HeroCar />
+          <Car3D months={months} onReady={on3d} />
           <span className="road-tag road-tag-far">{r.paidOff}</span>
         </span>
         <span className="road-tag road-tag-near">{r.today}</span>

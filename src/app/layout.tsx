@@ -13,6 +13,8 @@ import { Providers } from "@/components/ui/Providers";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: { default: "Deal Desk", template: "%s | Deal Desk" },
+  // Each page names itself as the canonical address, resolved against metadataBase.
+  alternates: { canonical: "./" },
   openGraph: { siteName: "Deal Desk", type: "website" },
   twitter: { card: "summary_large_image" },
   description: "Enter what the dealer says. See in dollars where the money moved, and what to ask for next.",
@@ -22,6 +24,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  // The site is dark by default whatever the system says, so one colour; the light screen is a choice made on the page.
   themeColor: "#0e1a1f",
 };
 
@@ -35,6 +38,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: prefsScript }} />
       </head>
       <body>
+        <noscript>
+          <p style={{ margin: 0, padding: "12px 16px", background: "#f5c400", color: "#12161c", fontFamily: "sans-serif", fontWeight: 700 }}>
+            Deal Desk needs JavaScript to run the calculator. The guides on this site still read without it.
+          </p>
+        </noscript>
         <Providers>{children}</Providers>
       </body>
     </html>

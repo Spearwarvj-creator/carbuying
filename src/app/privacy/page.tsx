@@ -28,7 +28,7 @@ export default function Privacy() {
         <h2 id="device-h">What stays on your device</h2>
         <ul>
           <li>The numbers you enter. They are held in the page while it is open and are never sent to us.</li>
-          <li>Your choice of light screen and larger text. These two settings are saved in your browser so the page looks the same next time.</li>
+          <li>Your choice of light screen, larger text, and whether you last used the Walk or the Desk. These three settings are saved in your browser so the page looks the same next time. They are the only things saved.</li>
           <li>Your ZIP code, when ZIP lookup arrives. The table that turns a ZIP code into a city and state is part of the page, so the ZIP code is never sent to a server.</li>
         </ul>
       </section>
@@ -64,12 +64,12 @@ export default function Privacy() {
 
       <section id="cookies" aria-labelledby="cookies-h">
         <h2 id="cookies-h">Cookies and storage</h2>
-        <p>Deal Desk sets no cookies. It uses your browser&rsquo;s storage for the two display settings above and nothing else. Clearing your browser&rsquo;s site data removes them.</p>
+        <p>Deal Desk sets no cookies. It uses your browser&rsquo;s storage for the three settings above (names: dd-theme, dd-text, dd-mode) and nothing else. Clearing your browser&rsquo;s site data removes them.</p>
       </section>
 
       <section id="changes" aria-labelledby="changes-h">
         <h2 id="changes-h">Changes and questions</h2>
-        <p>If this page changes, the date at the top changes with it. For questions, use the contact page at v2stack.com.</p>
+        <p>If this page changes, the date at the top changes with it. For questions, use the <a href="https://v2stack.com/contact">contact page at v2stack.com</a>.</p>
       </section>
     </DocPage>
   );

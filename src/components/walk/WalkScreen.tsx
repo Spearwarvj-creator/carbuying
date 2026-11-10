@@ -198,7 +198,7 @@ function BottomBar() {
           title={walk.bar.partsHeading}
           closeLabel={walk.bar.close}
           trigger={
-            <button type="button" className="parts-btn">
+            <button type="button" className="parts-btn" aria-label={walk.bar.open}>
               <ListIcon size={20} />
               <span className="parts-txt">{walk.bar.open}</span>
             </button>
@@ -296,6 +296,10 @@ export function WalkScreen() {
       <main className="walk-main" id="main">
         <p className="sr-only">
           <Nums text={en.note} />
+        </p>
+        {/* Tells a screen reader which step it is now on, since the Next button keeps focus while the page changes. */}
+        <p className="sr-only" role="status" aria-live="polite">
+          {view === "stage" ? `${walk.stepOf(stage, STAGES)}: ${walk.stepNames[stage - 1]}` : ""}
         </p>
         {/* Enter only: the new step slides in from the side the buyer is heading toward. No exit animation, so there is no blank gap between steps. */}
         <motion.div

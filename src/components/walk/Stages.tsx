@@ -142,7 +142,7 @@ export function Stage2() {
       <div className="col-a">
         <StageHead title={t.title} sub={t.sub} icon={<TagIcon size={26} />} tone="car" />
         <MoneyField label={t.price} prefix="$" value={o.price} onChange={(n) => set({ price: n })} autoFocus />
-        <MoneyField label={t.tax} suffix="%" decimals={2} max={20} value={o.taxRate * 100} onChange={(n) => set({ taxRate: n / 100 })} />
+        <MoneyField label={t.tax} suffix="%" decimals={2} max={20} value={o.taxRate * 100} onChange={(n) => set({ taxRate: n / 100 })} hint={t.taxHint} />
         <MoneyField label={t.fees} prefix="$" value={o.fees} onChange={(n) => set({ fees: n })} hint={t.feesHint} learn={<Term k="docFee" />} />
       </div>
       <div className="col-b">
