@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { AiError, takeSlot, visitorOf, type Feature } from "@/server/ai";
+import { AiError, takeSharedSlot, visitorOf, type Feature } from "@/server/ai";
 
 const MESSAGES: Record<AiError["kind"], { status: number; message: string }> = {
   "not-configured": { status: 503, message: "This helper is not switched on yet." },
@@ -21,7 +21,7 @@ export async function aiRoute<S extends z.ZodTypeAny, R>(
   try {
     const input = schema.parse(await request.json());
     if (opts.needsKey && !process.env.OPENROUTER_API_KEY) throw new AiError("not configured", "not-configured");
-    if (process.env.OPENROUTER_API_KEY) takeSlot(feature, visitorOf(request.headers), opts.units?.(input) ?? 1);
+    if (process.env.OPENROUTER_API_KEY) await takeSharedSlot(feature, visitorOf(request.headers), opts.units?.(input) ?? 1);
     return NextResponse.json(await run(input), { headers: { "Cache-Control": "no-store" } });
   } catch (err) {
     const kind: AiError["kind"] = err instanceof AiError ? err.kind : err instanceof z.ZodError ? "bad-input" : "upstream";

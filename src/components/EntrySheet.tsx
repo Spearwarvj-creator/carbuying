@@ -146,7 +146,7 @@ function Inner({ box }: { box: BoxKey }) {
           type="button"
           className="num"
           onClick={() => press(def.decimals > 0 ? "." : "000")}
-          aria-label={def.decimals > 0 ? "Decimal point" : "Three zeros"}
+          aria-label={def.decimals > 0 ? en.sheet.point : en.sheet.zeros}
         >
           {def.decimals > 0 ? "." : "000"}
         </button>

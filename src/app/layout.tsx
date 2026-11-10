@@ -8,6 +8,7 @@ import "./globals.css";
 import "./site.css";
 import "./walk.css";
 import { Providers } from "@/components/ui/Providers";
+import { RegisterSW } from "@/components/RegisterSW";
 
 // The live domain is not settled yet; set NEXT_PUBLIC_SITE_URL when it is, so share images resolve.
 export const metadata: Metadata = {
@@ -16,6 +17,8 @@ export const metadata: Metadata = {
   // Each page names itself as the canonical address, resolved against metadataBase.
   alternates: { canonical: "./" },
   openGraph: { siteName: "Deal Desk", type: "website" },
+  appleWebApp: { capable: true, title: "Deal Desk", statusBarStyle: "black-translucent" },
+  icons: { apple: "/icons/apple-touch-icon.png" },
   twitter: { card: "summary_large_image" },
   description: "Enter what the dealer says. See in dollars where the money moved, and what to ask for next.",
 };
@@ -44,6 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </p>
         </noscript>
         <Providers>{children}</Providers>
+        <RegisterSW />
       </body>
     </html>
   );

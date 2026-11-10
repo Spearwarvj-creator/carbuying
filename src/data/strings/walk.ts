@@ -9,6 +9,7 @@ export const walk = {
     open: "Fill it in for me",
     openSub: "Photo of the worksheet, your voice, or a pasted text. You check every number first.",
     openShort: "Quick fill",
+    monthsShort: "mo",
     title: "Fill it in for me",
     tabs: { say: "Say or type", photo: "Photo" },
     sayLabel: "What did the dealer say or write?",
@@ -72,6 +73,7 @@ export const walk = {
     price: "A price",
     priceSub: "Like 31,500 for the car",
     boxes: { price: "Price", trade: "Trade-in", down: "Down payment", pay: "Monthly payment" },
+    fourAlt: "A worksheet with four boxes: price, trade-in, down payment and monthly payment.",
     caption: "Each box can move against another. That is why a single change is hard to see.",
     payFields: "Tell us the payment and how many months.",
     payAdds: "Next, let us find the full price behind that payment.",
@@ -152,6 +154,12 @@ export const walk = {
     again: "Start over",
     desk: "Open the Desk",
     askHeading: "Questions to ask, from the terms you opened",
+  },
+
+  graphics: {
+    partAria: (label: string, n: number) => `${label} about ${n} in 100`,
+    inHundred: (n: number) => `${n} in 100`,
+    of100: "in 100",
   },
 
   need: {

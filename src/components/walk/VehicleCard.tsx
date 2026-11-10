@@ -4,7 +4,7 @@ import { ai } from "@/data/strings/ai";
 import type { VehicleInfo } from "@/lib/vehicle";
 
 const v = ai.finder;
-const stars = (r: string | null) => (r && /^\d$/.test(r) ? `${r} of 5` : "Not rated");
+const stars = (r: string | null) => (r && /^\d$/.test(r) ? v.stars(r) : v.notRatedShort);
 const dollars = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
 
 /** What is known about one car, with where each part comes from and what to ask because of it. */
@@ -70,16 +70,11 @@ export function VehicleCard({ info }: { info: VehicleInfo }) {
       {mpg?.found && mpg.combined ? (
         <>
           <p>
-            <b className="num">{mpg.combined}</b> mpg combined
-            {mpg.city && mpg.highway ? (
-              <span>
-                {" "}
-                ({mpg.city} city, {mpg.highway} highway)
-              </span>
-            ) : null}
+            <b className="num">{mpg.combined}</b> {v.mpgCombined}
+            {mpg.city && mpg.highway ? <span> {v.cityHighway(mpg.city, mpg.highway)}</span> : null}
             {mpg.annualFuelCost ? (
               <span>
-                . About <b className="num">{dollars(mpg.annualFuelCost)}</b> a year in fuel, or <b className="num">{dollars(mpg.annualFuelCost / 12)}</b> a month.
+                . {v.fuelCost(dollars(mpg.annualFuelCost), dollars(mpg.annualFuelCost / 12))}
               </span>
             ) : null}
           </p>

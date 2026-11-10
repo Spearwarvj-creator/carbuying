@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { getLang } from "@/lib/i18n";
 
 /** The browser's speech service, where it has one. Chrome and Safari do; Firefox does not. In Chrome and Safari the audio may go to the browser maker. */
 interface Recognition {
@@ -22,7 +23,7 @@ export const canListen = () => {
 };
 
 /** Speech to text for one short utterance. `onText` receives the whole phrase so far; `error` says why it stopped. */
-export function useListen(onText: (text: string) => void, lang: "en" | "es" = "en") {
+export function useListen(onText: (text: string) => void, lang: "en" | "es" = getLang()) {
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<"denied" | "unsupported" | null>(null);
   const rec = useRef<Recognition | null>(null);

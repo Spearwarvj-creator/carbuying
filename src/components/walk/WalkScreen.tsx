@@ -7,7 +7,7 @@ import { AppFooter } from "@/components/AppFooter";
 import { AppHeader } from "@/components/AppHeader";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { Btn } from "@/components/ui/Btn";
-import { ArrowIcon, BackIcon, CameraIcon, CheckIcon, ListIcon, LockIcon, MicIcon, SceneCar, SceneDesk, SceneQuote } from "@/components/ui/icons";
+import { ArrowIcon, BackIcon, CameraIcon, CarIcon, CheckIcon, ListIcon, LockIcon, MicIcon, ReceiptIcon, SceneCar, SceneDesk, SceneQuote } from "@/components/ui/icons";
 import { Sheet } from "@/components/ui/Sheet";
 import { en } from "@/data/strings/en";
 import { walk } from "@/data/strings/walk";
@@ -18,6 +18,10 @@ import { STAGES, useWalk } from "@/store/walk";
 import { TenSecondCheck } from "./Check";
 import { QuickFill } from "./QuickFill";
 import { VehicleFinder } from "./VehicleFinder";
+import { LeaseCheck } from "./LeaseCheck";
+import { BudgetHelper } from "./BudgetHelper";
+import { more } from "@/data/strings/more";
+import { install, useCanInstall } from "@/lib/install";
 import { ai } from "@/data/strings/ai";
 import { applySavedDeal } from "@/lib/extract/apply";
 import { clearDeal, useSavedDeal } from "@/lib/saved";
@@ -48,6 +52,7 @@ function Door() {
   };
 
   const saved = useSavedDeal();
+  const canInstall = useCanInstall();
 
   const doors = [
     { id: "check", scene: <SceneCar />, ...t.think },
@@ -71,6 +76,7 @@ function Door() {
           ))}
         </ul>
       </motion.header>
+      <div className="door-main">
       <ul className="doors">
         {saved && (
           <motion.li variants={rise} initial="hidden" animate="show" custom={0}>
@@ -94,46 +100,8 @@ function Door() {
             </div>
           </motion.li>
         )}
-        <motion.li variants={rise} initial="hidden" animate="show" custom={1}>
-          <QuickFill
-            target="walk"
-            trigger={
-              <button type="button" className="quickbtn">
-                <span className="quick-ico" aria-hidden="true">
-                  <CameraIcon size={26} />
-                  <MicIcon size={26} />
-                </span>
-                <span className="door-text">
-                  <b>{walk.quick.open}</b>
-                  <span>{walk.quick.openSub}</span>
-                </span>
-                <span className="door-go" aria-hidden="true">
-                  <ArrowIcon size={22} />
-                </span>
-              </button>
-            }
-          />
-        </motion.li>
-        <motion.li variants={rise} initial="hidden" animate="show" custom={2}>
-          <VehicleFinder
-            trigger={
-              <button type="button" className="doorbtn">
-                <span className="door-art">
-                  <SceneCar />
-                </span>
-                <span className="door-text">
-                  <b>{ai.finder.open}</b>
-                  <span>{ai.finder.openSub}</span>
-                </span>
-                <span className="door-go" aria-hidden="true">
-                  <ArrowIcon size={22} />
-                </span>
-              </button>
-            }
-          />
-        </motion.li>
         {doors.map((d, i) => (
-          <motion.li key={d.id} variants={rise} initial="hidden" animate="show" custom={i + 3}>
+          <motion.li key={d.id} variants={rise} initial="hidden" animate="show" custom={i + 1}>
             <button type="button" className="doorbtn" onClick={() => pick(d.id)}>
               <span className="door-art">{d.scene}</span>
               <span className="door-text">
@@ -147,6 +115,58 @@ function Door() {
           </motion.li>
         ))}
       </ul>
+      <motion.div className="door-tools" variants={rise} initial="hidden" animate="show" custom={5}>
+        <QuickFill
+          target="walk"
+          trigger={
+            <button type="button" className="toolbtn">
+              <span className="quick-ico" aria-hidden="true">
+                <CameraIcon size={22} />
+                <MicIcon size={22} />
+              </span>
+              <span className="door-text">
+                <b>{walk.quick.open}</b>
+                <span>{walk.quick.openSub}</span>
+              </span>
+            </button>
+          }
+        />
+        <VehicleFinder
+          trigger={
+            <button type="button" className="toolbtn">
+              <span className="quick-ico" aria-hidden="true">
+                <CarIcon size={22} />
+              </span>
+              <span className="door-text">
+                <b>{ai.finder.open}</b>
+                <span>{ai.finder.openSub}</span>
+              </span>
+            </button>
+          }
+        />
+        <LeaseCheck
+          trigger={
+            <button type="button" className="toolbtn">
+              <span className="quick-ico" aria-hidden="true">
+                <ReceiptIcon size={22} />
+              </span>
+              <span className="door-text">
+                <b>{more.lease.open}</b>
+                <span>{more.lease.openSub}</span>
+              </span>
+            </button>
+          }
+        />
+      </motion.div>
+      {canInstall && (
+        <p className="install">
+          <button type="button" className="link" onClick={() => void install()}>
+            {more.install.button}
+          </button>{" "}
+          <span className="hint">{more.install.hint}</span>
+        </p>
+      )}
+      </div>
     </div>
   );
 }
@@ -155,6 +175,8 @@ function CheckView() {
   const go = useWalk((s) => s.go);
   const setQuote = useWalk((s) => s.setQuote);
   const setStartedWith = useWalk((s) => s.setStartedWith);
+  // A payment worked out from income is passed in as a new starting value, so the box is remounted with it.
+  const [seed, setSeed] = useState({ pay: 0, n: 0 });
   return (
     <div className="check-view">
       <header className="stagehead">
@@ -163,6 +185,8 @@ function CheckView() {
         </div>
       </header>
       <TenSecondCheck
+        key={seed.n}
+        initial={{ pay: seed.pay }}
         onContinue={(v) => {
           useDeal.getState().startQuote();
           useDeal.setState((s) => ({ offers: [{ ...s.offers[0], months: v.months, down: v.down }, s.offers[1]] }));
@@ -171,6 +195,14 @@ function CheckView() {
           setStartedWith("payment");
           go("stage", 1);
         }}
+      />
+      <BudgetHelper
+        onUse={(pay) => setSeed((s) => ({ pay, n: s.n + 1 }))}
+        trigger={
+          <button type="button" className="link budget-link">
+            {more.budget.open} {more.budget.openSub}
+          </button>
+        }
       />
       <Btn variant="quiet" icon={<BackIcon size={18} />} onClick={() => go("door")}>
         {walk.back}

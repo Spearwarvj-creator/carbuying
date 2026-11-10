@@ -80,7 +80,7 @@ export function MoneyBar({ parts, showShare = true }: { parts: BarPart[]; showSh
   const total = shown.reduce((s, p) => s + p.cents, 0) || 1;
   return (
     <figure className="mbar">
-      <div className="mbar-row" role="img" aria-label={shown.map((p) => `${p.label} about ${Math.round((p.cents / total) * 100)} in 100`).join(", ")}>
+      <div className="mbar-row" role="img" aria-label={shown.map((p) => walk.graphics.partAria(p.label, Math.round((p.cents / total) * 100))).join(", ")}>
         {shown.map((p, i) => (
           <motion.span
             key={p.key}
@@ -98,7 +98,7 @@ export function MoneyBar({ parts, showShare = true }: { parts: BarPart[]; showSh
             <span className="k">{p.label}</span>
             {showShare && (
               <span className="v">
-                <Nums text={`${Math.max(Math.round((p.cents / total) * 100), 1)} in 100`} />
+                <Nums text={walk.graphics.inHundred(Math.max(Math.round((p.cents / total) * 100), 1))} />
               </span>
             )}
           </li>
@@ -137,7 +137,7 @@ export function ShareRing({ share, label }: { share: number; label: string }) {
       </svg>
       <div className="share-mid" aria-hidden="true">
         <AnimatedNumber value={clamped} format={inHundred} className="num share-n" />
-        <span className="share-of">in 100</span>
+        <span className="share-of">{walk.graphics.of100}</span>
       </div>
       <figcaption>{label}</figcaption>
     </figure>
@@ -156,7 +156,7 @@ export function FourSquare({ lit, values }: { lit?: "price" | "trade" | "down" |
   ] as const;
   return (
     <figure className="four">
-      <div className="four-grid" role="img" aria-label="A worksheet with four boxes: price, trade-in, down payment and monthly payment.">
+      <div className="four-grid" role="img" aria-label={walk.stage1.fourAlt}>
         {cells.map((c, i) => (
           <motion.span
             key={c.k}

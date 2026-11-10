@@ -405,12 +405,14 @@ button {
 
 .tabs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   border-top: 1px solid var(--line);
   margin: 0 -16px;
   padding: 0 8px;
 }
 .tabs button {
+  white-space: nowrap;
+  padding: 0 2px;
   height: 56px;
   font-size: var(--t-sm);
   font-weight: 600;
@@ -644,7 +646,9 @@ button {
   .cols[data-tab="target"] .colA,
   .cols[data-tab="target"] .colB,
   .cols[data-tab="ask"] .colA,
-  .cols[data-tab="ask"] .colB {
+  .cols[data-tab="ask"] .colB,
+  .cols[data-tab="checks"] .colA,
+  .cols[data-tab="checks"] .colB {
     display: none;
   }
   .cols:not([data-tab="deal"]) .panel {

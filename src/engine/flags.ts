@@ -1,3 +1,4 @@
+import { flagText as x } from "@/data/strings/flags";
 import { costBreakdown, extrasRealCostCents, paymentEquivalents } from "./breakdown";
 import { computeDeal, type Offer } from "./offer";
 
@@ -45,10 +46,10 @@ export function dealFlags({ offer, quotedPay = 0 }: FlagInput): DealFlag[] {
     flags.push({
       id: "longTerm",
       severity: offer.months >= 84 ? "high" : "check",
-      title: `${offer.months} months is a long loan`,
-      body: `Compared with 60 months, the payment is about ${whole(lower)} lower, but you pay about ${whole(extra)} more in total.`,
-      ask: "Can you show me the payment and the total for 60 months as well?",
-      source: "Experian, State of the Automotive Finance Market (2026): nearly one third of loans run longer than six years.",
+      title: x.longTerm.title(offer.months),
+      body: x.longTerm.body(whole(lower), whole(extra)),
+      ask: x.longTerm.ask,
+      source: x.longTerm.source,
       figures: [offer.months, lower, extra, 60],
     });
   }
@@ -58,10 +59,10 @@ export function dealFlags({ offer, quotedPay = 0 }: FlagInput): DealFlag[] {
     flags.push({
       id: "highFees",
       severity: offer.fees > 900 ? "high" : "check",
-      title: "The fees are on the high side",
-      body: `Fees are ${whole(offer.fees)}. Dealer document fees often run a few hundred dollars, and some states cap them.`,
-      ask: "Can you list each fee and what it is for?",
-      source: "Consumer guides and state rules differ; check your state's attorney general or motor vehicle site.",
+      title: x.highFees.title,
+      body: x.highFees.body(whole(offer.fees)),
+      ask: x.highFees.ask,
+      source: x.highFees.source,
       figures: [offer.fees],
     });
   }
@@ -74,10 +75,10 @@ export function dealFlags({ offer, quotedPay = 0 }: FlagInput): DealFlag[] {
     flags.push({
       id: "extras",
       severity: "check",
-      title: "There are extras in this deal",
-      body: `The extras cost ${whole(offer.addons)}, and about ${whole(real / 100)} once tax and interest are counted. That is about ${eq.toFixed(1)} of your monthly payments.`,
-      ask: "If I did not ask for an extra, can you take it off? Which ones can I cancel later?",
-      source: "CFPB and Consumer Reports: you do not have to pay for an add-on you did not ask for.",
+      title: x.extras.title,
+      body: x.extras.body(whole(offer.addons), whole(real / 100), eq.toFixed(1)),
+      ask: x.extras.ask,
+      source: x.extras.source,
       figures: [offer.addons, real / 100, Number(eq.toFixed(1)), cents / 100],
     });
   }
@@ -88,10 +89,10 @@ export function dealFlags({ offer, quotedPay = 0 }: FlagInput): DealFlag[] {
     flags.push({
       id: "packing",
       severity: "high",
-      title: "The payment does not match the numbers",
-      body: `With these numbers the payment comes to ${whole(d.pay)} a month, and the dealer said ${whole(quotedPay)}. That is ${whole(Math.abs(gap))} ${gap > 0 ? "less" : "more"} than the numbers give.`,
-      ask: "What is in the monthly payment? Can you show it line by line?",
-      source: "FTC: payment packing hides add-ons inside a monthly figure.",
+      title: x.packing.title,
+      body: x.packing.body(whole(d.pay), whole(quotedPay), whole(Math.abs(gap)), gap > 0),
+      ask: x.packing.ask,
+      source: x.packing.source,
       figures: [d.pay, quotedPay, Math.abs(gap)],
     });
   }
@@ -101,10 +102,10 @@ export function dealFlags({ offer, quotedPay = 0 }: FlagInput): DealFlag[] {
     flags.push({
       id: "underwater",
       severity: "check",
-      title: "You owe more than the trade is worth",
-      body: `The gap is ${whole(-d.equity)}. It is added to the new loan, and you pay interest on it.`,
-      ask: "How much of the new loan is the old loan I still owe?",
-      source: "FTC, Financing or Leasing a Car: negative equity is rolled into the new loan.",
+      title: x.underwater.title,
+      body: x.underwater.body(whole(-d.equity)),
+      ask: x.underwater.ask,
+      source: x.underwater.source,
       figures: [-d.equity],
     });
   }
@@ -114,10 +115,10 @@ export function dealFlags({ offer, quotedPay = 0 }: FlagInput): DealFlag[] {
     flags.push({
       id: "rate",
       severity: offer.apr >= 15 ? "high" : "check",
-      title: `${offer.apr}% is a higher rate`,
-      body: `Rates depend on your credit and the lender. A dealer can add to the rate a lender offers, and the extra interest goes to the dealer.`,
-      ask: "What rate did the lender approve me for, and is any of this rate added by the dealership?",
-      source: "CFPB and the Center for Responsible Lending: dealer rate markups.",
+      title: x.rate.title(offer.apr),
+      body: x.rate.body,
+      ask: x.rate.ask,
+      source: x.rate.source,
       figures: [offer.apr],
     });
   }
@@ -126,10 +127,10 @@ export function dealFlags({ offer, quotedPay = 0 }: FlagInput): DealFlag[] {
     flags.push({
       id: "noTax",
       severity: "check",
-      title: "No sales tax is counted",
-      body: "The tax rate is zero, so the out-the-door price here has no sales tax in it. Most states charge it on a car.",
-      ask: "What is the sales tax in dollars on this deal?",
-      source: "Enter the tax from the worksheet.",
+      title: x.noTax.title,
+      body: x.noTax.body,
+      ask: x.noTax.ask,
+      source: x.noTax.source,
       figures: [],
     });
   }
@@ -138,10 +139,10 @@ export function dealFlags({ offer, quotedPay = 0 }: FlagInput): DealFlag[] {
     flags.push({
       id: "interestShare",
       severity: "info",
-      title: "A large share is interest",
-      body: `About ${Math.round((100 * d.interest) / d.total)} of every 100 dollars you pay goes to interest.`,
-      ask: "What would the interest be on a shorter loan or a bigger down payment?",
-      source: "Calculated from the numbers on this page.",
+      title: x.interestShare.title,
+      body: x.interestShare.body(Math.round((100 * d.interest) / d.total)),
+      ask: x.interestShare.ask,
+      source: x.interestShare.source,
       figures: [Math.round((100 * d.interest) / d.total), 100],
     });
   }

@@ -8,6 +8,9 @@ import { toCents } from "./money";
  *
  * Tax = taxRate x (price + taxed add-ons + taxed fees), minus the trade-in
  * allowance when the buyer's state taxes only the difference (never below zero).
+ *
+ * rebate is manufacturer or dealer cash that lowers what is owed after tax. Tax is worked out on the price before
+ * the rebate, which is the usual rule. A state that taxes after the rebate needs the price entered after it.
  */
 export const OfferSchema = z.object({
   price: z.number().gt(0).max(10_000_000),
@@ -24,6 +27,7 @@ export const OfferSchema = z.object({
   taxRate: z.number().min(0).max(0.2),
   tradeAllowance: z.number().min(0).max(10_000_000).default(0),
   tradePayoff: z.number().min(0).max(10_000_000).default(0),
+  rebate: z.number().min(0).max(1_000_000).default(0),
   feesTaxed: z.boolean().default(false),
   addonsTaxed: z.boolean().default(true),
   taxDifferenceOnly: z.boolean().default(false),
@@ -39,6 +43,7 @@ export function makeOffer(input: OfferInput): Offer {
   return {
     tradeAllowance: 0,
     tradePayoff: 0,
+    rebate: 0,
     feesTaxed: false,
     addonsTaxed: true,
     taxDifferenceOnly: false,
@@ -78,7 +83,7 @@ export function computeDeal(offer: Offer): Deal {
   const tax = offer.taxRate * Math.max(taxedBase, 0);
   const otd = offer.price + tax + offer.fees + offer.addons;
   const equity = offer.tradeAllowance - offer.tradePayoff;
-  const finRaw = otd - offer.down - equity;
+  const finRaw = otd - offer.down - offer.rebate - equity;
   const fin = Math.max(finRaw, 0);
   const pay = payment(fin, offer.apr, offer.months);
   const total = offer.down + pay * offer.months;
@@ -100,6 +105,22 @@ export function computeDeal(offer: Offer): Deal {
     finCents: toCents(fin),
     taxCents: toCents(tax),
   };
+}
+
+/**
+ * The tax rate that gives a tax amount the buyer read off a worksheet, for the price, fees and add-ons already
+ * entered. It is the exact fraction, so the tax the calculator shows matches the dollars on the paper. Null when
+ * there is nothing taxed yet or the amount is not a plausible tax (over 20 percent of the taxed amount).
+ */
+export function taxRateFromAmount(offer: Offer, taxDollars: number): number | null {
+  const base =
+    offer.price +
+    (offer.addonsTaxed ? offer.addons : 0) +
+    (offer.feesTaxed ? offer.fees : 0) -
+    (offer.taxDifferenceOnly ? offer.tradeAllowance : 0);
+  if (base <= 0 || taxDollars < 0) return null;
+  const rate = taxDollars / base;
+  return rate <= 0.2 ? rate : null;
 }
 
 /** Returns a list of plain-language problems, empty when the offer is valid. */

@@ -31,8 +31,16 @@ import { DealChecks } from "./DealChecks";
 import { PracticeSheet } from "./PracticeSheet";
 import { ReadAloud } from "./ReadAloud";
 import { SaveDeal } from "./SaveDeal";
+import { ShareDeal } from "./ShareDeal";
+import { PrintDeal } from "./PrintDeal";
 import { ZipTax } from "./ZipTax";
+import { PriceFromPayment } from "./PriceFromPayment";
+import { ImpliedRate } from "./ImpliedRate";
+import { CashCompare } from "./CashCompare";
+import { TaxAmount } from "./TaxAmount";
+import { more } from "@/data/strings/more";
 import { ai } from "@/data/strings/ai";
+import { useAiOn } from "@/lib/ai-status";
 import { dealSummary } from "@/lib/summary";
 
 /** The first offer, the one the Walk edits. */
@@ -140,6 +148,10 @@ export function Stage2() {
   const t = walk.stage2;
   const { o, d, set } = useQuote();
   const [taxKey, setTaxKey] = useState(0);
+  const [priceKey, setPriceKey] = useState(0);
+  const quotedPay = useWalk((s) => s.quotedPay);
+  const checkMonths = useWalk((s) => s.checkMonths);
+  const checkDown = useWalk((s) => s.checkDown);
   const parts: BarPart[] = [
     { key: "car", label: t.parts.car, cents: toCents(o.price) },
     { key: "tax", label: t.parts.tax, cents: d.taxCents },
@@ -149,15 +161,41 @@ export function Stage2() {
     <>
       <div className="col-a">
         <StageHead title={t.title} sub={t.sub} icon={<TagIcon size={26} />} tone="car" />
-        <MoneyField label={t.price} prefix="$" value={o.price} onChange={(n) => set({ price: n })} autoFocus />
+        <MoneyField key={`price${priceKey}`} label={t.price} prefix="$" value={o.price} onChange={(n) => set({ price: n })} autoFocus />
         <MoneyField key={`tax${taxKey}`} label={t.tax} suffix="%" decimals={2} max={20} value={o.taxRate * 100} onChange={(n) => set({ taxRate: n / 100 })} hint={t.taxHint} />
-        <ZipTax
-          onUse={(pct) => {
-            set({ taxRate: pct / 100 });
-            setTaxKey((k) => k + 1);
-          }}
-        />
+        {o.price <= 0 && (
+          <PriceFromPayment
+            pay={quotedPay}
+            months={checkMonths}
+            down={checkDown}
+            taxRate={o.taxRate}
+            fees={o.fees}
+            onPick={(price) => {
+              set({ price });
+              setPriceKey((k) => k + 1);
+            }}
+          />
+        )}
         <MoneyField label={t.fees} prefix="$" value={o.fees} onChange={(n) => set({ fees: n })} hint={t.feesHint} learn={<Term k="docFee" />} />
+        <Disclosure title={more.taxAmount.more} className="taxhelp">
+          <TaxAmount
+            offer={o}
+            onRate={(r) => {
+              set({ taxRate: r });
+              setTaxKey((k) => k + 1);
+            }}
+          />
+          <label className="checkrow">
+            <input type="checkbox" checked={o.feesTaxed} onChange={(e) => set({ feesTaxed: e.target.checked })} />
+            <span>{ai.tax.feesTaxed}</span>
+          </label>
+          <ZipTax
+            onUse={(pct) => {
+              set({ taxRate: pct / 100 });
+              setTaxKey((k) => k + 1);
+            }}
+          />
+        </Disclosure>
       </div>
       <div className="col-b">
         <Readout label={<Term k="outTheDoor">{t.numberLabel}</Term>} value={o.price > 0 ? d.otd : 0} empty={o.price <= 0} dup />
@@ -224,6 +262,8 @@ export function Stage4() {
   const payDiff = Math.abs(alt.payCents - d.payCents);
 
   const ready = rateEntered && o.price > 0;
+  const quotedPay = useWalk((s) => s.quotedPay);
+  const [aprKey, setAprKey] = useState(0);
 
   return (
     <>
@@ -239,6 +279,7 @@ export function Stage4() {
           <MonthChips value={o.months} onChange={(m) => set({ months: m })} label={t.months} />
         </div>
         <MoneyField
+          key={`apr${aprKey}`}
           label={t.apr}
           learn={<Term k="apr" />}
           suffix="%"
@@ -251,13 +292,25 @@ export function Stage4() {
           }}
           autoFocus
         />
+        {quotedPay > 0 && o.price > 0 && !ready && (
+          <ImpliedRate
+            financed={d.fin}
+            pay={quotedPay}
+            months={o.months}
+            onUse={(apr) => {
+              set({ apr });
+              setRateEntered(true);
+              setAprKey((k) => k + 1);
+            }}
+          />
+        )}
         <Slider
           label={t.apr}
           min={0}
           max={25}
           step={0.25}
           value={o.apr}
-          format={(n) => `${n} percent`}
+          format={(n) => `${n}%`}
           onChange={(n) => {
             set({ apr: n });
             setRateEntered(true);
@@ -294,7 +347,7 @@ export function Stage4() {
           <>
             <PaymentStrip months={o.months} interestBlocks={interestBlocks} caption={t.stripCaption(o.months, interestBlocks)} />
             <p className="hint">
-              <Term k="interest">Interest</Term>: <Nums text={t.interestShare(share)} />
+              <Term k="interest">{t.stripKey.interest}</Term>: <Nums text={t.interestShare(share)} />
             </p>
           </>
         ) : (
@@ -350,6 +403,16 @@ export function Stage5() {
           value={o.tradePayoff}
           onChange={(n) => set({ tradePayoff: n })}
         />
+        <MoneyField label={more.rebate.label} prefix="$" value={o.rebate} onChange={(n) => set({ rebate: n })} hint={more.rebate.hint} />
+        {o.tradeAllowance > 0 && (
+          <label className="checkrow">
+            <input type="checkbox" checked={o.taxDifferenceOnly} onChange={(e) => set({ taxDifferenceOnly: e.target.checked })} />
+            <span>
+              {ai.tax.difference}
+              <small className="hint"> {ai.tax.hint}</small>
+            </span>
+          </label>
+        )}
         <Btn variant="quiet" onClick={() => set({ tradeAllowance: 0, tradePayoff: 0 })}>
           {t.noTrade}
         </Btn>
@@ -375,6 +438,7 @@ export function Stage6() {
   const seen = useWalk((s) => s.seen);
   const quotedPay = useWalk((s) => s.quotedPay);
   const vehicle = useDeal((s) => s.vehicle);
+  const aiOn = useAiOn();
   const b = costBreakdown(o);
   const share = d.totalCents > 0 ? Math.round((b.interestCents / d.totalCents) * 100) : 0;
   const extrasReal = extrasRealCostCents(o);
@@ -443,17 +507,23 @@ export function Stage6() {
           ))}
         <div className="actions">
           <ReadAloud text={`${t.totalLabel}: ${whole(d.totalCents)}. ${dealSummary(o, quotedPay).text}`} />
-          <PracticeSheet
-            offer={o}
-            quotedPay={quotedPay}
-            trigger={
-              <Btn variant="ghost" type="button">
-                {ai.practice.open}
-              </Btn>
-            }
-          />
+          {aiOn && (
+            <PracticeSheet
+              offer={o}
+              quotedPay={quotedPay}
+              trigger={
+                <Btn variant="ghost" type="button">
+                  {ai.practice.open}
+                </Btn>
+              }
+            />
+          )}
         </div>
         <SaveDeal offer={o} quotedPay={quotedPay} />
+        <div className="actions">
+          <PrintDeal quotedPay={quotedPay} />
+        </div>
+        <ShareDeal />
         <div className="actions">
           <Btn variant="primary" arrow onClick={second}>
             {t.compare}
@@ -470,6 +540,7 @@ export function Stage6() {
         <ShareRing share={share} label={t.parts.interest} />
         <MoneyBar parts={parts} />
         <DealChecks offer={o} quotedPay={quotedPay} />
+        <CashCompare offer={o} />
         <Disclosure title={t.showMath} className="math">
           <dl>
             {parts

@@ -2425,3 +2425,227 @@
   font-size: var(--t-sm);
   color: var(--ink-2);
 }
+
+/* ---------- Payment-only help, tax options ---------- */
+.afford {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--c-car);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--c-car) 10%, var(--panel));
+}
+.afford h2 {
+  margin: 0;
+  font-size: var(--t-lg);
+}
+.afford p {
+  margin: 0;
+}
+.afford ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.afford li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 10px;
+}
+.checkrow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 44px;
+  font-size: var(--t-md);
+}
+.checkrow input {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+  accent-color: var(--c-car);
+}
+.checkrow small {
+  display: block;
+}
+
+/* Larger text on a phone: the Walk and Desk switch takes the room the name needs, so the mark stands for the name. */
+@media (max-width: 520px) {
+  html[data-text="large"] .top .brand {
+    font-size: 0;
+  }
+}
+
+/* The door: three ways in, and two tools beneath them, smaller. */
+.door-main {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.door-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 10px;
+}
+.toolbtn {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--c-car);
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--c-car) 10%, var(--panel));
+  text-align: left;
+  transition: translate 0.25s var(--ease);
+}
+.toolbtn:hover {
+  translate: 0 -2px;
+}
+.toolbtn .door-text b {
+  font-size: var(--t-md);
+}
+.toolbtn .door-text span {
+  font-size: var(--t-sm);
+}
+.nudge {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--c-car);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--c-car) 10%, var(--panel));
+}
+.nudge p {
+  margin: 0;
+}
+
+.deskactions {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  margin: 14px 0;
+}
+
+/* ---------- Print: only the one-page sheet ---------- */
+.print-root {
+  display: none;
+}
+@media print {
+  body > :not(.print-root) {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .print-root {
+    display: block;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    line-height: 1.35;
+    color: #000;
+  }
+  .print-root h1 {
+    margin: 0 0 4pt;
+    font-size: 18pt;
+  }
+  .print-root h2 {
+    margin: 14pt 0 4pt;
+    font-size: 13pt;
+  }
+  .print-root table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .print-root th,
+  .print-root td {
+    padding: 3pt 6pt;
+    border-bottom: 0.5pt solid #999;
+    text-align: left;
+  }
+  .print-root thead th {
+    border-bottom: 1pt solid #000;
+  }
+  .print-root ol {
+    margin: 0;
+    padding-left: 16pt;
+  }
+  .print-note {
+    margin-top: 14pt;
+    font-size: 9pt;
+    color: #333;
+  }
+}
+
+/* Name box on the Desk, lease and budget results, and the budget link on the payment check. */
+.namebox {
+  display: grid;
+  gap: 4px;
+  padding: 6px 0 2px;
+}
+.namebox label {
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.namebox input {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1.5px solid var(--edge);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+}
+.lease-out {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 14px;
+  border: 1.5px solid var(--edge);
+  border-radius: 14px;
+  background: var(--panel);
+}
+.lease-out .facts {
+  margin: 0;
+}
+.budget-link {
+  justify-self: start;
+  white-space: normal;
+  text-align: left;
+}
+
+/* The lease figures stay in view at the bottom of the sheet while the fields above are filled in. */
+.lease-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin: 14px -4px 0;
+  padding: 10px 12px;
+  border: 1.5px solid var(--edge);
+  border-radius: 14px;
+  background: var(--panel-2);
+}
+.lease-bar .facts {
+  margin: 0;
+}
+.lease-bar p {
+  margin: 0;
+}
+
+.install {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}

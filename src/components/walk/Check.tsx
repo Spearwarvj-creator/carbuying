@@ -10,7 +10,7 @@ import { formatWhole, paymentsAddUp } from "@/engine";
 import { MoneyField } from "./MoneyField";
 import { PaymentStrip } from "./graphics";
 
-export const MONTH_CHOICES = [36, 48, 60, 72, 84] as const;
+export const MONTH_CHOICES = [24, 36, 48, 60, 72, 84, 96] as const;
 
 export function MonthChips({ value, onChange, label }: { value: number; onChange: (m: number) => void; label: string }) {
   return <Segmented variant="chips" label={label} value={value} onChange={onChange} options={MONTH_CHOICES.map((m) => ({ value: m, label: m }))} />;

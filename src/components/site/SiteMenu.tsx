@@ -13,7 +13,7 @@ const f = site.footer.links;
  * legal pages and the text size and screen switches. Radix Popover gives the focus handling,
  * Escape to close and the return of focus to the button. On wide screens the header shows the links itself.
  */
-export function SiteMenu({ calculator = true }: { calculator?: boolean }) {
+export function SiteMenu({ calculator = true, language = false }: { calculator?: boolean; language?: boolean }) {
   return (
     <Popover.Root>
       <Popover.Trigger className="menu-btn" aria-label={site.nav.menu}>
@@ -49,7 +49,7 @@ export function SiteMenu({ calculator = true }: { calculator?: boolean }) {
             </ul>
           </nav>
           <div className="menu-prefs">
-            <Prefs />
+            <Prefs language={language} />
           </div>
         </Popover.Content>
       </Popover.Portal>

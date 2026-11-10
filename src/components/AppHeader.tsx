@@ -51,10 +51,10 @@ export function AppHeader({ tag }: { tag?: string }) {
           <Link href="/about">{site.nav.about}</Link>
         </nav>
         <span className="top-prefs">
-          <Prefs />
+          <Prefs language />
         </span>
         <span className="top-menu">
-          <SiteMenu />
+          <SiteMenu language />
         </span>
       </div>
     </header>

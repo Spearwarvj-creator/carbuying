@@ -134,13 +134,117 @@ const RULES: Rule[] = [
 /** "Take 500 off the price": a change to the price the buyer already has, so it needs the current price to mean anything. */
 const TAKE_OFF = new RegExp(String.raw`(?:take|knock|drop|lower|reduce|cut)\s+(?:the price\s+)?${N}\s*(?:off|down)(?:\s+(?:of\s+)?(?:the\s+)?price)?`, "i");
 
-export function parseSpoken(input: string, current?: { price?: number }): Detected {
-  let text = wordsToDigits(input)
-    .replace(/\bdollars?\b|\bbucks\b/gi, " ")
-    .replace(/\bout the door\b[^,.;]*/gi, " ") // an out-the-door total is not the selling price
-    .replace(/[-]/g, " ");
+
+/* ------------------------------------------------------------------ Spanish */
+
+const ES_ONES: Record<string, number> = {
+  cero: 0, un: 1, uno: 1, una: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10, once: 11,
+  doce: 12, trece: 13, catorce: 14, quince: 15, dieciseis: 16, diecisiete: 17, dieciocho: 18, diecinueve: 19, veinte: 20,
+  veintiun: 21, veintiuno: 21, veintiuna: 21, veintidos: 22, veintitres: 23, veinticuatro: 24, veinticinco: 25, veintiseis: 26,
+  veintisiete: 27, veintiocho: 28, veintinueve: 29,
+};
+const ES_TENS: Record<string, number> = { treinta: 30, cuarenta: 40, cincuenta: 50, sesenta: 60, setenta: 70, ochenta: 80, noventa: 90 };
+const ES_HUNDREDS: Record<string, number> = {
+  cien: 100, ciento: 100, doscientos: 200, trescientos: 300, cuatrocientos: 400, quinientos: 500, seiscientos: 600,
+  setecientos: 700, ochocientos: 800, novecientos: 900,
+};
+const isEsNumber = (w: string) => w in ES_ONES || w in ES_TENS || w in ES_HUNDREDS || w === "mil";
+
+/** Lowercase, no accents, so "dieciséis" and "dieciseis" are the same word. */
+const plain = (t: string) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+/**
+ * Spanish number words to digits: "treinta y un mil quinientos" is 31,500, "quinientos veintidós" is 522,
+ * "siete punto nueve" is 7.9. Digits the speech service already wrote stay as they are, and "3 mil" is 3,000.
+ */
+export function wordsToDigitsEs(input: string): string {
+  const words = plain(input)
+    .replace(/\bpor\s*ciento\b/g, "%") // "ciento" here is not 100
+    .replace(/([,;])(\s|$)/g, " $1 ")
+    .split(/\s+/)
+    .filter(Boolean);
+  const out: string[] = [];
+  let i = 0;
+  while (i < words.length) {
+    const w = words[i];
+    const last = out[out.length - 1] ?? "";
+    if (w === "mil" && /^\d[\d,]*(?:\.\d+)?$/.test(last)) {
+      out[out.length - 1] = String(Number(last.replace(/,/g, "")) * 1000);
+      i++;
+      continue;
+    }
+    if (!isEsNumber(w)) {
+      out.push(w);
+      i++;
+      continue;
+    }
+    let total = 0;
+    let current = 0;
+    let any = false;
+    while (i < words.length) {
+      const x = words[i];
+      if (x === "y" && any && (words[i + 1] ?? "") in ES_ONES) {
+        i++;
+        continue;
+      }
+      if (!isEsNumber(x)) break;
+      if (x === "mil") {
+        total += (current || 1) * 1000;
+        current = 0;
+      } else current += ES_ONES[x] ?? ES_TENS[x] ?? ES_HUNDREDS[x];
+      any = true;
+      i++;
+    }
+    let text = String(total + current);
+    if (words[i] === "punto" && (words[i + 1] ?? "") in ES_ONES && ES_ONES[words[i + 1]] < 10) {
+      let frac = "";
+      i++;
+      while (i < words.length && words[i] in ES_ONES && ES_ONES[words[i]] < 10) frac += ES_ONES[words[i++]];
+      text += `.${frac}`;
+    }
+    out.push(text);
+  }
+  return out.join(" ");
+}
+
+const RULES_ES: Rule[] = [
+  { key: "months", re: new RegExp(String.raw`(\d{1,3})\s*(?:meses|mes\b)`, "i") },
+  { key: "months", re: new RegExp(String.raw`(\d{1,2})\s*(?:anos?)\b`, "i"), convert: (v) => v * 12 },
+  { key: "taxAmount", re: new RegExp(String.raw`(?:impuestos?|tax)\s*(?:es|de|fue|son|del|a)?\D{0,10}?${N}`, "i"), ok: (v) => v > 20 },
+  { key: "taxRate", re: new RegExp(String.raw`(?:impuestos?|tax)\s*(?:es|de|fue|son|del|a|tasa)?\D{0,10}?(\d+(?:\.\d+)?)\s*(?:%|por\s*ciento)?`, "i"), ok: (v) => v <= 20 },
+  { key: "apr", re: new RegExp(String.raw`(?:apr|tasa|interes)\s*(?:es|de|a|fue)?\D{0,10}?(\d+(?:\.\d+)?)`, "i"), ok: (v) => v <= 40 },
+  { key: "apr", re: new RegExp(String.raw`(\d+(?:\.\d+)?)\s*(?:%|por\s*ciento)`, "i"), ok: (v) => v <= 40 },
+  { key: "monthlyPayment", re: new RegExp(`${N}\\s*(?:al|por|cada|/)\\s*mes`, "i") },
+  { key: "monthlyPayment", re: new RegExp(String.raw`(?:pago\s+mensual|mensualidad|cuota(?:\s+mensual)?|pagos?)\s*(?:es|de|seria|son)?\D{0,10}?${N}`, "i") },
+  { key: "down", re: new RegExp(String.raw`(?:enganche|pago\s+inicial|entrada|efectivo\s+al\s+inicio)\s*(?:es|de|fue)?\D{0,12}?${N}`, "i") },
+  { key: "down", re: new RegExp(`${N}\\s*(?:de\\s+)?(?:enganche|entrada|al\\s+inicio)`, "i") },
+  { key: "tradePayoff", re: new RegExp(String.raw`(?:debo|debe|adeudo|saldo|deuda)\s*(?:es|de|unos)?\D{0,12}?${N}`, "i") },
+  { key: "tradePayoff", re: new RegExp(`${N}\\s*(?:de\\s+)?(?:saldo|deuda|adeudo)`, "i") },
+  { key: "tradeAllowance", re: new RegExp(String.raw`(?:auto\s+a\s+cambio|a\s+cambio|intercambio|permuta|trade(?:\s*in)?)\s*(?:vale|valor|es|de|por)?\D{0,12}?${N}`, "i") },
+  { key: "fees", re: new RegExp(String.raw`(?:cargos?(?:\s+por\s+documentos)?|tarifas?|honorarios|documentos)\s*(?:es|de|son|total)?\D{0,12}?${N}`, "i") },
+  { key: "addons", re: new RegExp(String.raw`(?:extras?|adicionales?|garantia|proteccion|accesorios|contrato\s+de\s+servicio)\s*(?:es|son|de|total|cuesta)?\D{0,12}?${N}`, "i") },
+  { key: "price", re: new RegExp(String.raw`(?:precio\s+de\s+venta|precio|cuesta|vale|costo)\s*(?:es|de|fue|a)?\D{0,12}?${N}`, "i") },
+];
+
+const TAKE_OFF_ES = new RegExp(String.raw`(?:quit\w*|baj\w*|rebaj\w*|descuent\w*|rest\w*)\s+(?:el precio\s+)?${N}\s*(?:al|del|de)?\s*(?:precio)?`, "i");
+
+/** A thousands dot ("31.500") is how some Spanish speech output writes 31,500; it must not become 31.5. */
+const esThousands = (t: string) => t.replace(/(\d)\.(\d{3})(?!\d)/g, "$1$2");
+
+export function parseSpoken(input: string, current?: { price?: number }, lang: "en" | "es" = "en"): Detected {
+  const es = lang === "es";
+  const rules = es ? RULES_ES : RULES;
+  const takeOff = es ? TAKE_OFF_ES : TAKE_OFF;
+  let text = es
+    ? esThousands(wordsToDigitsEs(plain(input)))
+        .replace(/\bdolares?\b|\bpesos\b/gi, " ")
+        .replace(/\bprecio final[^,.;]*/gi, " ") // a total with everything in is not the selling price
+    : wordsToDigits(input)
+        .replace(/\bdollars?\b|\bbucks\b/gi, " ")
+        .replace(/\bout the door\b[^,.;]*/gi, " ") // an out-the-door total is not the selling price
+        .replace(/[-]/g, " ");
   let found: Detected = {};
-  const off = TAKE_OFF.exec(text);
+  const off = takeOff.exec(text);
   if (off && current?.price && current.price > 0) {
     const amount = num(off);
     const price = fit("price", current.price - amount);
@@ -149,7 +253,7 @@ export function parseSpoken(input: string, current?: { price?: number }): Detect
   }
   let taxAmount: number | null = null;
   let taxFrom = "";
-  for (const rule of RULES) {
+  for (const rule of rules) {
     if (rule.key !== "taxAmount" && found[rule.key]) continue;
     if (rule.key === "taxAmount" && taxAmount !== null) continue;
     const m = rule.re.exec(text);

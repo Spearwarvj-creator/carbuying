@@ -6,6 +6,7 @@ import { Btn } from "@/components/ui/Btn";
 import { CloseIcon, MicIcon } from "@/components/ui/icons";
 import { ai } from "@/data/strings/ai";
 import type { Offer } from "@/engine";
+import { getLang } from "@/lib/i18n";
 import { useListen } from "@/lib/listen";
 import { dealSummary } from "@/lib/summary";
 import { ReadAloud } from "./ReadAloud";
@@ -17,13 +18,16 @@ const p = ai.practice;
  * these rules, never by the model, so it cannot be talked into saying a buyer did well.
  */
 export const RUBRIC: { id: keyof typeof p.rubric; test: RegExp }[] = [
-  { id: "writing", test: /\b(in writing|written|put (it|that) in writing|on paper|itemi[sz]ed)\b/i },
-  { id: "without", test: /\b(without (the|that|those|any)|take (it|that|those|them) off|remove (the|that|those)|price (before|without)|just the (car|price))\b/i },
-  { id: "no", test: /\b(no thank|no,? thanks|not interested|i('| a)?ll pass|i decline|i don'?t want|did not ask for|didn'?t ask for|i('| wi)ll skip)\b/i },
-  { id: "final", test: /\b(not final|financing (falls|fell)|falls? through|isn'?t approved|not approved|spot delivery|contract in transit|if (the )?(loan|financing) (is|isn'?t|does))\b/i },
-  { id: "rate", test: /\b(rate|apr|lender|buy rate|who is (the )?(bank|lender)|which (bank|lender))\b/i },
-  { id: "time", test: /\b(time to read|read (it|the contract|everything)|take (it|the contract) home|review (it|the contract)|look it over|think about it)\b/i },
+  { id: "writing", test: /\b(in writing|written|put (it|that) in writing|on paper|itemi[sz]ed|por escrito|en papel|detallad[oa])\b/i },
+  { id: "without", test: /\b(without (the|that|those|any)|take (it|that|those|them) off|remove (the|that|those)|price (before|without)|just the (car|price)|sin (los|el|esos|ese|extras)|quit[ae] (los|el|eso|esos)|solo el (auto|precio))\b/i },
+  { id: "no", test: /\b(no thank|no,? thanks|not interested|i('| a)?ll pass|i decline|i don'?t want|did not ask for|didn'?t ask for|i('| wi)ll skip|no,? gracias|no me interesa|no quiero|no (lo )?pedi|yo no pedi)\b/i },
+  { id: "final", test: /\b(not final|financing (falls|fell)|falls? through|isn'?t approved|not approved|spot delivery|contract in transit|if (the )?(loan|financing) (is|isn'?t|does)|no (se )?(aprueba|aprobaron)|financiamiento no|si (el )?(financiamiento|prestamo) (no|falla)|no es definitivo)\b/i },
+  { id: "rate", test: /\b(rate|apr|lender|buy rate|who is (the )?(bank|lender)|which (bank|lender)|tasa|prestamista|banco)\b/i },
+  { id: "time", test: /\b(time to read|read (it|the contract|everything)|take (it|the contract) home|review (it|the contract)|look it over|think about it|tiempo para (leer|revisar)|leer (el )?contrato|llevar(me)? (el )?contrato|pensarlo)\b/i },
 ];
+
+/** Accents are dropped before the patterns run, so “préstamo” and “prestamo” are the same word. */
+export const unaccent = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -50,7 +54,7 @@ export function PracticeSheet({ trigger, offer, quotedPay = 0 }: { trigger: Reac
       const res = await fetch("/api/practice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.slice(-14), summary: sum.text, figures: sum.figures, lang: "en" }),
+        body: JSON.stringify({ messages: next.slice(-14), summary: sum.text, figures: sum.figures, lang: getLang() }),
       });
       if (res.status === 503) setNote(p.unavailable);
       else if (res.status === 429) setNote(p.limit);
@@ -135,7 +139,7 @@ export function PracticeSheet({ trigger, offer, quotedPay = 0 }: { trigger: Reac
               <h3 className="qf-label">{p.scoreTitle}</h3>
               <ul className="qf-score">
                 {RUBRIC.map((r) => {
-                  const hit = r.test.test(said);
+                  const hit = r.test.test(unaccent(said));
                   return (
                     <li key={r.id} data-hit={hit}>
                       <span aria-hidden="true">{hit ? "✓" : "○"}</span>

@@ -67,7 +67,9 @@ export async function chat({ job, system, user, maxTokens = 400, json = false, t
 /**
  * Daily caps, per visitor and for the whole service. The count lives in the memory of one server instance, so
  * on serverless hosting it is a soft brake; the plan is to move it to Upstash Redis. It keeps a number per
- * visitor and nothing else, and drops the previous day's numbers.
+ * visitor and nothing else, and drops the previous day's numbers. When UPSTASH_REDIS_REST_URL and
+ * UPSTASH_REDIS_REST_TOKEN are set, takeSharedSlot keeps the counts in Redis instead, so they hold across every
+ * server instance; the visitor is stored only as a one-way hash that changes each day.
  */
 export type Feature = "photo" | "explain" | "draft" | "practice";
 const VISITOR_CAP: Record<Feature, number> = {
@@ -101,3 +103,49 @@ export function takeSlot(feature: Feature, visitor: string, units = 1, now = new
 }
 
 export const visitorOf = (headers: Headers) => headers.get("x-forwarded-for")?.split(",")[0].trim() || "local";
+
+const upstash = () => {
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  return url && token ? { url: url.replace(/\/$/, ""), token } : null;
+};
+
+async function dayHash(text: string): Promise<string> {
+  const bytes = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)));
+  return Array.from(bytes.slice(0, 10), (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * Counts one use against the daily caps, in Redis when it is set up and in this server's memory otherwise. If Redis
+ * cannot be reached it falls back to the memory count rather than turning every visitor away.
+ */
+export async function takeSharedSlot(feature: Feature, visitor: string, units = 1, now = new Date(), fetcher: typeof fetch = fetch): Promise<void> {
+  const store = upstash();
+  if (!store) return takeSlot(feature, visitor, units, now);
+  const day = now.toISOString().slice(0, 10);
+  const vKey = `dd:${day}:${feature}:v:${await dayHash(`${day}:${visitor}`)}`;
+  const gKey = `dd:${day}:${feature}:all`;
+  const call = (commands: (string | number)[][]) =>
+    fetcher(`${store.url}/pipeline`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${store.token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(commands),
+      signal: AbortSignal.timeout(3000),
+      cache: "no-store",
+    });
+  let counts: { result?: unknown }[] | null = null;
+  try {
+    const res = await call([["INCRBY", vKey, units], ["EXPIRE", vKey, 172800], ["INCRBY", gKey, units], ["EXPIRE", gKey, 172800]]);
+    counts = res.ok ? ((await res.json()) as { result?: unknown }[]) : null;
+  } catch {
+    counts = null;
+  }
+  const v = counts?.[0]?.result;
+  const g = counts?.[2]?.result;
+  if (typeof v !== "number" || typeof g !== "number") return takeSlot(feature, visitor, units, now);
+  if (v > VISITOR_CAP[feature] || g > GLOBAL_CAP[feature]) {
+    // Give the use back, so a refused try does not count against the visitor or the service.
+    void call([["DECRBY", vKey, units], ["DECRBY", gKey, units]]).catch(() => undefined);
+    throw new AiError("The daily limit is reached", "limit");
+  }
+}

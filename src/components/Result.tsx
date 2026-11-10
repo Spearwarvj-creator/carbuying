@@ -2,7 +2,7 @@
 
 import { en } from "@/data/strings/en";
 import { formatCents, formatSignedCents, splitCents, type TrailKey, type TrailStep } from "@/engine";
-import { useDeal } from "@/store/deal";
+import { useDeal, useOfferNames } from "@/store/deal";
 import { Arrow } from "./Arrow";
 import { Nums } from "./Nums";
 import { useAnalysis } from "./analysis";
@@ -96,6 +96,7 @@ function toRow(s: TrailStep): Row {
 export function Trail() {
   const { ready, trail } = useAnalysis();
   const drawKey = useDeal((s) => s.drawKey);
+  const names = useOfferNames();
   const wide = useMediaQuery("(min-width: 900px)");
   const narrow = useMediaQuery("(max-width: 340px)");
 
@@ -112,7 +113,7 @@ export function Trail() {
       ? up
       : rows.length === 0
         ? t.nothingMoved
-        : t.movedHeading;
+        : t.movedHeading(names[0]);
   const max = Math.max(...rows.map((r) => Math.abs(r.cents)), 1);
 
   return (

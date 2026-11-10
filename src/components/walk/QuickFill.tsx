@@ -8,11 +8,13 @@ import { Segmented } from "@/components/ui/Segmented";
 import { ai } from "@/data/strings/ai";
 import { walk } from "@/data/strings/walk";
 import { applyToDesk, applyToWalk } from "@/lib/extract/apply";
-import { FIELD_BY_KEY, FILL_FIELDS, fit, type Detected, type FillKey } from "@/lib/extract/fields";
+import { FILL_FIELDS, fit, type Detected, type FillKey } from "@/lib/extract/fields";
 import { parseSpoken } from "@/lib/extract/spoken";
+import { useAiOn } from "@/lib/ai-status";
+import { getLang } from "@/lib/i18n";
 import { useListen } from "@/lib/listen";
 import { setMode } from "@/lib/mode";
-import { useDeal } from "@/store/deal";
+import { offerName, useDeal } from "@/store/deal";
 import { ContractCheck } from "./ContractCheck";
 import { VehicleCard } from "./VehicleCard";
 import { lookupVin, type VehicleInfo } from "@/lib/vehicle";
@@ -43,8 +45,10 @@ async function shrink(file: File): Promise<string> {
 export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "walk" | "desk" }) {
   const offers = useDeal((s) => s.offers);
   const editing = useDeal((s) => s.editing);
+  const names = useDeal((s) => s.names);
   const currentOffer = target === "walk" ? offers[0] : offers[editing];
 
+  const aiOn = useAiOn();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"say" | "photo">("say");
   const [kind, setKind] = useState<Kind>("worksheet");
@@ -74,7 +78,7 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
   }
 
   function findNumbers() {
-    const d = parseSpoken(text, { price: currentOffer.price });
+    const d = parseSpoken(text, { price: currentOffer.price }, getLang());
     if (Object.keys(d).length === 0) return setNote(q.nothing);
     setNote("");
     setSlot(editing);
@@ -177,7 +181,7 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
                 }}
                 options={[
                   { value: "say", label: q.tabs.say, icon: <MicIcon size={20} /> },
-                  { value: "photo", label: q.tabs.photo, icon: <CameraIcon size={20} /> },
+                  ...(aiOn ? [{ value: "photo" as const, label: q.tabs.photo, icon: <CameraIcon size={20} /> }] : []),
                 ]}
               />
               {tab === "say" ? (
@@ -258,8 +262,8 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
                     value={slot}
                     onChange={setSlot}
                     options={[
-                      { value: 0, label: `${ai.offerFor} Offer 1` },
-                      { value: 1, label: `${ai.offerFor} Offer 2` },
+                      { value: 0, label: `${ai.offerFor} ${offerName(names, 0)}` },
+                      { value: 1, label: `${ai.offerFor} ${offerName(names, 1)}` },
                     ]}
                   />
                   <p className="hint">{ai.mergeNote}</p>
@@ -270,14 +274,14 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
                   const item = found[f.key]!;
                   return (
                     <li key={f.key}>
-                      <label htmlFor={`qf-${f.key}`}>{FIELD_BY_KEY[f.key].label}</label>
+                      <label htmlFor={`qf-${f.key}`}>{ai.fieldLabels[f.key]}</label>
                       <div className="qf-val">
                         {f.unit === "$" && <span className="aff">$</span>}
                         <input id={`qf-${f.key}`} className="num" inputMode="decimal" defaultValue={item.value} onBlur={(e) => edit(f.key, e.target.value)} aria-describedby={`qf-${f.key}-from`} />
                         {f.unit === "%" && <span className="aff">%</span>}
-                        {f.unit === "months" && <span className="aff">mo</span>}
+                        {f.unit === "months" && <span className="aff">{q.monthsShort}</span>}
                       </div>
-                      <button type="button" className="icon-btn" onClick={() => drop(f.key)} aria-label={`${q.remove}: ${f.label}`}>
+                      <button type="button" className="icon-btn" onClick={() => drop(f.key)} aria-label={`${q.remove}: ${ai.fieldLabels[f.key]}`}>
                         <CloseIcon size={18} />
                       </button>
                       <span id={`qf-${f.key}-from`} className="qf-from">

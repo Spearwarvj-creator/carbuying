@@ -6,6 +6,8 @@ import { Btn } from "@/components/ui/Btn";
 import { CloseIcon } from "@/components/ui/icons";
 import { Segmented } from "@/components/ui/Segmented";
 import { ai } from "@/data/strings/ai";
+import { useAiOn } from "@/lib/ai-status";
+import { getLang } from "@/lib/i18n";
 import { ReadAloud } from "./ReadAloud";
 
 const t = ai.ask;
@@ -16,7 +18,8 @@ const t = ai.ask;
  * figures, and the numbers guard on the server throws it away if it brings a number of its own.
  */
 export function AskSheet({ trigger, topic, title, context, figures }: { trigger: ReactNode; topic: string; title: string; context: string; figures: number[] }) {
-  const [lang, setLang] = useState<"en" | "es">("en");
+  const aiOn = useAiOn();
+  const [lang, setLang] = useState<"en" | "es">(getLang());
   const [question, setQuestion] = useState("");
   const [busy, setBusy] = useState(false);
   const [answer, setAnswer] = useState<{ text: string; source: "ai" | "template" } | null>(null);
@@ -62,6 +65,8 @@ export function AskSheet({ trigger, topic, title, context, figures }: { trigger:
             </Dialog.Close>
           </div>
           <p className="qf-fixed">{context}</p>
+          {!aiOn && <ReadAloud text={context} />}
+          {aiOn && (
           <div className="qf-body">
             <Segmented variant="chips" label={t.language} value={lang} onChange={setLang} options={[{ value: "en", label: "English" }, { value: "es", label: "Español" }]} />
             <ul className="qf-chips">
@@ -93,6 +98,7 @@ export function AskSheet({ trigger, topic, title, context, figures }: { trigger:
               </div>
             )}
           </div>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

@@ -76,7 +76,9 @@ export default function Privacy() {
 
       <section id="cookies" aria-labelledby="cookies-h">
         <h2 id="cookies-h">Cookies and storage</h2>
-        <p>Deal Desk sets no cookies. It uses your browser&rsquo;s storage for the three settings above (names: dd-theme, dd-text, dd-mode) and, only if you press Save, one saved deal (dd-saved). Nothing else. Clearing your browser&rsquo;s site data removes them.</p>
+        <p>Deal Desk sets no cookies. It uses your browser&rsquo;s storage for four settings (names: dd-theme, dd-text, dd-mode, dd-lang) and, only if you press Save, one saved deal (dd-saved). Clearing your browser&rsquo;s site data removes them.</p>
+        <p>While you work, the numbers you have entered and the step you are on are also kept in this tab&rsquo;s session storage (name: dd-session), so a refresh does not lose them. It stays on your device, is never sent anywhere, and is cleared when you close the tab. The address of a Walk step holds only the step number.</p>
+        <p>To work with a weak signal, Deal Desk saves its own pages, images and scripts on your device with a service worker (the cache names start with dd-v1). It saves nothing you type, and it does not save car lookups or AI answers.</p>
       </section>
 
       <section id="changes" aria-labelledby="changes-h">

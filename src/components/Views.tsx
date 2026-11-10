@@ -3,13 +3,15 @@
 import { useState } from "react";
 import { en } from "@/data/strings/en";
 import { formatCents, toCents, type Lever, type Metric, type Offer } from "@/engine";
-import { useDeal } from "@/store/deal";
+import { useDeal, useOfferNames } from "@/store/deal";
 import { useAnalysis } from "./analysis";
 import { leverLine } from "./lever-line";
 import { Nums } from "./Nums";
 import { Btn } from "./ui/Btn";
 import { ReadAloud } from "./walk/ReadAloud";
 import { ai } from "@/data/strings/ai";
+import { useAiOn } from "@/lib/ai-status";
+import { getLang } from "@/lib/i18n";
 
 const METRICS: Metric[] = ["total", "pay", "otd"];
 
@@ -30,7 +32,6 @@ function MetricSwitch() {
   );
 }
 
-const offerName = (side: "a" | "b") => (side === "a" ? en.offer1 : en.offer2);
 
 type Take = NonNullable<ReturnType<typeof useAnalysis>["take"]>;
 
@@ -47,6 +48,7 @@ function relevantLevers(take: Take, loser: Offer) {
 
 export function CompareView() {
   const { ready, d1, d2 } = useAnalysis();
+  const names = useOfferNames();
   const c = en.compare;
   if (!ready) return <section className="view"><h2>{c.heading}</h2><p className="hint">{en.result.empty}</p></section>;
 
@@ -59,13 +61,12 @@ export function CompareView() {
   ];
   const payLow = lowerOf(d1.payCents, d2.payCents);
   const totalLow = lowerOf(d1.totalCents, d2.totalCents);
-  const names = [en.offer1, en.offer2];
   const diff = formatCents(Math.abs(d1.totalCents - d2.totalCents));
   const headline =
     payLow >= 0 && totalLow >= 0 && payLow !== totalLow
-      ? c.winnersDiffer(names[payLow], names[totalLow], diff)
+      ? c.winnersDiffer(names[payLow as 0 | 1], names[totalLow as 0 | 1], diff)
       : totalLow >= 0
-        ? c.sameWinner(names[totalLow])
+        ? c.sameWinner(names[totalLow as 0 | 1])
         : null;
 
   return (
@@ -80,10 +81,10 @@ export function CompareView() {
         <thead>
           <tr>
             <th scope="col">
-              <span className="sr-only">Measure</span>
+              <span className="sr-only">{c.measure}</span>
             </th>
-            <th scope="col">{en.offer1}</th>
-            <th scope="col">{en.offer2}</th>
+            <th scope="col">{names[0]}</th>
+            <th scope="col">{names[1]}</th>
           </tr>
         </thead>
         <tbody>
@@ -106,6 +107,7 @@ export function CompareView() {
 
 export function TargetView() {
   const { ready, take, d1, d2 } = useAnalysis();
+  const names = useOfferNames();
   const t = en.target;
   if (!ready || !take) return <section className="view"><h2>{t.heading}</h2><p className="hint">{en.result.empty}</p></section>;
 
@@ -126,7 +128,7 @@ export function TargetView() {
       {take.tie ? (
         <p className="intro">{t.tie}</p>
       ) : (
-        <p className="intro">{t.intro(offerName(take.loser), t.measure[take.metric])}</p>
+        <p className="intro">{t.intro(names[take.loser === "a" ? 0 : 1], t.measure[take.metric])}</p>
       )}
       {!take.tie &&
         cards.map(({ lever, result }) => (
@@ -145,30 +147,34 @@ export function TargetView() {
   );
 }
 
-export function buildAsk(take: Take, loser: Offer): string {
+export function buildAsk(take: Take, loser: Offer, names: [string, string]): string {
+  const nameOf = (side: "a" | "b") => names[side === "a" ? 0 : 1];
   const a = en.ask;
   // Each side is rounded to cents first, so this matches the totals on screen to the cent.
   const measureFmt = formatCents(toCents(take.loserNow) - toCents(take.target));
   const lines = relevantLevers(take, loser).filter((l) => l.result).map((l) => `- ${leverLine(l.lever, l.result!)}`);
-  const head = a.opening(offerName(take.loser), measureFmt, en.target.measure[take.metric]);
+  const head = a.opening(nameOf(take.loser), measureFmt, en.target.measure[take.metric]);
   if (lines.length === 0) return [head, a.fallback, a.thanks].join("\n\n");
-  return [head, a.request(offerName(take.winner)), lines.join("\n"), a.thanks].join("\n\n");
+  return [head, a.request(nameOf(take.winner)), lines.join("\n"), a.thanks].join("\n\n");
 }
 
 export function AskView() {
   const { ready, take, d1, d2 } = useAnalysis();
+  const names = useOfferNames();
   const [copied, setCopied] = useState(false);
   const [reworded, setReworded] = useState<{ base: string; text: string } | null>(null);
   const [rewording, setRewording] = useState(false);
   const [toneNote, setToneNote] = useState("");
+  const aiOn = useAiOn();
   const a = en.ask;
   if (!ready || !take) return <section className="view"><h2>{a.heading}</h2><p className="hint">{en.result.empty}</p></section>;
   if (take.tie) return <section className="view"><h2>{a.heading}</h2><p className="hint">{a.nothing}</p></section>;
 
-  const standard = buildAsk(take, take.loser === "a" ? d1.offer : d2.offer);
+  const standard = buildAsk(take, take.loser === "a" ? d1.offer : d2.offer, names);
   const text = reworded && reworded.base === standard ? reworded.text : standard;
-  async function reword(tone: "polite" | "firm" | "short" | "text", lang: "en" | "es" = "en") {
-    if (tone === "polite" && lang === "en") return setReworded(null);
+  const ui = getLang();
+  async function reword(tone: "polite" | "firm" | "short" | "text", lang: "en" | "es" = ui) {
+    if (tone === "polite" && lang === ui) return setReworded(null);
     setRewording(true);
     setToneNote("");
     try {
@@ -199,6 +205,7 @@ export function AskView() {
       <div className="card">
         <p className="askbox" style={{ margin: 0 }}>{text}</p>
       </div>
+      {aiOn && (
       <div className="tonebox" role="group" aria-label={ai.tone.label}>
         <span className="label">{ai.tone.label}</span>
         {(["polite", "firm", "short", "text"] as const).map((k) => (
@@ -206,10 +213,11 @@ export function AskView() {
             {ai.tone.options[k]}
           </Btn>
         ))}
-        <Btn variant="ghost" onClick={() => reword("polite", "es")} aria-disabled={rewording}>
+        <Btn variant="ghost" onClick={() => reword("polite", ui === "en" ? "es" : "en")} aria-disabled={rewording}>
           {ai.tone.es}
         </Btn>
       </div>
+      )}
       {toneNote && (
         <p className="hint" role="status">
           {rewording ? ai.tone.working : toneNote}

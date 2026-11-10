@@ -256,3 +256,11 @@ export const MicIcon = (p: IconProps) => (
     <path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6" />
   </Icon>
 );
+
+export const CarIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M5 16V12l1.6-4.4A2 2 0 0 1 8.5 6h7a2 2 0 0 1 1.9 1.6L19 12v4M3.5 16h17M7 16v2M17 16v2" />
+    <circle cx="8" cy="13.5" r="0.8" />
+    <circle cx="16" cy="13.5" r="0.8" />
+  </Icon>
+);

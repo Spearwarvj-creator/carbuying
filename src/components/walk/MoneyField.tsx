@@ -63,6 +63,13 @@ export function MoneyField({ label, value, onChange, prefix, suffix, decimals = 
           aria-describedby={hint ? `${id}-h` : undefined}
           onChange={(e) => handle(e.target.value)}
           onBlur={() => setText(fmt(value, decimals))}
+          onKeyDown={(e) => {
+            // The phone keyboard's Go or Next key moves on, as a buyer would expect after typing a number.
+            if (e.key === "Enter") {
+              e.preventDefault();
+              document.querySelector<HTMLButtonElement>(".nav .bt-primary")?.click();
+            }
+          }}
         />
         {suffix && <span className="aff" aria-hidden="true">{suffix}</span>}
       </div>

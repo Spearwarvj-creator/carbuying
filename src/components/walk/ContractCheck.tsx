@@ -26,15 +26,15 @@ export type ContractRow = { key: FillKey; label: string; agreed: number; paper: 
 export function compareContract(found: Detected, offer: Offer): ContractRow[] {
   const d = computeDeal(offer);
   const rows: Row[] = [
-    { key: "price", label: "Price of the car", agreed: offer.price, tolerance: 1, unit: "$" },
-    { key: "fees", label: "Fees", agreed: offer.fees, tolerance: 1, unit: "$" },
-    { key: "addons", label: "Extras", agreed: offer.addons, tolerance: 1, unit: "$" },
-    { key: "down", label: "Down payment", agreed: offer.down, tolerance: 1, unit: "$" },
-    { key: "amountFinanced", label: "Amount financed", agreed: d.fin, tolerance: 2, unit: "$" },
-    { key: "apr", label: "Rate (APR)", agreed: offer.apr, tolerance: 0.05, unit: "%" },
-    { key: "months", label: "Loan length", agreed: offer.months, tolerance: 0, unit: "mo" },
-    { key: "monthlyPayment", label: "Monthly payment", agreed: d.pay, tolerance: 1, unit: "$" },
-    { key: "totalOfPayments", label: "Total of payments", agreed: d.pay * offer.months, tolerance: Math.max(5, offer.months), unit: "$" },
+    { key: "price", label: c.rows.price, agreed: offer.price, tolerance: 1, unit: "$" },
+    { key: "fees", label: c.rows.fees, agreed: offer.fees, tolerance: 1, unit: "$" },
+    { key: "addons", label: c.rows.addons, agreed: offer.addons, tolerance: 1, unit: "$" },
+    { key: "down", label: c.rows.down, agreed: offer.down, tolerance: 1, unit: "$" },
+    { key: "amountFinanced", label: c.rows.amountFinanced, agreed: d.fin, tolerance: 2, unit: "$" },
+    { key: "apr", label: c.rows.apr, agreed: offer.apr, tolerance: 0.05, unit: "%" },
+    { key: "months", label: c.rows.months, agreed: offer.months, tolerance: 0, unit: "mo" },
+    { key: "monthlyPayment", label: c.rows.monthlyPayment, agreed: d.pay, tolerance: 1, unit: "$" },
+    { key: "totalOfPayments", label: c.rows.totalOfPayments, agreed: d.pay * offer.months, tolerance: Math.max(5, offer.months), unit: "$" },
   ];
   return rows.map((r) => {
     const paper = found[r.key]?.value ?? null;
@@ -43,7 +43,7 @@ export function compareContract(found: Detected, offer: Offer): ContractRow[] {
   });
 }
 
-const show = (n: number, unit: Row["unit"]) => (unit === "$" ? money(n) : unit === "%" ? `${n}%` : `${n} months`);
+const show = (n: number, unit: Row["unit"]) => (unit === "$" ? money(n) : unit === "%" ? `${n}%` : c.monthsUnit(n));
 
 export function ContractCheck({ found, offer }: { found: Detected; offer: Offer }) {
   if (offer.price <= 0) return <p className="qf-note">{c.needDeal}</p>;

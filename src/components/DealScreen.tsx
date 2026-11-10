@@ -1,16 +1,22 @@
 "use client";
 
 import { en } from "@/data/strings/en";
-import { useDeal, type TabKey } from "@/store/deal";
+import { useDeal, useOfferNames, type TabKey } from "@/store/deal";
 import { Boxes } from "./Boxes";
 import { EntrySheet } from "./EntrySheet";
 import { AppFooter } from "./AppFooter";
 import { AppHeader } from "./AppHeader";
 import { Result, Trail } from "./Result";
 import { AskView, CompareView, TargetView } from "./Views";
+import { dealFlags } from "@/engine";
+import { ai } from "@/data/strings/ai";
+import { Btn } from "./ui/Btn";
+import { PrintDeal } from "./walk/PrintDeal";
+import { ShareDeal } from "./walk/ShareDeal";
 import { DealChecks } from "./walk/DealChecks";
+import { CashCompare } from "./walk/CashCompare";
 
-const TABS: TabKey[] = ["deal", "compare", "target", "ask"];
+const TABS: TabKey[] = ["deal", "compare", "target", "ask", "checks"];
 
 export function DealScreen() {
   const tab = useDeal((s) => s.tab);
@@ -18,6 +24,11 @@ export function DealScreen() {
   const example = useDeal((s) => s.example);
   const edited = useDeal((s) => s.edited);
   const offer = useDeal((s) => s.offers[s.editing]);
+  const flagCount = dealFlags({ offer }).length;
+  const offers = useDeal((s) => s.offers);
+  const fromShare = useDeal((s) => s.fromShare);
+  const names = useOfferNames();
+  const same = offers[0].price > 0 && JSON.stringify(offers[0]) === JSON.stringify(offers[1]);
 
   return (
     <div className="app">
@@ -28,12 +39,39 @@ export function DealScreen() {
         <div className="colB">
           <Result />
           <Trail />
-          <DealChecks offer={offer} />
         </div>
         <div className="colA">
+          {fromShare && (
+            <div className="nudge" role="status">
+              <p>{ai.share.banner}</p>
+              <Btn variant="ghost" onClick={() => useDeal.getState().dismissShare()}>
+                {ai.share.dismiss}
+              </Btn>
+            </div>
+          )}
+          {same && (
+            <div className="nudge">
+              <p>{ai.second.text(names[1])}</p>
+              <Btn
+                variant="primary"
+                onClick={() => {
+                  useDeal.getState().setEditing(1);
+                  useDeal.getState().open("price");
+                }}
+              >
+                {ai.second.button(names[1])}
+              </Btn>
+            </div>
+          )}
           <Boxes />
         </div>
         <div className="colC">
+          <DealChecks offer={offer} />
+          <CashCompare offer={offer} />
+          <div className="deskactions">
+            <PrintDeal />
+            <ShareDeal />
+          </div>
           <CompareView />
           <TargetView />
           <AskView />
@@ -43,14 +81,25 @@ export function DealScreen() {
           {tab === "compare" && <CompareView />}
           {tab === "target" && <TargetView />}
           {tab === "ask" && <AskView />}
+          {tab === "checks" && (
+            <>
+              <DealChecks offer={offer} />
+          <CashCompare offer={offer} />
+              <div className="deskactions">
+                <PrintDeal />
+                <ShareDeal />
+              </div>
+            </>
+          )}
           <AppFooter />
         </div>
       </main>
 
-      <nav className="tabs" aria-label="Sections">
+      <nav className="tabs" aria-label={en.sections}>
         {TABS.map((k) => (
           <button key={k} type="button" aria-current={tab === k ? "page" : undefined} onClick={() => setTab(k)}>
             {en.tabs[k]}
+            {k === "checks" && flagCount > 0 ? ` (${flagCount})` : ""}
           </button>
         ))}
       </nav>
