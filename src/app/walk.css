@@ -37,7 +37,7 @@
 }
 .walk[data-view="door"],
 .walk[data-view="check"] {
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
 }
 .walk-main {
   min-height: 0;
@@ -56,7 +56,7 @@
     align-content: center;
   }
 }
-.walk .brand {
+.top .brand {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -825,7 +825,7 @@
 }
 .four-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   max-width: 30rem;
 }
@@ -1245,20 +1245,38 @@
   .walk-main {
     padding: 12px 0 20px;
   }
+  /* Both columns stretch to one height, up to 40rem, so a step fills the window instead of floating in it. */
   .stage {
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
     gap: clamp(28px, 5vw, 6rem);
-    align-items: center;
-    align-content: center;
-    min-height: 100%;
+    align-items: stretch;
+    min-height: clamp(22rem, calc(100dvh - 15rem), 40rem);
   }
   .col-a {
     gap: 18px;
+    justify-content: center;
   }
   .col-b {
     gap: 16px;
+    justify-content: center;
     padding: clamp(20px, 2.6vw, 44px);
+  }
+  /* The worksheet grows to fill its panel. */
+  .col-b .four {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .col-b .four-grid {
+    flex: 1;
+    max-width: none;
+    grid-auto-rows: 1fr;
+    gap: 14px;
+  }
+  .col-b .four .l {
+    font-size: var(--t-md);
   }
   .rail-name,
   .rail li:not([data-state="now"]) .rail-name {
@@ -1295,9 +1313,13 @@
   .doors {
     gap: 14px;
   }
+  /* The cards grow with the screen's height, so a tall window is filled by the cards, not left empty above and below them. */
   .door-art {
-    width: clamp(132px, 11vw, 200px);
-    height: clamp(96px, 8vw, 148px);
+    width: clamp(132px, 22vh, 280px);
+    height: clamp(96px, 16vh, 210px);
+  }
+  .doors {
+    gap: clamp(14px, 2.4vh, 28px);
   }
   .door-text b {
     font-size: var(--t-xl);
@@ -1620,4 +1642,202 @@
 }
 .s-readout .check-out {
   gap: 10px;
+}
+
+/* ---------- App header and footer: drawn like the site's, so the calculator never feels like another product ---------- */
+.walk,
+.app {
+  width: 100%;
+  max-width: 120rem;
+  margin-inline: auto;
+}
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  height: auto;
+  min-height: 52px;
+}
+.top-mid {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-self: center;
+}
+.top-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(8px, 1.5vw, 1.5rem);
+  justify-self: end;
+}
+.top-links,
+.top-prefs {
+  display: none;
+}
+.top-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.top-links a:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 2px;
+}
+@media (min-width: 640px) {
+  .top-prefs {
+    display: block;
+  }
+}
+@media (min-width: 900px) {
+  .top {
+    min-height: 60px;
+  }
+  .top-links {
+    display: flex;
+    gap: clamp(14px, 2vw, 1.75rem);
+  }
+  .top-menu {
+    display: none;
+  }
+}
+@media (max-height: 640px) {
+  .top {
+    min-height: 44px;
+  }
+}
+
+/* The menu for narrow screens */
+.menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  min-width: 44px;
+  justify-content: center;
+  padding: 0 10px;
+  border: 1.5px solid var(--edge);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--t-sm);
+  font-weight: 600;
+}
+.menu-btn:hover {
+  background: var(--panel);
+}
+.menu-txt {
+  display: none;
+}
+@media (min-width: 480px) and (max-width: 899px) {
+  .menu-txt {
+    display: inline;
+  }
+}
+.menu-pop {
+  z-index: 60;
+  width: min(19rem, calc(100vw - 24px));
+  padding: 8px 16px 14px;
+  border: 1.5px solid var(--edge);
+  border-radius: 16px;
+  background: var(--panel-2);
+  color: var(--text);
+  box-shadow: var(--lift-pop);
+  transform-origin: var(--radix-popover-content-transform-origin);
+  animation: card-in 0.2s var(--ease);
+}
+.menu-pop[data-state="closed"] {
+  animation: card-out 0.12s ease forwards;
+}
+.menu-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.menu-list a {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-size: var(--t-md);
+  font-weight: 700;
+  text-decoration: none;
+}
+.menu-list a:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.menu-legal {
+  margin-top: 6px;
+}
+.menu-legal a {
+  min-height: 44px;
+  border-bottom: 0;
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+  font-weight: 600;
+}
+.menu-prefs {
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+/* The slim footer inside the calculator */
+.app-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px 24px;
+  margin-top: 14px;
+  padding: 6px 0 8px;
+  border-top: 1px solid var(--line);
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+.app-foot nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 18px;
+}
+.app-foot a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  color: var(--ink-2);
+  text-underline-offset: 3px;
+}
+.app-foot a:hover {
+  color: var(--text);
+}
+.app-foot p {
+  margin: 0;
+}
+.walk > .app-foot {
+  margin-top: 0;
+}
+
+/* The marketing header carries the same mark as the calculator. */
+.s-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.s-menu {
+  display: none;
+}
+@media (max-width: 719px) {
+  .s-menu {
+    display: block;
+  }
 }

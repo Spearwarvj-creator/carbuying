@@ -1,0 +1,764 @@
+/*
+ * Landing page. One object owns the hero (the loan as a road of payment tiles), the rest of the
+ * page is pictures with a line each. Tokens only, same light direction as the Walk (--lift-pop).
+ * Rule for this file: no table, no paragraph over two lines, no figure that is not part of a picture.
+ */
+
+.hero .s-btn,
+.finale .s-btn {
+  gap: 0.6rem;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  min-height: calc(100dvh - 4rem);
+  isolation: isolate;
+  overflow: clip;
+}
+.hero-text {
+  position: relative;
+  z-index: 3;
+  padding-top: clamp(24px, 5vh, 4rem);
+}
+.hero-h {
+  margin: 0;
+  max-width: 21ch;
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: clamp(2.75rem, 5.4vw, 6.25rem);
+  line-height: 0.9;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+.hero-lead {
+  margin: 0.9rem 0 0;
+  max-width: 44ch;
+  font-size: var(--f-lead);
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 1.25rem;
+}
+.hero-fine {
+  margin: 0.75rem 0 0;
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+
+/* The road: absolute behind the text on wide screens, stacked under it on narrow ones. */
+.road {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.road-sky {
+  position: absolute;
+  inset: 0;
+  /* The light at the end of the loan: the one warm source, plus a cool wash from the left. */
+  background:
+    radial-gradient(48% 42% at 66% 48%, color-mix(in oklab, var(--yellow) 17%, transparent), transparent 70%),
+    radial-gradient(40% 40% at 8% 0%, color-mix(in oklab, var(--c-car) 20%, transparent), transparent 72%);
+}
+.road-view {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+}
+.road-floor {
+  position: absolute;
+  left: 50%;
+  bottom: 21%;
+  width: min(106%, 1600px);
+  translate: -50% 0;
+  transform-origin: 50% 100%;
+  mask-image: linear-gradient(to top, #000 40%, transparent 96%);
+}
+.road-row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(5px, 0.7vw, 11px);
+  margin-bottom: clamp(5px, 0.7vw, 11px);
+}
+.tile {
+  display: block;
+  aspect-ratio: 2.1;
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, var(--edge) 55%, transparent);
+  background: color-mix(in oklab, var(--panel) 40%, transparent);
+  opacity: 0.55;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    box-shadow 0.3s,
+    opacity 0.3s;
+}
+.tile[data-on="true"] {
+  opacity: 1;
+  background: linear-gradient(165deg, color-mix(in oklab, var(--c-car) 92%, white), color-mix(in oklab, var(--c-car) 58%, var(--ground)));
+  border-color: color-mix(in oklab, var(--c-car) 55%, white);
+  box-shadow: 0 0 22px color-mix(in oklab, var(--c-car) 38%, transparent);
+  transition-delay: calc(var(--c) * 12ms);
+}
+.tile[data-tail="true"] {
+  background: linear-gradient(165deg, color-mix(in oklab, var(--up) 95%, white), color-mix(in oklab, var(--up) 62%, var(--ground)));
+  border-color: color-mix(in oklab, var(--up) 55%, white);
+  box-shadow: 0 0 22px color-mix(in oklab, var(--up) 36%, transparent);
+}
+/* The car at the end of the road: drawn like the three door scenes, with its wheels turning slowly. */
+.road-car {
+  position: absolute;
+  right: clamp(0px, 3vw, 5rem);
+  top: 30%;
+  width: min(46vw, 760px);
+}
+.road-car .wheel {
+  animation: wheel 5s linear infinite;
+}
+@keyframes wheel {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.road-tag {
+  position: absolute;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--edge);
+  background: color-mix(in oklab, var(--panel) 80%, transparent);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.road-tag-near {
+  left: clamp(16px, 4vw, 4.5rem);
+  bottom: 9.5rem;
+}
+/* Rides under the car, so it always points at the end of the road. */
+.road-tag-far {
+  left: 62%;
+  top: 100%;
+  translate: -50% 10px;
+}
+
+/* The control dock: one raised glass card with the slider and the only two figures on the page. */
+.dock {
+  position: absolute;
+  z-index: 4;
+  left: clamp(16px, 4vw, 4.5rem);
+  right: clamp(16px, 4vw, 4.5rem);
+  bottom: clamp(16px, 3.5vh, 36px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(16px, 2.4vw, 2.5rem);
+  align-items: center;
+  padding: clamp(16px, 1.8vw, 1.75rem) clamp(18px, 2.2vw, 2.25rem);
+  border: 1px solid var(--edge);
+  border-radius: 24px;
+  background: color-mix(in oklab, var(--panel) 80%, transparent);
+  backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow: var(--lift-pop);
+}
+.dock-ctl {
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+}
+.dock-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dock-label {
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.dock-months {
+  font-size: var(--f-num-md);
+  font-weight: 800;
+  line-height: 1;
+}
+.dock-key {
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+.dock-key .sw {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-right: 6px;
+  border-radius: 3px;
+  vertical-align: -1px;
+}
+.dock-key .sw.car {
+  background: var(--c-car);
+}
+.dock-key .sw.interest {
+  background: var(--up);
+}
+.dock-fig {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.dock-big {
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: var(--f-num-xl);
+  line-height: 0.95;
+  white-space: nowrap;
+}
+.dock-total {
+  width: fit-content;
+  padding-inline: 0.12em;
+  border-radius: 8px;
+  color: var(--total-fg);
+  background: var(--total-bg);
+}
+.dock-small {
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.dock-delta {
+  min-height: 1.4em;
+  font-size: var(--t-sm);
+  font-weight: 700;
+}
+.dock-delta[data-dir="down"] {
+  color: var(--down);
+}
+.dock-delta[data-dir="up"] {
+  color: var(--up);
+}
+
+@media (max-width: 999px) {
+  .hero {
+    min-height: 0;
+  }
+  .road {
+    position: relative;
+    inset: auto;
+    display: grid;
+    margin-top: 12px;
+  }
+  .road-view {
+    position: relative;
+    inset: auto;
+    height: clamp(280px, 70vw, 460px);
+  }
+  .road-floor {
+    bottom: 4%;
+    width: 135%;
+  }
+  .road-car {
+    top: 14%;
+    right: 2%;
+    width: 66vw;
+    max-width: 560px;
+  }
+  .road-tag-near {
+    bottom: 12px;
+  }
+  .road-sky {
+    background:
+      radial-gradient(60% 40% at 70% 36%, color-mix(in oklab, var(--yellow) 16%, transparent), transparent 70%),
+      radial-gradient(50% 40% at 0% 0%, color-mix(in oklab, var(--c-car) 18%, transparent), transparent 72%);
+  }
+  .dock {
+    position: relative;
+    inset: auto;
+    margin: -8px clamp(16px, 4vw, 4.5rem) 28px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+  .dock-ctl {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 559px) {
+  .hero-cta .s-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---------- The worksheet ---------- */
+.wsheet {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(24px, 5vw, 6rem);
+  align-items: center;
+  padding-block: clamp(56px, 10vw, 9rem);
+  border-top: 1px solid var(--line);
+}
+.l-h2 {
+  margin: 0;
+  max-width: 14ch;
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: var(--f-title);
+  line-height: 0.93;
+  text-wrap: balance;
+}
+.l-p {
+  margin: 1.1rem 0 0;
+  max-width: 34ch;
+  font-size: var(--f-lead);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+.wsheet-art {
+  min-width: 0;
+}
+.wsheet-art .four-grid {
+  max-width: none;
+  gap: clamp(10px, 1.4vw, 1.5rem);
+}
+.wsheet-art figcaption {
+  display: none;
+}
+.wsheet-art .four .cell {
+  min-height: clamp(96px, 12vw, 190px);
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.cell-v {
+  max-width: 100%;
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3vw, var(--f-num-lg));
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- The tour: six steps, one phone ---------- */
+.tour {
+  padding-block: clamp(56px, 9vw, 8rem) clamp(24px, 4vw, 4rem);
+  border-top: 1px solid var(--line);
+}
+/* The text and the phone meet on the centre line of the page, so neither floats in empty space. */
+.tour-head {
+  max-width: 44rem;
+  margin-inline: auto;
+  text-align: center;
+}
+.tour-head .l-h2,
+.tour-head .l-p {
+  margin-inline: auto;
+}
+.story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  margin-top: clamp(16px, 3vw, 3rem);
+}
+.story-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.story-steps > li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 56dvh;
+  padding-right: clamp(2rem, 6vw, 7rem);
+  text-align: right;
+}
+/* Steps you are not on dim, but stay above 4.5:1 so nobody has to chase the highlight to read them. */
+.story-text {
+  opacity: 0.62;
+  transition: opacity 0.3s;
+}
+.story-steps > li[data-active="true"] .story-text {
+  opacity: 1;
+}
+.story-text h3 {
+  margin: 0.35em 0 0.2em auto;
+  max-width: 13ch;
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: var(--f-num-xl);
+  line-height: 0.95;
+}
+.story-text p {
+  margin: 0 0 0 auto;
+  max-width: 28ch;
+  font-size: var(--t-xl);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+.story-n {
+  display: inline-grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--edge);
+  font-size: var(--t-lg);
+  font-weight: 800;
+}
+.story-inline {
+  display: none;
+}
+.story-phone {
+  position: sticky;
+  top: 9dvh;
+  align-self: start;
+  height: 82dvh;
+  display: grid;
+  place-items: center start;
+  padding-left: clamp(2rem, 6vw, 7rem);
+}
+.phone {
+  position: relative;
+  height: min(78dvh, 700px);
+  aspect-ratio: 9 / 18;
+  padding: 12px;
+  border: 2px solid var(--edge);
+  border-radius: 46px;
+  background: var(--ground);
+  box-shadow: var(--lift-pop);
+  overflow: hidden;
+}
+.phone-notch {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  translate: -50% 0;
+  width: 28%;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--line);
+  z-index: 2;
+}
+.phone-screen {
+  display: flex;
+  height: 100%;
+  padding: 52px 18px 22px;
+  border-radius: 34px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.phone-ui {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  min-width: 0;
+}
+.phone-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.phone-title {
+  font-size: var(--t-md);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.phone-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 0;
+}
+.phone-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.phone-dots {
+  display: flex;
+  gap: 6px;
+}
+.phone-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+}
+.phone-dots i[data-on="true"] {
+  background: var(--c-car);
+}
+.phone-next {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--ground);
+  font-size: var(--t-sm);
+  font-weight: 700;
+}
+.story-inline .phone-foot {
+  display: none;
+}
+.sc {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+}
+.sc-label {
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.sc-big {
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: var(--f-num-xl);
+  line-height: 0.95;
+}
+.sc-total {
+  width: fit-content;
+  padding-inline: 0.1em;
+  border-radius: 8px;
+  color: var(--total-fg);
+  background: var(--total-bg);
+}
+.sc-pill {
+  display: block;
+  padding: 13px 16px;
+  border: 1.5px solid var(--edge);
+  border-radius: 14px;
+  font-weight: 600;
+}
+.sc-pill[data-on="true"] {
+  border-color: var(--c-car);
+  background: color-mix(in oklab, var(--c-car) 18%, var(--panel));
+}
+.sc-field {
+  padding: 12px 16px;
+  border: 1.5px solid var(--edge);
+  border-radius: 12px;
+  font-size: var(--f-num-md);
+  font-weight: 800;
+}
+.sc-bars {
+  display: grid;
+  gap: 10px;
+}
+.sc-bar {
+  height: 30px;
+  border-radius: 9px;
+  transform-origin: left;
+  animation: grow 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+.sc-bar-credit {
+  width: 62%;
+  background: var(--c-car);
+}
+.sc-bar-owe {
+  width: 86%;
+  background: var(--up);
+  animation-delay: 0.12s;
+}
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+.phone .strip-grid,
+.story-inline .strip-grid {
+  --blk: clamp(10px, 1.2vw, 16px);
+}
+
+@media (max-width: 999px) {
+  .story {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .story-phone {
+    display: none;
+  }
+  .story-steps > li {
+    display: grid;
+    gap: 18px;
+    min-height: 0;
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+    text-align: left;
+  }
+  .tour-head {
+    text-align: left;
+    margin-inline: 0;
+  }
+  .tour-head .l-h2,
+  .tour-head .l-p {
+    margin-inline: 0;
+  }
+  .story-text h3,
+  .story-text p {
+    margin-left: 0;
+  }
+  .story-text {
+    opacity: 1;
+  }
+  .story-inline {
+    display: block;
+    max-width: 480px;
+    padding: 18px;
+    border: 1.5px solid var(--edge);
+    border-radius: 28px;
+    background: var(--panel);
+    box-shadow: var(--lift);
+  }
+  .story-inline .phone-ui {
+    gap: 14px;
+  }
+}
+
+/* ---------- Trust ---------- */
+.trust {
+  padding-block: clamp(48px, 7vw, 6rem);
+  border-top: 1px solid var(--line);
+}
+.trust ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 3rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.trust li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 16px;
+  align-items: center;
+}
+.trust-ico {
+  grid-row: 1 / 3;
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--c-car) 16%, var(--panel));
+  color: var(--c-car);
+}
+.trust li b {
+  font-size: var(--t-lg);
+  line-height: 1.2;
+}
+.trust li span:not(.trust-ico) {
+  color: var(--ink-2);
+}
+.trust-more {
+  margin: clamp(20px, 3vw, 2.5rem) 0 0;
+  color: var(--ink-2);
+}
+.trust-more a {
+  color: var(--text);
+  text-underline-offset: 3px;
+}
+
+/* ---------- Finale ---------- */
+.finale {
+  position: relative;
+  display: grid;
+  gap: clamp(28px, 4vw, 4rem);
+  padding-block: clamp(64px, 10vw, 9rem);
+  border-top: 1px solid var(--line);
+  isolation: isolate;
+}
+.finale::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(40% 70% at 92% 100%, color-mix(in oklab, var(--yellow) 14%, transparent), transparent 70%);
+}
+.finale-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.75rem 3rem;
+}
+.finale-h {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: var(--f-display);
+  line-height: 0.9;
+  text-wrap: balance;
+}
+/* One row of the hero's tiles, filling in to a flag. */
+.fin-road {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(12px, 2vw, 2rem);
+}
+.fin-row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(5px, 0.8vw, 12px);
+}
+.fin-tile {
+  display: block;
+  aspect-ratio: 2.1;
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, var(--c-car) 55%, white);
+  background: linear-gradient(165deg, color-mix(in oklab, var(--c-car) 92%, white), color-mix(in oklab, var(--c-car) 58%, var(--ground)));
+  box-shadow: 0 0 22px color-mix(in oklab, var(--c-car) 38%, transparent);
+}
+.fin-flag {
+  display: grid;
+  place-items: center;
+  width: clamp(48px, 5vw, 72px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--ground);
+  box-shadow: 0 0 36px color-mix(in oklab, var(--c-car) 45%, transparent);
+}
+
+@media (max-width: 899px) {
+  .wsheet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 639px) {
+  .trust ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .fin-row {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .road-car .wheel {
+    animation: none;
+  }
+  .tile,
+  .story-text {
+    transition: none;
+  }
+  .tile[data-on="true"] {
+    transition-delay: 0s;
+  }
+  .sc-bar {
+    animation: none;
+  }
+}

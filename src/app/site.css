@@ -820,3 +820,8 @@ a.brand {
     animation: none;
   }
 }
+
+/* Site pages promise 44 px controls (see the accessibility page); the tool header keeps its tighter 36 px. */
+.s-prefs .tools button {
+  height: 44px;
+}

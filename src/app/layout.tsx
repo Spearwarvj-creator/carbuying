@@ -9,8 +9,12 @@ import "./site.css";
 import "./walk.css";
 import { Providers } from "@/components/ui/Providers";
 
+// The live domain is not settled yet; set NEXT_PUBLIC_SITE_URL when it is, so share images resolve.
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: { default: "Deal Desk", template: "%s | Deal Desk" },
+  openGraph: { siteName: "Deal Desk", type: "website" },
+  twitter: { card: "summary_large_image" },
   description: "Enter what the dealer says. See in dollars where the money moved, and what to ask for next.",
 };
 

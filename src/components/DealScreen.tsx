@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { en } from "@/data/strings/en";
 import { useDeal, type TabKey } from "@/store/deal";
 import { Boxes } from "./Boxes";
 import { EntrySheet } from "./EntrySheet";
-import { Prefs } from "./Prefs";
-import { ModeSwitch } from "./walk/WalkScreen";
+import { AppFooter } from "./AppFooter";
+import { AppHeader } from "./AppHeader";
 import { Result, Trail } from "./Result";
 import { AskView, CompareView, TargetView } from "./Views";
 
@@ -19,14 +18,7 @@ export function DealScreen() {
 
   return (
     <div className="app">
-      <header className="top">
-        <Link href="/" className="brand" aria-label={`${en.appName}, home page`}>
-          {en.appName}
-        </Link>
-        <span className="tag">{example ? en.exampleTag : en.yourDealTag}</span>
-        <ModeSwitch />
-        <Prefs />
-      </header>
+      <AppHeader tag={example ? en.exampleTag : en.yourDealTag} />
 
       <main className="cols" data-tab={tab}>
         <div className="colB">
@@ -40,13 +32,13 @@ export function DealScreen() {
           <CompareView />
           <TargetView />
           <AskView />
-          <p className="note">{en.note}</p>
+          <AppFooter />
         </div>
         <div className="panel">
           {tab === "compare" && <CompareView />}
           {tab === "target" && <TargetView />}
           {tab === "ask" && <AskView />}
-          <p className="note">{en.note}</p>
+          <AppFooter />
         </div>
       </main>
 

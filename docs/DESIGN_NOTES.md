@@ -99,3 +99,22 @@ The owner's note after Phase 1: still text-only, not industry-standard component
 - **Reduced motion:** Motion through `MotionConfig reducedMotion="user"` (in `Providers`), the strip and ring through `useReducedMotion`, CSS through one media block. Not yet watched live: the test browser cannot switch the setting.
 - **Bug found by looking:** the share ring first drew a white box. Tailwind v4 has a utility called `ring`, and our class collided with it. Renamed to `share`. Check class names against Tailwind's before reusing common words.
 - **Not done:** step title and fields still scroll inside a 320 by 568 phone (loan step 336 px, verdict 248 px); 375 by 667 loan step scrolls 127 px; at 1280 by 720 the loan step scrolls 97 px. The Desk (grid) view was not redrawn. Keyboard-only, screen reader and axe passes still not run. The old `.seg` and `.btn` rules in globals.css are used by the Desk only.
+
+## Landing page rebuilt as pictures first (added 2026-11-09)
+
+Why: the owner read the first landing as tables and paragraphs. A new buyer gives a page about eight seconds and will not read a comparison table. The old page showed ten dollar figures and about 600 words above the footer; the new one has two figures (the hero) and about 150 words.
+
+Research (live, 2026-11-09): motionsites.ai and 21st.dev. What carried over: one subject-specific object owns the hero, the headline is short and huge, there is almost no body copy, and the product is shown in a frame (a phone) instead of described. What did not: stock 3D, shader backgrounds and gradient washes that have nothing to do with the subject.
+
+Structure (`src/app/page.tsx`, `src/app/landing.css`, `src/components/site/landing/`):
+1. Hero. The loan drawn as a road: one tile per monthly payment, twelve to a row (each row a year), tilted with a leaning floor. A line-drawn car with a headlight beam sits at the end. One control (loan length) and the only two figures on the page: the payment falls, the total climbs. On first sight the loan stretches from 60 to 84 months by itself, once; any touch cancels it. Keyboard works (Radix Slider). Numbers come from the engine through `getExample()`.
+2. The worksheet. The four boxes with a marker that hops between them. Two lines of text.
+3. The tour. Six steps beside a sticky phone that shows what each step looks like, built from the Walk's own graphics (payment strip, money bar, share ring). On a phone the picture sits inside each step.
+4. Trust row (no account, stays on device, plain words) and one link to About for what it does and leaves to you.
+5. Closing line with the car driving away.
+
+Removed from the landing: the comparison table, the example readout card, the "ask for one change" list, the does and leaves lists. `ExampleTable`, `ExampleReadout` and `HeroCheck` were deleted because nothing else used them. The ten-second check still lives in the Walk's front door.
+
+Class-name collision caught: the landing's `.sheet` clashed with the Walk's Radix sheet; renamed `.wsheet`. Reduced motion: tile transitions, the wheel spin and the story bars stop, and the auto-stretch does not run.
+
+Not done: the car and scenes are drawn, not photographs; no generated imagery was used. How it works and About are still text pages and have not been redesigned.

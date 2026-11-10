@@ -1,41 +1,22 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import Link from "next/link";
 import { useState } from "react";
 import { Nums } from "@/components/Nums";
-import { Prefs } from "@/components/Prefs";
+import { AppFooter } from "@/components/AppFooter";
+import { AppHeader } from "@/components/AppHeader";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { Btn } from "@/components/ui/Btn";
-import { ArrowIcon, BackIcon, CheckIcon, ListIcon, LockIcon, SceneCar, SceneDesk, SceneQuote, WalletIcon } from "@/components/ui/icons";
-import { Segmented } from "@/components/ui/Segmented";
+import { ArrowIcon, BackIcon, CheckIcon, ListIcon, LockIcon, SceneCar, SceneDesk, SceneQuote } from "@/components/ui/icons";
 import { Sheet } from "@/components/ui/Sheet";
 import { en } from "@/data/strings/en";
 import { walk } from "@/data/strings/walk";
 import { costBreakdown, formatWhole, toCents } from "@/engine";
-import { setMode, useMode } from "@/lib/mode";
+import { setMode } from "@/lib/mode";
 import { useDeal } from "@/store/deal";
 import { STAGES, useWalk } from "@/store/walk";
 import { TenSecondCheck } from "./Check";
 import { Stage1, Stage2, Stage3, Stage4, Stage5, Stage6, canContinue, useQuote } from "./Stages";
-
-/** The Walk and Desk switch. Both views edit the same numbers, so nothing is lost by switching. */
-export function ModeSwitch() {
-  const mode = useMode();
-  const m = walk.mode;
-  return (
-    <Segmented
-      variant="pill"
-      label={m.label}
-      value={mode}
-      onChange={(v) => setMode(v)}
-      options={[
-        { value: "walk", label: m.walk },
-        { value: "desk", label: m.desk },
-      ]}
-    />
-  );
-}
 
 /** Items rise in one after another. One orchestrated moment on arrival, then the page is still. */
 const rise = {
@@ -310,16 +291,7 @@ export function WalkScreen() {
 
   return (
     <div className="walk" data-view={view}>
-      <header className="top">
-        <Link href="/" className="brand" aria-label={`${en.appName}, home page`}>
-          <span className="brand-mark" aria-hidden="true">
-            <WalletIcon size={18} />
-          </span>
-          {en.appName}
-        </Link>
-        <ModeSwitch />
-        <Prefs />
-      </header>
+      <AppHeader />
       {view === "stage" && <Rail />}
       <main className="walk-main" id="main">
         {/* Enter only: the new step slides in from the side the buyer is heading toward. No exit animation, so there is no blank gap between steps. */}
@@ -339,7 +311,7 @@ export function WalkScreen() {
           )}
         </motion.div>
       </main>
-      {view === "stage" && <BottomBar />}
+      {view === "stage" ? <BottomBar /> : <AppFooter />}
       <p className="sr-only">
         <Nums text={en.note} />
       </p>

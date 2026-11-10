@@ -63,3 +63,16 @@ export function DocPage({
     </SitePage>
   );
 }
+
+/** A picture-first page: a short title block, then chapters that each carry one graphic. Used by How it works and About. */
+export function InfoPage({ current, title, lead, children }: { current: SiteSection; title: string; lead: string; children: ReactNode }) {
+  return (
+    <SitePage current={current}>
+      <header className="pg-head s-wrap">
+        <h1 className="pg-h1">{title}</h1>
+        <p className="pg-lead">{lead}</p>
+      </header>
+      {children}
+    </SitePage>
+  );
+}

@@ -122,6 +122,49 @@ export const ListIcon = (p: IconProps) => (
   </Icon>
 );
 
+export const ClockIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
+  </Icon>
+);
+export const UserIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21c0-4 3.600-6 8-6s8 2 8 6" />
+  </Icon>
+);
+export const UsersIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="9" cy="8" r="3.500" />
+    <path d="M2 20c0-3.500 3-5.500 7-5.500s7 2 7 5.500" />
+    <circle cx="17" cy="9" r="2.800" />
+    <path d="M16.500 14.500c3 .2 5.500 1.800 5.500 4.500" />
+  </Icon>
+);
+export const SunIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2" />
+  </Icon>
+);
+export const TypeIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M3 19 9 5l6 14M5.500 14h7M16 19v-5.500a2.800 2.800 0 0 1 5 0V19M16 16.500h5" />
+  </Icon>
+);
+export const CalcIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="5" y="3" width="14" height="18" rx="3" />
+    <path d="M8.500 7.500h7M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01" />
+  </Icon>
+);
+export const SparkIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="m12 3 2 6 6 2-6 2-2 6-2-6-6-2 6-2z" />
+  </Icon>
+);
+
 /* ------------------------------------------------------------------------------------------
  * Drawn scenes for the three doors. Flat shapes in the chart colours, one line weight, so they
  * read as one set. They are decoration, so they are hidden from screen readers. The wheel and
@@ -193,3 +236,9 @@ export function SceneDesk() {
     </svg>
   );
 }
+
+export const MenuIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M4 7h16M4 12h16M4 17h16" />
+  </Icon>
+);

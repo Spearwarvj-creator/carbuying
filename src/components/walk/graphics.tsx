@@ -134,7 +134,7 @@ export function ShareRing({ share, label }: { share: number; label: string }) {
 }
 
 /** The dealer's four-box worksheet. `lit` marks the box the buyer started from; the mark slides when it changes. */
-export function FourSquare({ lit }: { lit?: "price" | "trade" | "down" | "pay" | null }) {
+export function FourSquare({ lit, values }: { lit?: "price" | "trade" | "down" | "pay" | null; values?: Partial<Record<"price" | "trade" | "down" | "pay", string>> }) {
   const reduce = useReducedMotion();
   const b = walk.stage1.boxes;
   const cells = [
@@ -157,6 +157,7 @@ export function FourSquare({ lit }: { lit?: "price" | "trade" | "down" | "pay" |
           >
             <span className="cell-ico">{c.icon}</span>
             <span className="l">{c.label}</span>
+            {values?.[c.k] && <span className="cell-v num">{values[c.k]}</span>}
             {lit === c.k && (
               <motion.span layoutId="four-lit" className="cell-mark" transition={{ type: "spring", stiffness: 420, damping: 34 }} />
             )}
