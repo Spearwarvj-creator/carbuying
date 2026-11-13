@@ -116,6 +116,7 @@ function Door() {
         ))}
       </ul>
       <motion.div className="door-tools" variants={rise} initial="hidden" animate="show" custom={5}>
+        <h2 className="door-tools-h">{more.guide.shortcuts}</h2>
         <QuickFill
           target="walk"
           trigger={

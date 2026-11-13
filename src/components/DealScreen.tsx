@@ -15,6 +15,7 @@ import { PrintDeal } from "./walk/PrintDeal";
 import { ShareDeal } from "./walk/ShareDeal";
 import { DealChecks } from "./walk/DealChecks";
 import { CashCompare } from "./walk/CashCompare";
+import { DeskBars } from "./walk/charts";
 
 const TABS: TabKey[] = ["deal", "compare", "target", "ask", "checks"];
 
@@ -38,6 +39,7 @@ export function DealScreen() {
         <h1 className="sr-only">{en.deskHeading}</h1>
         <div className="colB">
           <Result />
+          <DeskBars />
           <Trail />
         </div>
         <div className="colA">
@@ -68,7 +70,7 @@ export function DealScreen() {
         <div className="colC">
           <DealChecks offer={offer} />
           <CashCompare offer={offer} />
-          <div className="deskactions">
+          <div className="deskactions" data-tour="share">
             <PrintDeal />
             <ShareDeal />
           </div>
@@ -85,7 +87,7 @@ export function DealScreen() {
             <>
               <DealChecks offer={offer} />
           <CashCompare offer={offer} />
-              <div className="deskactions">
+              <div className="deskactions" data-tour="share">
                 <PrintDeal />
                 <ShareDeal />
               </div>
@@ -95,7 +97,7 @@ export function DealScreen() {
         </div>
       </main>
 
-      <nav className="tabs" aria-label={en.sections}>
+      <nav className="tabs" aria-label={en.sections} data-tour="tabs">
         {TABS.map((k) => (
           <button key={k} type="button" aria-current={tab === k ? "page" : undefined} onClick={() => setTab(k)}>
             {en.tabs[k]}

@@ -6,7 +6,9 @@ import { Btn } from "@/components/ui/Btn";
 import { CloseIcon } from "@/components/ui/icons";
 import { Segmented } from "@/components/ui/Segmented";
 import { ai } from "@/data/strings/ai";
-import { useAiOn } from "@/lib/ai-status";
+import { aiFetch, useAiOn } from "@/lib/ai-status";
+import { CreditsLeft, LimitReached } from "@/components/ui/Credits";
+import { more } from "@/data/strings/more";
 import { getLang } from "@/lib/i18n";
 import { ReadAloud } from "./ReadAloud";
 
@@ -24,17 +26,18 @@ export function AskSheet({ trigger, topic, title, context, figures }: { trigger:
   const [busy, setBusy] = useState(false);
   const [answer, setAnswer] = useState<{ text: string; source: "ai" | "template" } | null>(null);
   const [note, setNote] = useState("");
+  const [limited, setLimited] = useState(false);
 
   async function send(q: string) {
     setBusy(true);
     setNote("");
     try {
-      const res = await fetch("/api/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, question: q || t.questions[2], lang, context, figures }),
-      });
-      if (res.status === 429) setNote(t.limit);
+      const res = await aiFetch("/api/ask", { topic, question: q || t.questions[2], lang, context, figures });
+      if (res.status === 429) {
+        const body = (await res.json().catch(() => ({}))) as { error?: string };
+        if (body.error === "burst") setNote(more.credits.burst);
+        else setLimited(true);
+      }
       else if (!res.ok) setNote(t.failed);
       else setAnswer((await res.json()) as { text: string; source: "ai" | "template" });
     } catch {
@@ -50,6 +53,7 @@ export function AskSheet({ trigger, topic, title, context, figures }: { trigger:
         if (!o) {
           setAnswer(null);
           setNote("");
+          setLimited(false);
           setQuestion("");
         }
       }}
@@ -85,6 +89,7 @@ export function AskSheet({ trigger, topic, title, context, figures }: { trigger:
             <Btn variant="primary" onClick={() => send(question)} aria-disabled={busy}>
               {busy ? t.working : t.send}
             </Btn>
+            {limited ? <LimitReached onApplied={() => setLimited(false)} /> : <CreditsLeft />}
             {note && (
               <p className="qf-note" role="status">
                 {note}

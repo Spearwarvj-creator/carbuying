@@ -25,6 +25,7 @@ import { Segmented } from "@/components/ui/Segmented";
 import { Slider } from "@/components/ui/Slider";
 import { MonthChips, TenSecondCheck } from "./Check";
 import { FourSquare, MoneyBar, PaymentStrip, ShareRing, StepBadge, type BarPart } from "./graphics";
+import { EquityBars, LoanPicture, TermChart } from "./charts";
 import { MoneyField } from "./MoneyField";
 import { Term } from "./Term";
 import { DealChecks } from "./DealChecks";
@@ -349,6 +350,10 @@ export function Stage4() {
             <p className="hint">
               <Term k="interest">{t.stripKey.interest}</Term>: <Nums text={t.interestShare(share)} />
             </p>
+            <section className="vz-block" aria-labelledby="vz-terms-h">
+              <h3 id="vz-terms-h">{more.visuals.terms.title}</h3>
+              <TermChart offer={o} />
+            </section>
           </>
         ) : (
           <>
@@ -420,6 +425,7 @@ export function Stage5() {
       <div className="col-b">
         <Readout label={<Term k="amountFinanced">{t.numberLabel}</Term>} value={d.fin} />
         {o.price > 0 && <MoneyBar parts={parts} showShare={false} />}
+        {hasTrade && <EquityBars allowance={o.tradeAllowance} payoff={o.tradePayoff} />}
         {hasTrade && (
           <p className="hint">
             <Nums text={equity > 0 ? t.ahead(formatWhole(equity)) : equity < 0 ? t.behind(formatWhole(-equity)) : t.even} />{" "}
@@ -539,6 +545,7 @@ export function Stage6() {
       <div className="col-b">
         <ShareRing share={share} label={t.parts.interest} />
         <MoneyBar parts={parts} />
+        <LoanPicture offer={o} />
         <DealChecks offer={o} quotedPay={quotedPay} />
         <CashCompare offer={o} />
         <Disclosure title={t.showMath} className="math">

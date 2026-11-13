@@ -10,7 +10,7 @@ const contents = [
   { id: "short", label: "The short version" },
   { id: "device", label: "What stays on your device" },
   { id: "leaves", label: "What leaves your device" },
-  { id: "ai", label: "Planned AI features" },
+  { id: "ai", label: "Free AI uses and limits" },
   { id: "cookies", label: "Cookies and storage" },
   { id: "changes", label: "Changes and questions" },
 ];
@@ -60,23 +60,23 @@ export default function Privacy() {
       </section>
 
       <section id="ai" aria-labelledby="ai-h">
-        <h2 id="ai-h">Planned AI features</h2>
+        <h2 id="ai-h">Free AI uses and limits</h2>
         <p>
-          Some planned features use an AI model: reading a photo of a worksheet, checking a contract, explaining a term and a practice conversation.
-          They are not available yet. When they are, this is how they will work:
+          The AI helpers cost money to run, so each visitor gets a number of free uses a day. A question, a reword or a practice turn uses one, and a photo uses two.
+          The calculator, the checks and typing or saying your numbers never use any. The count comes back every day at midnight UTC.
         </p>
         <ul>
-          <li>Only what you choose to submit, text or a photo, goes through our server to the model provider.</li>
+          <li>To keep the count we use a one-way hash of the network address, mixed with the date, so it changes every day and cannot be turned back into the address. The count is deleted after two days.</li>
+          <li>To slow a burst of requests, the address is held in the server&rsquo;s memory for up to a minute. It is not written anywhere.</li>
           <li>Nothing you submit is stored, and request contents are not written to our logs.</li>
-          <li>We keep counters for daily limits, without any of the content.</li>
-          <li>Before any upload, the screen will tell you to cover your name, address and signature.</li>
           <li>The AI never produces a number on its own. Every figure comes from the calculator.</li>
+          <li>If you run out and ask us for more, we may give you a code. It is kept in your browser (name: dd-boost) and sent with your AI requests so the server can raise your daily limit.</li>
         </ul>
       </section>
 
       <section id="cookies" aria-labelledby="cookies-h">
         <h2 id="cookies-h">Cookies and storage</h2>
-        <p>Deal Desk sets no cookies. It uses your browser&rsquo;s storage for four settings (names: dd-theme, dd-text, dd-mode, dd-lang) and, only if you press Save, one saved deal (dd-saved). Clearing your browser&rsquo;s site data removes them.</p>
+        <p>Deal Desk sets no cookies. It uses your browser&rsquo;s storage for your settings (names: dd-theme, dd-text, dd-mode, dd-lang), a note of which welcome screens you have seen (dd-seen), a code for more AI uses if we gave you one (dd-boost), and, only if you press Save, one saved deal (dd-saved). Clearing your browser&rsquo;s site data removes them.</p>
         <p>While you work, the numbers you have entered and the step you are on are also kept in this tab&rsquo;s session storage (name: dd-session), so a refresh does not lose them. It stays on your device, is never sent anywhere, and is cleared when you close the tab. The address of a Walk step holds only the step number.</p>
         <p>To work with a weak signal, Deal Desk saves its own pages, images and scripts on your device with a service worker (the cache names start with dd-v1). It saves nothing you type, and it does not save car lookups or AI answers.</p>
       </section>

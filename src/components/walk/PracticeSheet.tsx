@@ -3,6 +3,9 @@
 import { Dialog } from "radix-ui";
 import { useRef, useState, type ReactNode } from "react";
 import { Btn } from "@/components/ui/Btn";
+import { CreditsLeft, LimitReached } from "@/components/ui/Credits";
+import { more } from "@/data/strings/more";
+import { aiFetch } from "@/lib/ai-status";
 import { CloseIcon, MicIcon } from "@/components/ui/icons";
 import { ai } from "@/data/strings/ai";
 import type { Offer } from "@/engine";
@@ -37,6 +40,7 @@ export function PracticeSheet({ trigger, offer, quotedPay = 0 }: { trigger: Reac
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState("");
+  const [limited, setLimited] = useState(false);
   const [done, setDone] = useState(false);
   const end = useRef<HTMLDivElement>(null);
   const mic = useListen(setDraft);
@@ -51,13 +55,13 @@ export function PracticeSheet({ trigger, offer, quotedPay = 0 }: { trigger: Reac
     setBusy(true);
     setNote("");
     try {
-      const res = await fetch("/api/practice", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.slice(-14), summary: sum.text, figures: sum.figures, lang: getLang() }),
-      });
+      const res = await aiFetch("/api/practice", { messages: next.slice(-14), summary: sum.text, figures: sum.figures, lang: getLang() });
       if (res.status === 503) setNote(p.unavailable);
-      else if (res.status === 429) setNote(p.limit);
+      else if (res.status === 429) {
+        const body = (await res.json().catch(() => ({}))) as { error?: string };
+        if (body.error === "burst") setNote(more.credits.burst);
+        else setLimited(true);
+      }
       else if (!res.ok) setNote(p.failed);
       else {
         const a = (await res.json()) as { text: string };
@@ -108,6 +112,7 @@ export function PracticeSheet({ trigger, offer, quotedPay = 0 }: { trigger: Reac
                 {busy && <p className="hint">{p.thinking}</p>}
                 <div ref={end} />
               </div>
+              {limited ? <LimitReached onApplied={() => setLimited(false)} /> : <CreditsLeft />}
               {note && (
                 <p className="qf-note" role="status">
                   {note}

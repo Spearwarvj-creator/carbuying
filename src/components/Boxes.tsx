@@ -103,7 +103,7 @@ export function Boxes() {
           </p>
         </div>
       )}
-      <div className="fields">
+      <div className="fields" data-tour="offers">
         {BOX_ORDER.map((box) => (
           <button
             key={box}

@@ -7,6 +7,7 @@ import { initLang, useLang } from "@/lib/i18n";
 import { startPersistence } from "@/lib/persist";
 import { useDeal } from "@/store/deal";
 import { DealScreen } from "./DealScreen";
+import { Onboarding } from "./onboarding/Onboarding";
 import { WalkScreen } from "./walk/WalkScreen";
 
 /** The calculator has two views of the same numbers: the Walk for a first visit, and the Desk for experts. */
@@ -29,5 +30,10 @@ export function DealApp() {
       history.replaceState(null, "", location.pathname);
     });
   }, []);
-  return mode === "desk" ? <DealScreen key={lang} /> : <WalkScreen key={lang} />;
+  return (
+    <>
+      {mode === "desk" ? <DealScreen key={lang} /> : <WalkScreen key={lang} />}
+      <Onboarding key={`guide-${lang}`} />
+    </>
+  );
 }

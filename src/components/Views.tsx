@@ -10,7 +10,10 @@ import { Nums } from "./Nums";
 import { Btn } from "./ui/Btn";
 import { ReadAloud } from "./walk/ReadAloud";
 import { ai } from "@/data/strings/ai";
-import { useAiOn } from "@/lib/ai-status";
+import { aiFetch, useAiOn } from "@/lib/ai-status";
+import { LoanCompare, OfferBars } from "./walk/charts";
+import { useMediaQuery } from "./use-media-query";
+import { CreditsLeft, LimitReached } from "@/components/ui/Credits";
 import { getLang } from "@/lib/i18n";
 
 const METRICS: Metric[] = ["total", "pay", "otd"];
@@ -49,6 +52,7 @@ function relevantLevers(take: Take, loser: Offer) {
 export function CompareView() {
   const { ready, d1, d2 } = useAnalysis();
   const names = useOfferNames();
+  const wide = useMediaQuery("(min-width: 900px)");
   const c = en.compare;
   if (!ready) return <section className="view"><h2>{c.heading}</h2><p className="hint">{en.result.empty}</p></section>;
 
@@ -77,6 +81,7 @@ export function CompareView() {
           <Nums text={headline} />
         </p>
       )}
+      {!wide && <OfferBars offers={[d1.offer, d2.offer]} names={names} />}
       <table className="cmp">
         <thead>
           <tr>
@@ -101,6 +106,7 @@ export function CompareView() {
           ))}
         </tbody>
       </table>
+      <LoanCompare offers={[d1.offer, d2.offer]} names={names} />
     </section>
   );
 }
@@ -165,6 +171,7 @@ export function AskView() {
   const [reworded, setReworded] = useState<{ base: string; text: string } | null>(null);
   const [rewording, setRewording] = useState(false);
   const [toneNote, setToneNote] = useState("");
+  const [toneLimited, setToneLimited] = useState(false);
   const aiOn = useAiOn();
   const a = en.ask;
   if (!ready || !take) return <section className="view"><h2>{a.heading}</h2><p className="hint">{en.result.empty}</p></section>;
@@ -178,7 +185,12 @@ export function AskView() {
     setRewording(true);
     setToneNote("");
     try {
-      const res = await fetch("/api/draft", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: standard, tone, lang }) });
+      const res = await aiFetch("/api/draft", { text: standard, tone, lang });
+      if (res.status === 429) {
+        const body = (await res.json().catch(() => ({}))) as { error?: string };
+        if (body.error !== "burst") setToneLimited(true);
+        return setToneNote(ai.tone.kept);
+      }
       if (!res.ok) return setToneNote(ai.tone.kept);
       const a = (await res.json()) as { text: string; source: "ai" | "template" };
       setReworded({ base: standard, text: a.text });
@@ -218,6 +230,7 @@ export function AskView() {
         </Btn>
       </div>
       )}
+      {aiOn && (toneLimited ? <LimitReached onApplied={() => setToneLimited(false)} /> : <CreditsLeft />)}
       {toneNote && (
         <p className="hint" role="status">
           {rewording ? ai.tone.working : toneNote}

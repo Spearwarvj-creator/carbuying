@@ -15,7 +15,7 @@ export function Result() {
 
   if (!ready || !trail) {
     return (
-      <div className="result">
+      <div className="result" data-tour="total">
         <div className="lbl">{t.totalLabel}</div>
         <div className="total">
           <span className="dash num">$&mdash;</span>
@@ -30,7 +30,7 @@ export function Result() {
   const totalChange = trail.totalCents;
 
   return (
-    <div className="result">
+    <div className="result" data-tour="total">
       <div className="lbl">{t.totalLabel}</div>
       <div className="total" role="img" aria-label={formatCents(d2.totalCents)}>
         <span className="big num" aria-hidden="true">
@@ -117,8 +117,8 @@ export function Trail() {
   const max = Math.max(...rows.map((r) => Math.abs(r.cents)), 1);
 
   return (
-    <div className="trail">
-      <h2>
+    <div className="trail" tabIndex={0} role="region" aria-labelledby="trail-h">
+      <h2 id="trail-h">
         <Nums text={heading} />
       </h2>
       {rows.map((r) => {

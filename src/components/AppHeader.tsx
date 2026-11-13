@@ -9,6 +9,9 @@ import { en } from "@/data/strings/en";
 import { site } from "@/data/strings/site";
 import { walk } from "@/data/strings/walk";
 import { setMode, useMode } from "@/lib/mode";
+import { openHelp } from "@/lib/onboarding";
+import { more } from "@/data/strings/more";
+import { InfoIcon } from "@/components/ui/icons";
 
 /** The Walk and Desk switch. Both views edit the same numbers, so nothing is lost by switching. */
 export function ModeSwitch() {
@@ -50,6 +53,10 @@ export function AppHeader({ tag }: { tag?: string }) {
           <Link href="/how-it-works">{site.nav.how}</Link>
           <Link href="/about">{site.nav.about}</Link>
         </nav>
+        <button type="button" className="top-help" onClick={openHelp} aria-label={more.guide.help}>
+          <InfoIcon size={20} />
+          <span>{more.guide.help}</span>
+        </button>
         <span className="top-prefs">
           <Prefs language />
         </span>

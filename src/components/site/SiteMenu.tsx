@@ -1,6 +1,8 @@
 "use client";
 
 import { Popover } from "radix-ui";
+import { more } from "@/data/strings/more";
+import { openHelp } from "@/lib/onboarding";
 import Link from "next/link";
 import { Prefs } from "@/components/Prefs";
 import { MenuIcon } from "@/components/ui/icons";
@@ -36,6 +38,17 @@ export function SiteMenu({ calculator = true, language = false }: { calculator?:
                 <Link href="/about">{f.about}</Link>
               </li>
             </ul>
+            {language && (
+              <ul className="menu-list">
+                <li>
+                  <Popover.Close asChild>
+                    <button type="button" className="menu-help" onClick={openHelp}>
+                      {more.guide.help}
+                    </button>
+                  </Popover.Close>
+                </li>
+              </ul>
+            )}
             <ul className="menu-list menu-legal">
               <li>
                 <Link href="/privacy">{f.privacy}</Link>

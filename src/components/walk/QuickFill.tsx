@@ -10,7 +10,8 @@ import { walk } from "@/data/strings/walk";
 import { applyToDesk, applyToWalk } from "@/lib/extract/apply";
 import { FILL_FIELDS, fit, type Detected, type FillKey } from "@/lib/extract/fields";
 import { parseSpoken } from "@/lib/extract/spoken";
-import { useAiOn } from "@/lib/ai-status";
+import { aiFetch, useAiOn } from "@/lib/ai-status";
+import { CreditsLeft, LimitReached } from "@/components/ui/Credits";
 import { getLang } from "@/lib/i18n";
 import { useListen } from "@/lib/listen";
 import { setMode } from "@/lib/mode";
@@ -54,6 +55,7 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
   const [kind, setKind] = useState<Kind>("worksheet");
   const [text, setText] = useState("");
   const [note, setNote] = useState("");
+  const [limited, setLimited] = useState(false);
   const [found, setFound] = useState<Detected | null>(null);
   const [contract, setContract] = useState<Detected | null>(null);
   const [vehicle, setVehicle] = useState<VehicleInfo | null>(null);
@@ -97,8 +99,9 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
     setNote("");
     try {
       const images = await Promise.all(Array.from(files).slice(0, kind === "contract" ? 4 : 1).map(shrink));
-      const res = await fetch("/api/extract", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind, images }) });
-      const data = (await res.json()) as { fields?: Detected; vin?: string; message?: string };
+      const res = await aiFetch("/api/extract", { kind, images });
+      const data = (await res.json()) as { fields?: Detected; vin?: string; message?: string; error?: string };
+      if (res.status === 429 && data.error === "limit") return setLimited(true);
       if (!res.ok) return setNote(data.message ?? q.unavailable);
       if (kind === "vin") {
         if (!data.vin) return setNote(ph.vinNone);
@@ -241,6 +244,7 @@ export function QuickFill({ trigger, target }: { trigger: ReactNode; target: "wa
                     {busy ? ph.reading : kind === "contract" ? ph.pickMore : ph.pick}
                   </Btn>
                   <p className="hint">{ph.privacy}</p>
+                  {limited ? <LimitReached onApplied={() => setLimited(false)} /> : <CreditsLeft />}
                 </div>
               )}
               {note && (
