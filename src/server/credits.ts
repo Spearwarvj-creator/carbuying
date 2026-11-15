@@ -83,10 +83,13 @@ const memoryPeek = (visitor: string, boost: number, now: Date): Credits => {
   return credits(mine && mine.day === dayOf(now) ? mine.n : 0, dailyCredits() + boost, now);
 };
 
+/** Values pasted into a dashboard can carry quote marks or spaces around them; they are not part of the value. */
+const clean = (v: string | undefined) => (v ?? "").trim().replace(/^["']|["']$/g, "").trim();
+
 const upstash = () => {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  return url && token ? { url: url.replace(/\/$/, ""), token } : null;
+  const url = clean(process.env.UPSTASH_REDIS_REST_URL);
+  const token = clean(process.env.UPSTASH_REDIS_REST_TOKEN);
+  return /^https:\/\//i.test(url) && token ? { url: url.replace(/\/$/, ""), token } : null;
 };
 
 async function dayHash(text: string): Promise<string> {

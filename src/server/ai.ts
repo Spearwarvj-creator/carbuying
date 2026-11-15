@@ -16,12 +16,26 @@ export class AiError extends Error {
 
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 
+/**
+ * An OpenRouter model name is "vendor/model", like anthropic/claude-haiku-5.5. A display name typed into a dashboard,
+ * such as "Haiku 5.5", is not one and would fail every call, so a value that does not look like a name is ignored
+ * (and said so in the log) and the built-in model is used instead. Stray quote marks and spaces are removed first.
+ */
+const MODEL_NAME = /^~?[a-z0-9][\w.-]*\/[\w.:-]+$/i;
+export function modelFrom(value: string | undefined, builtIn: string, variable: string): string {
+  const v = (value ?? "").trim().replace(/^["']|["']$/g, "").trim();
+  if (!v) return builtIn;
+  if (MODEL_NAME.test(v)) return v;
+  console.error(`[ai] ${variable} is not an OpenRouter model name (it should look like vendor/model), so ${builtIn} is used`);
+  return builtIn;
+}
+
 /** The model for each job. Both can be changed in the environment without touching the code. */
 export const models = () => ({
-  vision: process.env.MODEL_VISION ?? "anthropic/claude-haiku-5.5",
-  text: process.env.MODEL_TEXT ?? "anthropic/claude-haiku-5.5",
+  vision: modelFrom(process.env.MODEL_VISION, "anthropic/claude-haiku-5.5", "MODEL_VISION"),
+  text: modelFrom(process.env.MODEL_TEXT, "anthropic/claude-haiku-5.5", "MODEL_TEXT"),
   /** Tried by OpenRouter only if the main model is down or busy. */
-  fallback: process.env.MODEL_FALLBACK ?? "google/gemini-2.5-flash-lite",
+  fallback: modelFrom(process.env.MODEL_FALLBACK, "google/gemini-2.5-flash-lite", "MODEL_FALLBACK"),
 });
 
 export type Part = { type: "text"; text: string } | { type: "image_url"; image_url: { url: string } };
