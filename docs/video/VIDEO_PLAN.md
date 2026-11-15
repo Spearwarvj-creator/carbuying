@@ -30,7 +30,8 @@ A lower monthly payment can still cost you more, and the dealer talks about the 
 | 5 | Screen: 1920 x 1080, browser zoom 100%, dark theme, bookmarks bar hidden, notifications off | Matches the cards | Check |
 | 6 | Start the kit server: `cd docs/video/kit && python3 serve.py` | Plays the cards | Run it |
 | 7 | ElevenLabs: use your "indi techie" voice at speed 1.00, stability 50, similarity 75 | Same voice as earlier videos | Confirm the sliders |
-| 8 | On the Desk screen, confirm 60 months gives $603 and 84 months gives $462, and that the total rises by about $2,593 | Clip 7 says so | Confirm when recording |
+| 8 | Desk figures: 60 months $603, 84 months $462, +$2,593 | Clip 7 says so | Confirmed on the live Desk on 15 November: $462, "$141 less a month", "+$2,593 more in total", $40,781 |
+| 9 | Chrome window | The window gives only about 1440 x 670, which cuts off the Walk's loan step | Set Chrome zoom to 80% (Cmd and minus twice): the viewport becomes about 1800 x 874 and every screen fits |
 
 Everything else was checked on the live site on 15 November: all pages return 200 with the right language, the 404 page works, the Walk's figures match a hand calculation, the Spanish switch works, the AI helper answers and labels itself, and the pages have no sideways scroll at phone width.
 
@@ -73,7 +74,7 @@ Vee is injected as an overlay on the live site (see "Recording" below). The call
 **2. V2Stack, and the one rule.** No v2stack.com footage: stay on the Deal Desk site, so the viewer never leaves the product. While you name the five products, scroll the home page slowly down to the footer line "Deal Desk is a v2stack project" and rest there. Then open the About page and rest on the sentence about the calculator making the numbers.
 - At the footer line: `v.goTo({text:"v2stack project"},{point:true}); v.mood("happy",1200); v.say("NO. 6 IN V2STACK")`.
 - At "every one is built so the AI can't invent things": `v.mood("focus",2500)`.
-- On the About page: `v.goTo({text:"makes every number"},{side:"right",point:true})` (use whatever words the sentence really contains).
+- On the About page, the "One rule" section: `v.goTo({text:"The calculator does the math"},{side:"right",point:true})`, then `v.goTo({text:"Never makes a number"},{side:"below",point:true,gap:46})` (below, so Vee does not cover the card text).
 - At "thrown away": `v.stamp("THROWN AWAY")`.
 - Keep this chapter under 60 seconds. It is the part a new viewer might skip, so end it on the rule.
 

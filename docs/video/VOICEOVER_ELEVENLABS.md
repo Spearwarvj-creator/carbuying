@@ -16,7 +16,7 @@
 | --- | --- | --- |
 | Hook | $989 a month and $38,601 at 36 months; $491 a month and $44,246 at 84 months; $5,645 more in total | Read off the live home page slider on 15 November 2026 |
 | Walk | $30,000, 7% tax, 7.5% for 60 months, $2,000 down: $32,100 out the door, $603 a month, $38,189 in total, $6,089 interest, 16 in 100 | Live Walk on 15 November, and a hand calculation ($30,100 financed) |
-| Desk | 60 months $603 a month; 84 months $462 a month; about $2,593 more in total | Hand calculation, same loan. **Confirm on the Desk screen when you record.** |
+| Desk | 60 months $603 a month; 84 months $462 a month ($141 less); $40,781 in total, $2,593 more | Hand calculation, and read off the live Desk screen on 15 November |
 | Redesign | 20 kinds of component, 237 screenshots | `docs/research/COMPONENT_RESEARCH.md` and the `shots` folder |
 | Checks | 293 tests pass (one skipped) | `npx vitest run` on 15 November |
 | AI limit | 20 free AI uses a day for each visitor | The live site's own counter ("20 of 20") |
@@ -71,7 +71,7 @@ This is number six in V2Stack, where I build and ship one real product every wee
 
 ### c03. 2 V2Stack  `03-v2stack-and-the-rule.mp3`
 
-On screen: Stay on carbuying: the home page scrolled slowly to the footer line "Deal Desk is a v2stack project", then the About page, the line about numbers. No v2stack.com pages.
+On screen: Stay on carbuying: the home page scrolled slowly to the footer line "Deal Desk is a v2stack project", then the About page, the "One rule" section. No v2stack.com pages.
 
 About 134 words, 54 s of voice, 58 s on screen.
 
@@ -91,7 +91,7 @@ On screen: /deal, I have a quote. Type 30,000, 7% tax, no extras, 60 months at 7
 
 About 280 words, 112 s of voice, 160 s on screen.
 
-I open the calculator and pick: I have a quote. It asks six questions, one at a time, and every word is explained where it appears. Question one: what did they quote first? A payment, or a price. I'll start from the price. Question two: what does it cost to drive away? Thirty thousand dollars, with seven percent sales tax. The out the door price is thirty two thousand, one hundred dollars. The bar shows the car, and the tax on top. Question three: what did they add on? Service contracts, window etching, the extras. I have none, so there's nothing to question here. Question four: how long is the loan? Sixty months, at seven point five percent. Each block is one month, and the interest shows in red. Question five: what about your trade in? No trade in, but two thousand dollars down. And here is the deal. I'd pay thirty eight thousand, one hundred and eighty nine dollars in total. Thirty thousand of that is the car. The other eight thousand, one hundred and eighty nine is tax and interest. Six hundred and three dollars a month, for sixty months. About twenty dollars a day. And this ring says sixteen in every hundred dollars I pay is interest. I checked it by hand, because that's the point. Thirty thousand, one hundred dollars financed, at seven point five percent, over sixty months, is six hundred and three a month. It matches. Under that is a chart, and if you can't read charts, one button shows the same figures as a table. Then the things worth checking, each one from a fixed rule. And a checklist for before you sign.
+I open the calculator and pick: I have a quote. It takes six steps, one at a time, and every word is explained where it appears. Step one: where are you starting? A monthly payment, or a price. I'll start from the price. Step two: what is the full price to drive away? Thirty thousand dollars, with seven percent sales tax. The out the door price is thirty two thousand, one hundred dollars. The bar shows the car, and the tax on top. Step three: what extras did they add? Service contracts, window etching. I have none, and it says so: nothing to question here. Step four: how long is the loan, and what is the rate? Sixty months, at seven point five percent. Each block is one month, and the interest shows in red. Step five: what about your trade in and down payment? No trade in, but two thousand dollars down. And here is the deal. I'd pay thirty eight thousand, one hundred and eighty nine dollars in total. Thirty thousand of that is the car. The other eight thousand, one hundred and eighty nine is tax and interest. Six hundred and three dollars a month, for sixty months. About twenty dollars a day. And this ring says sixteen in every hundred dollars I pay is interest. I checked it by hand, because that's the point. Thirty thousand, one hundred dollars financed, at seven point five percent, over sixty months, is six hundred and three a month. It matches. Open the details and you can see how fast you pay it off. Of the first payment, a hundred and eighty eight dollars is interest. Of the last, under four dollars. Then the things worth checking, each one from a fixed rule.
 
 ### c06. To chapter 4  `06-transition-2.mp3`
 
@@ -183,7 +183,7 @@ And now, number six goes on the shelf.
 
 ### c17. 9 What's left  `17-not-done-and-close.mp3`
 
-On screen: A plain list on screen (the About page's honest-limits section, or a text card). Then the live link.
+On screen: The About page's "Built and planned" section: what works today, then the "Not here yet" list (a video guide, a native Spanish review). Then the live link.
 
 About 84 words, 34 s of voice, 34 s on screen.
 
