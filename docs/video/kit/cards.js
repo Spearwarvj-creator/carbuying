@@ -94,6 +94,9 @@
 
   // &noend=1 keeps the finished card on screen instead of wiping it away (to hold a frame, or to look at it)
   const endWipe = (ms) => !params.get("noend") && wipe(true, ms);
+  // ?bt=1.2,9.8,... gives the start time (in seconds) of each beat of an explainer card, taken from the voice clips, so the card moves when its sentence is spoken
+  const BT = (params.get("bt") || "").split(",").filter(Boolean).map(Number);
+  const bt = (i, d) => Math.round((BT.length ? BT[i] : d) * 1000);
 
   /* ---------- pieces ---------- */
   const logoBlock = "";
@@ -372,7 +375,6 @@
     dur: 50000,
     voice: "Clip 13: I thought it was cramped, so I looked at real examples of every component. Twenty kinds, two hundred and thirty seven screenshots. The real cause was small text and squeezed layouts. Then the changes were quiet. Here is before, and after.",
     build() {
-      const atK = (ms, fn) => at(Math.round(ms * 0.893), fn);
       const widths = [92, 70, 100, 55, 85, 100, 40, 76, 94, 60, 100, 48, 88, 100, 66, 80, 52, 96];
       layer.innerHTML = `
         <div class="ex rd">
@@ -404,15 +406,15 @@
       vee.S = 6;
       vee.moveTo(1690, 250, { snap: true });
       wipe(false, 520);
-      atK(400, () => { exHead("IT FELT CRAMPED"); exShow("rdA"); vee.mood("oops", 6000); });
-      atK(8000, () => { exHead("20 KINDS. 10+ EACH."); exShow("rdB"); vee.wow(); exCount("n20", 20, 2400); exCount("n237", 237, 5200); exFill("g237", 237, 6500); });
-      atK(24000, () => { exHead("THE REAL CAUSE"); exShow("rdC"); vee.mood("focus", 10000); });
-      atK(36000, () => { exHead("THEN, QUIET CHANGES"); exShow("rdD"); vee.mood("happy", 2500); });
-      atK(37200, () => rowOn("rr1"));
-      atK(41500, () => rowOn("rr2"));
-      atK(45500, () => { rowOn("rr3"); vee.stamp("SKIPPED", 1180, 760); vee.mood("wink", 2500); });
-      atK(50500, () => { exHead("BEFORE, AND AFTER"); exShow("rdE"); vee.celebrate(); });
-      atK(55000, () => endWipe(800));
+      const Bl = (bt(2, 21.4) - bt(1, 7.1)) / 1000;
+      at(bt(0, 0.4), () => { exHead("IT FELT CRAMPED"); exShow("rdA"); vee.mood("oops", 6000); });
+      at(bt(1, 7.1), () => { exHead("20 KINDS. 10+ EACH."); exShow("rdB"); vee.wow(); exCount("n20", 20, Bl * 250); exCount("n237", 237, Bl * 560); exFill("g237", 237, Bl * 720); });
+      at(bt(2, 21.4), () => { exHead("THE REAL CAUSE"); exShow("rdC"); vee.mood("focus", 10000); });
+      at(bt(3, 32.1), () => { exHead("THEN, QUIET CHANGES"); exShow("rdD"); vee.mood("happy", 2500); });
+      at(bt(4, 33.5), () => rowOn("rr1"));
+      at(bt(5, 37.5), () => rowOn("rr2"));
+      at(bt(6, 41.0), () => { rowOn("rr3"); vee.stamp("SKIPPED", 1180, 760); vee.mood("wink", 2500); });
+      at(bt(7, 49.0), () => endWipe(800));
     },
   });
 
@@ -422,7 +424,6 @@
     dur: 53000,
     voice: "Clip 15: 293 tests pass; the accessibility scan on my local build; Vercel deploys when I push; the live site showed a dash and plain-text AI answers; a model named Haiku 5.5 and a misspelled site address; test the real site.",
     build() {
-      const atK = (ms, fn) => at(Math.round(ms * 0.8), fn);
       layer.innerHTML = `
         <div class="ex ck">
           ${badge(6, 6)}
@@ -459,25 +460,25 @@
       vee.S = 6;
       vee.moveTo(1690, 250, { snap: true });
       wipe(false, 520);
-      atK(400, () => { exHead("293 TESTS PASS"); exShow("ckA"); vee.mood("happy", 3000); exCount("n293", 293, 5200); exFill("g293", 293, 6000); });
-      atK(6800, () => document.getElementById("g293").lastElementChild.classList.add("on"));
-      atK(7800, () => { exHead("ACCESSIBILITY SCAN"); exShow("ckB"); vee.mood("focus", 6000); });
-      atK(8800, () => rowOn("cr1"));
-      atK(11500, () => rowOn("cr2"));
-      atK(15200, () => { exHead("DEPLOYED THROUGH VERCEL"); exShow("ckE"); vee.mood("idle"); });
-      atK(16000, () => document.getElementById("cs1").classList.add("on"));
-      atK(17200, () => { document.getElementById("cs2").classList.add("on"); document.getElementById("cbar").style.width = "70%"; });
-      atK(18400, () => document.getElementById("cs3").classList.add("on"));
-      atK(19600, () => { document.getElementById("cs4").classList.add("on"); document.getElementById("cbar").style.width = "100%"; vee.celebrate(); });
-      atK(22500, () => { exHead("THEN THE LIVE SITE"); exShow("ckC"); vee.wow(); });
-      atK(24000, () => rowOn("cf1"));
-      atK(29000, () => { rowOn("cf2"); vee.oops(); });
-      atK(36500, () => { exHead("TWO SETTINGS WERE WRONG"); exShow("ckD"); vee.mood("focus", 6000); });
-      atK(38000, () => rowOn("cd1"));
-      atK(44000, () => rowOn("cd2"));
-      atK(52000, () => { rowOn("cd3"); vee.mood("happy", 3000); });
-      atK(59500, () => { exHead("WHY I TEST THE LIVE SITE"); exShow("ckF"); vee.celebrate(); vee.stamp("NOT JUST THE CODE", 960, 900); });
-      atK(65000, () => endWipe(800));
+      const Al = (bt(1, 6.2) - bt(0, 0.3)) / 1000;
+      at(bt(0, 0.3), () => { exHead("293 TESTS PASS"); exShow("ckA"); vee.mood("happy", 3000); exCount("n293", 293, Al * 800); exFill("g293", 293, Al * 900); });
+      at(bt(0, 0.3) + Math.round(Al * 950), () => document.getElementById("g293").lastElementChild.classList.add("on"));
+      at(bt(1, 6.2), () => { exHead("ACCESSIBILITY SCAN"); exShow("ckB"); vee.mood("focus", 6000); });
+      at(bt(1, 6.2) + 900, () => rowOn("cr1"));
+      at(bt(2, 9.0), () => rowOn("cr2"));
+      at(bt(3, 12.2), () => { exHead("DEPLOYED THROUGH VERCEL"); exShow("ckE"); vee.mood("idle"); });
+      at(bt(3, 12.2) + 800, () => document.getElementById("cs1").classList.add("on"));
+      at(bt(3, 12.2) + 2000, () => { document.getElementById("cs2").classList.add("on"); document.getElementById("cbar").style.width = "70%"; });
+      at(bt(3, 12.2) + 3200, () => document.getElementById("cs3").classList.add("on"));
+      at(bt(3, 12.2) + 4400, () => { document.getElementById("cs4").classList.add("on"); document.getElementById("cbar").style.width = "100%"; vee.celebrate(); });
+      at(bt(4, 18.0), () => { exHead("THEN THE LIVE SITE"); exShow("ckC"); vee.wow(); });
+      at(bt(5, 21.0), () => rowOn("cf1"));
+      at(bt(6, 24.0), () => { rowOn("cf2"); vee.oops(); });
+      at(bt(7, 29.2), () => { exHead("TWO SETTINGS WERE WRONG"); exShow("ckD"); vee.mood("focus", 6000); rowOn("cd1"); });
+      at(bt(8, 35.0), () => rowOn("cd2"));
+      at(bt(9, 40.0), () => { rowOn("cd3"); vee.mood("happy", 3000); });
+      at(bt(10, 47.6), () => { exHead("WHY I TEST THE LIVE SITE"); exShow("ckF"); vee.celebrate(); vee.stamp("NOT JUST THE CODE", 960, 900); });
+      at(bt(11, 52.0), () => endWipe(800));
     },
   });
 
@@ -500,12 +501,12 @@
       wipe(false, 520);
       const pre = document.getElementById("gdt");
       const cmd = '$ npx vitest run src/server/language.test.ts -t "invents a number"';
-      at(400, () => { exHead("THE GUARD TEST"); vee.mood("focus", 3000); });
-      at(1000, () => typeInto(pre, cmd, 55));
-      at(2800, () => { pre.classList.remove("caret"); pre.innerHTML = `${cmd}\n\n <span class="g">&#10003;</span> src/server/language.test.ts (18 tests | 17 skipped) 6ms\n`; });
-      at(4200, () => { pre.innerHTML += `\n Test Files  <span class="g">1 passed</span> (1)\n      Tests  <span class="g">1 passed</span> | 17 skipped (18)\n`; vee.wow(); });
-      at(6200, () => { vee.stamp("THROWN AWAY", 680, 800); vee.mood("happy", 2500); });
-      at(10300, () => endWipe(700));
+      at(bt(0, 0.4), () => { exHead("THE GUARD TEST"); vee.mood("focus", 3000); });
+      at(bt(0, 0.4) + 600, () => typeInto(pre, cmd, 55));
+      at(bt(1, 2.8), () => { pre.classList.remove("caret"); pre.innerHTML = `${cmd}\n\n <span class="g">&#10003;</span> src/server/language.test.ts (18 tests | 17 skipped) 6ms\n`; });
+      at(bt(2, 4.2), () => { pre.innerHTML += `\n Test Files  <span class="g">1 passed</span> (1)\n      Tests  <span class="g">1 passed</span> | 17 skipped (18)\n`; vee.wow(); });
+      at(bt(3, 6.2), () => { vee.stamp("THROWN AWAY", 680, 800); vee.mood("happy", 2500); });
+      at(bt(4, 10.3), () => endWipe(700));
     },
   });
 

@@ -1,0 +1,1 @@
+ffmpeg -nostdin -v error -i "/Users/vijaychilaka/Downloads/screen-capture (6).mp4" -vf "crop=60:60:0:0,format=gbrp,geq=lum='clip(min(r(X,Y),b(X,Y))-g(X,Y)-60,0,255)':cb=128:cr=128,format=gray,signalstats,metadata=print:key=lavfi.signalstats.YMAX:file=ymax.txt" -f null -

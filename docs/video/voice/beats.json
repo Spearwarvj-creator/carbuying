@@ -1,0 +1,278 @@
+[
+ {
+  "id": "h1",
+  "text": "A car dealer asks you one question: what monthly payment would you be comfortable with? That question is the whole trick."
+ },
+ {
+  "id": "h2",
+  "text": "Because a dealer can lower your payment just by making the loan longer. Watch."
+ },
+ {
+  "id": "h3",
+  "text": "Thirty six months: nine hundred and eighty nine dollars a month."
+ },
+ {
+  "id": "h4",
+  "text": "Eighty four months: four hundred and ninety one. The payment is cut in half."
+ },
+ {
+  "id": "h5",
+  "text": "Now look at the total. You pay five thousand, six hundred and forty five dollars more."
+ },
+ {
+  "id": "h6",
+  "text": "A lower payment that costs you more. I built a free tool that shows you that before you sign."
+ },
+ {
+  "id": "st1",
+  "text": "This is number six in V2Stack, where I build and ship one real product every week."
+ },
+ {
+  "id": "v1",
+  "text": "If you're new here: V2Stack is where I build and ship one real product every week. Not a demo. The actual thing, live."
+ },
+ {
+  "id": "v2",
+  "text": "Number one, Tactly, for overdue invoices. Number two, Verdict, a resume roast. Three, Compass, student visa status. Four, AgentFoundry, a chatbot builder. And five, Kurae, notes that file themselves."
+ },
+ {
+  "id": "v3",
+  "text": "Look across them and there's a pattern. Every one uses AI, and every one is built so the AI can't invent things."
+ },
+ {
+  "id": "v4",
+  "text": "Deal Desk is the strictest version of that idea. The calculator makes every number. The AI only reads your deal, explains a word, or helps you practise."
+ },
+ {
+  "id": "v5",
+  "text": "And a guard checks every figure the AI writes. If a number isn't in your deal, the whole answer is thrown away. No account. Your numbers stay on your device. And it's free."
+ },
+ {
+  "id": "tr1",
+  "text": "First, a real quote. One question at a time."
+ },
+ {
+  "id": "w0",
+  "text": "I open the calculator and pick: I have a quote. It takes six steps, one at a time, and every word is explained where it appears."
+ },
+ {
+  "id": "w1",
+  "text": "Step one: where are you starting? A monthly payment, or a price. I'll start from the price."
+ },
+ {
+  "id": "w2",
+  "text": "Step two: what is the full price to drive away? Thirty thousand dollars, with seven percent sales tax. The out the door price is thirty two thousand, one hundred dollars. The bar shows the car, and the tax on top."
+ },
+ {
+  "id": "w3",
+  "text": "Step three: what extras did they add? Service contracts, window etching. I have none, and it says so: nothing to question here."
+ },
+ {
+  "id": "w4",
+  "text": "Step four: how long is the loan, and what is the rate? Sixty months, at seven point five percent. Each block is one month, and the interest shows in red."
+ },
+ {
+  "id": "w5",
+  "text": "Step five: what about your trade in and down payment? No trade in, but two thousand dollars down."
+ },
+ {
+  "id": "w6",
+  "text": "And here is the deal. I'd pay thirty eight thousand, one hundred and eighty nine dollars in total. Thirty thousand of that is the car. The other eight thousand, one hundred and eighty nine is tax and interest."
+ },
+ {
+  "id": "w7",
+  "text": "Six hundred and three dollars a month, for sixty months. About twenty dollars a day. And this ring says sixteen in every hundred dollars I pay is interest."
+ },
+ {
+  "id": "w8",
+  "text": "I checked it by hand, because that's the point. Thirty thousand, one hundred dollars financed, at seven point five percent, over sixty months, is six hundred and three a month. It matches."
+ },
+ {
+  "id": "w9a",
+  "text": "Open the details and you can see how fast you pay it off."
+ },
+ {
+  "id": "w9b",
+  "text": "Of the first payment, a hundred and eighty eight dollars is interest. Of the last, under four dollars."
+ },
+ {
+  "id": "w9c",
+  "text": "Then the things worth checking, each one from a fixed rule."
+ },
+ {
+  "id": "tr2",
+  "text": "Now the Desk, for when the numbers keep changing."
+ },
+ {
+  "id": "d1",
+  "text": "Now the Desk. This is for when you're sitting in the chair and the numbers keep moving. Offer one is the first quote: sixty months."
+ },
+ {
+  "id": "d2",
+  "text": "Offer two is what they come back with: the same car, the same down payment, but eighty four months."
+ },
+ {
+  "id": "d3",
+  "text": "And there it is. The payment goes down, from six hundred and three to four hundred and sixty two dollars a month."
+ },
+ {
+  "id": "d4",
+  "text": "And the total goes up, by about twenty six hundred dollars."
+ },
+ {
+  "id": "d5",
+  "text": "The screen says it in plain words: the monthly payment is lower, but you pay more in total."
+ },
+ {
+  "id": "d6",
+  "text": "That's the move I wanted you to see coming. Deal Desk moves one box at a time, and shows what each change did to the total."
+ },
+ {
+  "id": "tr3",
+  "text": "Next, the AI, and the rule it can't break."
+ },
+ {
+  "id": "a1",
+  "text": "Ask about this deal. I tap, what should I look at first."
+ },
+ {
+  "id": "a2",
+  "text": "The answer uses only my own figures, and each one is underlined so I can find it on the page. It also says, in writing, that an AI wrote it."
+ },
+ {
+  "id": "a3",
+  "text": "Here is the proof that this is more than a promise. This test gives the guard an answer with a number the AI made up, and checks that it's thrown away. It is."
+ },
+ {
+  "id": "a4",
+  "text": "The same rule covers every AI feature: explaining a word, drafting a question for the dealer, even the practice conversation."
+ },
+ {
+  "id": "a5",
+  "text": "The AI also has a daily free limit for each visitor, so this isn't an open tap. And when it runs out, or can't answer, you don't get an error. You get the plain version, written by the calculator."
+ },
+ {
+  "id": "tr4",
+  "text": "Car buying has its own language. Let's learn it."
+ },
+ {
+  "id": "l1",
+  "text": "There's a Learn page. Six short lessons, and about a hundred words, each in plain language, tied to something from everyday life, with a question you can ask the dealer."
+ },
+ {
+  "id": "l2a",
+  "text": "There's a search,"
+ },
+ {
+  "id": "l2b",
+  "text": "and a decoder where you paste what the dealer wrote and it points out the words."
+ },
+ {
+  "id": "l3",
+  "text": "It also works in Spanish. One tap, and the calculator changes language in place."
+ },
+ {
+  "id": "l4",
+  "text": "The home page, how it works and the legal pages are written in Spanish too."
+ },
+ {
+  "id": "l5",
+  "text": "And I want to be honest about this: the Spanish is a beta. A model translated it, a second model translated it back so I could compare, and I fixed what that found. But no native speaker has reviewed it yet, and every Spanish page says so."
+ },
+ {
+  "id": "tr5",
+  "text": "Now the redesign, with proof."
+ },
+ {
+  "id": "r1",
+  "text": "A few days ago I looked at this and thought it was cramped."
+ },
+ {
+  "id": "r2",
+  "text": "So for every kind of component, buttons, tabs, tables, charts, accordions, search fields, I opened at least ten real examples on real design sites and wrote down what they did. Twenty kinds. Two hundred and thirty seven screenshots. All saved in the project, so you can check my work."
+ },
+ {
+  "id": "r3",
+  "text": "The real cause of the cramped feel wasn't decoration. It was text that was too small, and layouts squeezed by screen height."
+ },
+ {
+  "id": "r4a",
+  "text": "After that the changes were quiet. The four header controls became one soft group."
+ },
+ {
+  "id": "r4b",
+  "text": "Lists use thin lines instead of boxes around everything."
+ },
+ {
+  "id": "r4c",
+  "text": "And I left out the things I saw everywhere and didn't trust: glowing buttons, award badges, centred heroes with stars."
+ },
+ {
+  "id": "tr6",
+  "text": "How do I know it works? I tested it."
+ },
+ {
+  "id": "c1",
+  "text": "Two hundred and ninety three automated tests pass."
+ },
+ {
+  "id": "c2",
+  "text": "An automated accessibility scan found no violations on the main pages of my local build."
+ },
+ {
+  "id": "c3",
+  "text": "When I push to GitHub, Vercel deploys the site."
+ },
+ {
+  "id": "c4a",
+  "text": "Then I opened the live version and used it, which is how I found what the tests couldn't."
+ },
+ {
+  "id": "c4b",
+  "text": "The Desk showed a dash when only the first offer was filled in."
+ },
+ {
+  "id": "c4c",
+  "text": "And the AI answers on the live site were quietly falling back to plain text."
+ },
+ {
+  "id": "c5a",
+  "text": "Two settings in my Vercel dashboard were wrong: a model written as Haiku five point five, which is a display name and not a model name,"
+ },
+ {
+  "id": "c5b",
+  "text": "and a site address setting with a letter missing, so the live pages pointed at localhost."
+ },
+ {
+  "id": "c5c",
+  "text": "I couldn't see the exact error, so I added a log line for it, and I made the code ignore a bad model value instead of breaking."
+ },
+ {
+  "id": "c6",
+  "text": "That's why I test the real site, and not just the code."
+ },
+ {
+  "id": "tr7",
+  "text": "And now, number six goes on the shelf."
+ },
+ {
+  "id": "n1",
+  "text": "So what's not done. A native speaker hasn't reviewed the Spanish. I haven't tested with a screen reader."
+ },
+ {
+  "id": "n2",
+  "text": "And reading a photo of a dealer's worksheet is in there, but that gets its own video."
+ },
+ {
+  "id": "n3",
+  "text": "The tool is free, there's no account, and the link is in the description. If you're buying a car this year, put your real quote through it before you sign. And if a dealer has used a number on you that I didn't cover, tell me in the comments."
+ },
+ {
+  "id": "sh",
+  "text": "Five products shipped, each live, each with a walkthrough here. Deal Desk is number six."
+ },
+ {
+  "id": "en",
+  "text": "That was number six in V2Stack, where one real product ships every week. Subscribe to follow along, and if you want one built for your business, the email is on screen."
+ }
+]
