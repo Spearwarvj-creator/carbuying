@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { computeDeal, trail, whatItTakes, type Deal, type Trail, type WhatItTakes } from "@/engine";
+import { en } from "@/data/strings/en";
 import { useDeal } from "@/store/deal";
 
 export interface Analysis {
@@ -28,4 +29,11 @@ export function useAnalysis(): Analysis {
       take: ready ? whatItTakes(o1, o2, metric) : null,
     };
   }, [offers, metric]);
+}
+
+/** What to say when the two offers are not both filled in: the Desk compares two, so a lone Offer 1 needs a different nudge than an empty screen. */
+export function useEmptyHint(): string {
+  const o1 = useDeal((s) => s.offers[0].price);
+  const o2 = useDeal((s) => s.offers[1].price);
+  return o1 > 0 && o2 <= 0 ? en.result.emptyOne : en.result.empty;
 }

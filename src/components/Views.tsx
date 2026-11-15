@@ -4,7 +4,7 @@ import { useState } from "react";
 import { en } from "@/data/strings/en";
 import { formatCents, toCents, type Lever, type Metric, type Offer } from "@/engine";
 import { useDeal, useOfferNames } from "@/store/deal";
-import { useAnalysis } from "./analysis";
+import { useAnalysis, useEmptyHint } from "./analysis";
 import { leverLine } from "./lever-line";
 import { Nums } from "./Nums";
 import { Btn } from "./ui/Btn";
@@ -52,10 +52,11 @@ function relevantLevers(take: Take, loser: Offer) {
 
 export function CompareView() {
   const { ready, d1, d2 } = useAnalysis();
+  const emptyHint = useEmptyHint();
   const names = useOfferNames();
   const wide = useMediaQuery("(min-width: 900px)");
   const c = en.compare;
-  if (!ready) return <section className="view"><h2>{c.heading}</h2><p className="hint">{en.result.empty}</p></section>;
+  if (!ready) return <section className="view"><h2>{c.heading}</h2><p className="hint">{emptyHint}</p></section>;
 
   const lowerOf = (a: number, b: number) => (a < b ? 0 : a > b ? 1 : -1);
   const rows: Array<{ label: string; gloss?: string; v: [string, string]; low: number }> = [
@@ -114,9 +115,10 @@ export function CompareView() {
 
 export function TargetView() {
   const { ready, take, d1, d2 } = useAnalysis();
+  const emptyHint = useEmptyHint();
   const names = useOfferNames();
   const t = en.target;
-  if (!ready || !take) return <section className="view"><h2>{t.heading}</h2><p className="hint">{en.result.empty}</p></section>;
+  if (!ready || !take) return <section className="view"><h2>{t.heading}</h2><p className="hint">{emptyHint}</p></section>;
 
   const loserOffer = take.loser === "a" ? d1.offer : d2.offer;
   const items: Record<Lever, number> = {
@@ -167,6 +169,7 @@ export function buildAsk(take: Take, loser: Offer, names: [string, string]): str
 
 export function AskView() {
   const { ready, take, d1, d2 } = useAnalysis();
+  const emptyHint = useEmptyHint();
   const names = useOfferNames();
   const [copied, setCopied] = useState(false);
   const [reworded, setReworded] = useState<{ base: string; text: string } | null>(null);
@@ -175,7 +178,7 @@ export function AskView() {
   const [toneLimited, setToneLimited] = useState(false);
   const aiOn = useAiOn();
   const a = en.ask;
-  if (!ready || !take) return <section className="view"><h2>{a.heading}</h2><p className="hint">{en.result.empty}</p></section>;
+  if (!ready || !take) return <section className="view"><h2>{a.heading}</h2><p className="hint">{emptyHint}</p></section>;
   if (take.tie) return <section className="view"><h2>{a.heading}</h2><p className="hint">{a.nothing}</p></section>;
 
   const standard = buildAsk(take, take.loser === "a" ? d1.offer : d2.offer, names);

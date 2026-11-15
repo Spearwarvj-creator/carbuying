@@ -36,10 +36,13 @@ export interface ChatArgs {
   fetcher?: typeof fetch;
 }
 
-export const aiConfigured = () => Boolean(process.env.OPENROUTER_API_KEY);
+/** The key as typed into a dashboard: spaces, a line break or quote marks pasted around it are not part of it. */
+const apiKey = () => (process.env.OPENROUTER_API_KEY ?? "").trim().replace(/^["']|["']$/g, "").trim();
+
+export const aiConfigured = () => Boolean(apiKey());
 
 export async function chat({ job, system, user, maxTokens = 400, json = false, temperature = 0, fetcher }: ChatArgs): Promise<string> {
-  const key = process.env.OPENROUTER_API_KEY;
+  const key = apiKey();
   if (!key) throw new AiError("AI is not switched on", "not-configured");
   const res = await (fetcher ?? fetch)(ENDPOINT, {
     method: "POST",

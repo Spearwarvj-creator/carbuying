@@ -7,13 +7,14 @@ import { Arrow } from "./Arrow";
 import { Gloss } from "./learn/Gloss";
 import { moneyFor, useDetail } from "@/lib/detail";
 import { Nums } from "./Nums";
-import { useAnalysis } from "./analysis";
+import { useAnalysis, useEmptyHint } from "./analysis";
 import { useMediaQuery } from "./use-media-query";
 
 const t = en.result;
 
 export function Result() {
   const { ready, d2, trail } = useAnalysis();
+  const emptyHint = useEmptyHint();
   const detail = useDetail();
   const fc = (c: number) => moneyFor(detail, c);
   const fs = (c: number) => moneyFor(detail, c, true);
@@ -25,7 +26,7 @@ export function Result() {
         <div className="total">
           <span className="dash num">$&mdash;</span>
         </div>
-        <p className="hint">{t.empty}</p>
+        <p className="hint">{emptyHint}</p>
       </div>
     );
   }

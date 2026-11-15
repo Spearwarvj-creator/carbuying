@@ -21,6 +21,7 @@ export const en = {
     aMonth: " a month",
     inTotal: " in total",
     empty: "Enter the price from the dealer's worksheet to start.",
+    emptyOne: "Offer 1 is filled in. Enter the price on Offer 2 to see what changed.",
     divergent: (pay: string, total: string) => `The monthly payment went down by ${pay}, but you pay ${total} more in total.`,
     divergentShort: (pay: string, total: string) => `Payment down ${pay}. Total up ${total}.`,
     divergentShortUp: (pay: string, total: string) => `Payment up ${pay}. Total down ${total}.`,

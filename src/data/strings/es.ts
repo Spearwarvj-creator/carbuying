@@ -26,6 +26,7 @@ export const es: Pack = {
       aMonth: " al mes",
       inTotal: " en total",
       empty: "Ingrese el precio de la hoja del concesionario para empezar.",
+      emptyOne: "La oferta 1 ya está llena. Ingrese el precio de la oferta 2 para ver qué cambió.",
       divergent: (pay: string, total: string) => `El pago mensual bajó ${pay}, pero usted paga ${total} más en total.`,
       divergentShort: (pay: string, total: string) => `El pago baja ${pay}. El total sube ${total}.`,
       divergentShortUp: (pay: string, total: string) => `El pago sube ${pay}. El total baja ${total}.`,
