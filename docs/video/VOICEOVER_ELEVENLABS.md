@@ -1,82 +1,213 @@
-# Voiceover for ElevenLabs
+# Voiceover for ElevenLabs (V2Stack No. 6, Deal Desk)
 
-About 1,350 spoken words, in first person, for the timeline in `VIDEO_PLAN.md`. Each block is one section. Paste one block at a time, listen, and regenerate only the block you want to change. Blocks marked "(screen only)" have no talking on purpose.
+19 clips, about 1,370 spoken words, in first person. Read this file with `VIDEO_PLAN.md` open beside it: the plan says what is on screen, this says what you say.
 
-Numbers are written as words so the voice does not guess how to say them. Everything here was checked against the live site on 15 November 2026. Change a figure in the script only if you change it on screen too.
+**Voice: use the one you already made.** The ElevenLabs files in your Downloads folder are named `indi techie ... ivc_sp100_s50_sb75_v4`. That reads as your instant voice clone "indi techie", with speed 1.00, stability 50 and similarity 75. I cannot see your ElevenLabs account, so open that voice and confirm the sliders match before you generate, then keep them the same for every clip so the whole video sounds like one take. Only use your own voice.
 
-## Making the voice (your own voice only)
+**Pace.** Your Kurae video's subtitles show your voice at about 2.66 words a second (159 a minute) with the gaps included. This plan assumes a slower 2.5 words a second, so every clip has a little room. If a clip comes out longer than the screen time in the table, regenerate it once or trim a sentence; do not speed the voice up past 1.05.
 
-1. In ElevenLabs, open Voices, then Add a new voice, then Instant Voice Clone.
-2. Record or upload one to three minutes of your own speaking: a quiet room, the microphone you will use every week, no music, no other voices, your normal pace. Read a few paragraphs of this script so the clone learns the words you will use.
-3. Name it, tick the box that says you have the rights to the voice (it is yours), and create it.
-4. Settings to start from, then adjust by ear: Stability around 40 to 50 so it sounds like talking and not reading, Similarity around 75, Style near 0, Speaker boost on. Pick the newest multilingual model offered in your account.
-5. If it sounds flat on a line, regenerate that block once or twice; do not keep editing the words. If it mangles a word, respell it phonetically in the script (for example "Deal Desk" is fine; "APR" is better as "A P R").
-6. Export each block as its own audio file, named by section number, so the edit lines up with the clips.
+**How to generate.** Paste one clip at a time. Name each export with the file name in the table (`05-walk.mp3`). Leave about half a second of silence at the start and end of each clip, so the edit can breathe. Numbers are written as words so the voice does not guess how to say them. "V2Stack" is written the way your Kurae video wrote it; if the voice says it oddly, spell it "V two Stack" in that clip only.
 
-A Professional Voice Clone needs about half an hour of your recording and a verification step; it is worth doing only if the instant clone is not close enough after a few weeks.
+**Mark the audio as synthetic.** YouTube asks, when you upload, whether the video contains realistic altered or synthetic content. Answer yes for the cloned voice, and say it in the description (the line is in `VIDEO_PLAN.md`).
 
-Tell viewers the voice is generated from your own voice. YouTube asks you to mark realistic synthetic audio when you upload; answer yes.
+## The numbers in the script (all checked)
 
-## 1. Hook (0:00 to 0:35)
+| Where | Figure | Source |
+| --- | --- | --- |
+| Hook | $989 a month and $38,601 at 36 months; $491 a month and $44,246 at 84 months; $5,645 more in total | Read off the live home page slider on 15 November 2026 |
+| Walk | $30,000, 7% tax, 7.5% for 60 months, $2,000 down: $32,100 out the door, $603 a month, $38,189 in total, $6,089 interest, 16 in 100 | Live Walk on 15 November, and a hand calculation ($30,100 financed) |
+| Desk | 60 months $603 a month; 84 months $462 a month; about $2,593 more in total | Hand calculation, same loan. **Confirm on the Desk screen when you record.** |
+| Redesign | 20 kinds of component, 237 screenshots | `docs/research/COMPONENT_RESEARCH.md` and the `shots` folder |
+| Checks | 293 tests pass (one skipped) | `npx vitest run` on 15 November |
+| AI limit | 20 free AI uses a day for each visitor | The live site's own counter ("20 of 20") |
 
-A dealer says: what monthly payment would make you comfortable? And that is the whole trick. Because I can lower your payment by making the loan longer. Watch. Thirty six months. Now eighty four. The payment drops by about a hundred and fifty dollars a month, and the total you pay climbs by almost three thousand. A lower payment that costs you more. I built a free tool that shows you that before you sign. This is Deal Desk, and in this video I will show you all of it, working, live.
+## Say what you really changed (clip 15)
 
-## 2. The one rule (0:35 to 1:30)
+Clip 15 describes two dashboard problems I found: `MODEL_VISION` was set to the display name "Haiku 5.5" (a model name looks like `anthropic/claude-haiku-5.5`), and the site-address variable was spelled `EXT_PUBLIC_SITE_URL` (it must be `NEXT_PUBLIC_SITE_URL`), which left the live pages pointing at localhost. I did not see the exact reason the AI fell back, which is why the clip says "I couldn't see the exact error". Read the clip once and change it so it matches what you changed in Vercel.
 
-Here is the rule I built it around. The calculator makes every number. The A I never does. If you use A I to talk about money, the risky moment is when it quietly invents a figure that sounds right. So in Deal Desk, the A I can read your deal, explain a word, or help you practise a conversation, but a guard checks every figure in what it writes. If a number is not in your deal, the whole answer is thrown away, and you see plain sentences from the calculator instead. That is the product. No account, your numbers stay on your device, and it is free.
+## Timeline (targets, to hit 10:46)
 
-## 3. Walk through a real quote (1:30 to 4:30)
+| Clip | File | Starts | Screen time | Voice time | Words | Part |
+| --- | --- | --- | --- | --- | --- | --- |
+| c01 | `01-hook` | 0:00 | 38 s | 38 s | 95 | 1 The trick (A-roll) |
+| c02 | `02-start-card` | 0:38 | 7 s | 6 s | 16 | Start card (Card) |
+| c03 | `03-v2stack-and-the-rule` | 0:45 | 58 s | 54 s | 134 | 2 V2Stack (A-roll) |
+| c04 | `04-transition-1` | 1:43 | 4.2 s | 4 s | 9 | To chapter 3 (Card) |
+| c05 | `05-walk` | 1:47 | 160 s | 112 s | 280 | 3 A real quote (Screen) |
+| c06 | `06-transition-2` | 4:27 | 4.2 s | 4 s | 9 | To chapter 4 (Card) |
+| c07 | `07-desk` | 4:31 | 50 s | 47 s | 117 | 4 The Desk (Screen) |
+| c08 | `08-transition-3` | 5:21 | 4.2 s | 4 s | 9 | To chapter 5 (Card) |
+| c09 | `09-ai-and-the-guard` | 5:25 | 72 s | 54 s | 134 | 5 The AI (Screen + terminal) |
+| c10 | `10-transition-4` | 6:37 | 4.2 s | 4 s | 9 | To chapter 6 (Card) |
+| c11 | `11-learn-and-spanish` | 6:41 | 52 s | 50 s | 125 | 6 Words and Spanish (Screen) |
+| c12 | `12-transition-5` | 7:33 | 4.2 s | 2 s | 5 | To chapter 7 (Card) |
+| c13 | `13-redesign` | 7:37 | 58 s | 52 s | 131 | 7 The redesign (Screen) |
+| c14 | `14-transition-6` | 8:36 | 4.2 s | 4 s | 9 | To chapter 8 (Card) |
+| c15 | `15-how-i-checked-it` | 8:40 | 62 s | 60 s | 150 | 8 How I checked it (Terminal + screen) |
+| c16 | `16-transition-7` | 9:42 | 4.2 s | 3 s | 8 | To chapter 9 (Card) |
+| c17 | `17-not-done-and-close` | 9:46 | 34 s | 34 s | 84 | 9 What's left (Screen) |
+| c18 | `18-shelf-card` | 10:20 | 8 s | 6 s | 15 | Shelf card (Card) |
+| c19 | `19-end-card` | 10:28 | 18 s | 12 s | 31 | End card (Card) |
 
-I open the calculator, and I pick, I have a quote. Six steps, one at a time. Step one, where you start. I pick a price. Step two, the price. Thirty thousand dollars, with seven percent sales tax. The out the door price is thirty two thousand one hundred. It counts up, and the bar shows the car and the tax.
+Total 10:46, which leaves about 73 seconds under the 12-minute cap for a slow take or a longer pause. Cards are 7 s (start), 4.2 s each (seven transitions), 8 s (shelf) and 18 s (end): 62 s in all.
 
-Step three, extras. A service contract, window etching, the things they add. I have none, and it tells me so, nothing to question here.
+## The clips
 
-Step four, the loan. Sixty months, at seven point five percent. And now the total you would pay appears, thirty eight thousand five hundred and ninety three, with the interest shown as the red squares at the end.
+### c01. 1 The trick  `01-hook.mp3`
 
-Step five, the trade in and down payment. I put two thousand down.
+On screen: Landing page. Drag the Loan length slider from 36 to 84 months. Vee points at the payment, then the total.
 
-And here is your deal. You would pay thirty eight thousand one hundred and eighty nine dollars in total. That is thirty thousand for the car and eight thousand one hundred and eighty nine for tax, interest and the rest. Six hundred and three dollars a month, for sixty months. About twenty dollars a day, every day. And a ring that says sixteen of every hundred dollars you pay is interest.
+About 95 words, 38 s of voice, 38 s on screen.
 
-I checked this by hand, because that is the point. Thirty thousand one hundred financed at seven point five percent over sixty months is six hundred and three a month. It matches.
+A car dealer asks you one question: what monthly payment would you be comfortable with? That question is the whole trick. Because a dealer can lower your payment just by making the loan longer. Watch. Thirty six months: nine hundred and eighty nine dollars a month. Eighty four months: four hundred and ninety one. The payment is cut in half. Now look at the total. You pay five thousand, six hundred and forty five dollars more. A lower payment that costs you more. I built a free tool that shows you that before you sign.
 
-Under it, there is a chart, and if you cannot read charts, there is a button that shows the same figures as a table. Below that, things to check, each one from a fixed rule, and a checklist for before you sign.
+### c02. Start card  `02-start-card.mp3`
 
-## 4. The Desk (4:30 to 5:30)
+On screen: The start card (kit: ?card=start).
 
-Now the Desk. This is for when you are sitting in the chair and the numbers keep changing. Offer one is the first quote. Offer two is what they come back with. Same car, but now eighty four months. And there it is. The payment goes down, and the total goes up. The words on the screen say it plainly: the monthly payment went down, but you pay more in total. That is the move I wanted you to see coming.
+About 16 words, 6 s of voice, 7 s on screen.
 
-## 5. The A I, and the guard (5:30 to 6:45)
+This is number six in V2Stack, where I build and ship one real product every week.
 
-Ask about this deal. I click, what should I look at first. The answer uses only my own figures, and they are underlined so I can find each one on the page. If a figure is not in my deal, the answer is dropped.
+### c03. 2 V2Stack  `03-v2stack-and-the-rule.mp3`
 
-Here is the proof that this is not just a promise. This test feeds the guard an answer with a made up number in it, and checks it gets thrown away. It does.
+On screen: v2stack.com/projects, scrolling the five products slowly. Then the Deal Desk About page, the line about numbers.
 
-And the A I has a daily free limit for each visitor, so I am not handing out an open tap. When it runs out or cannot answer, you do not get an error. You get the plain version, made by the calculator.
+About 134 words, 54 s of voice, 58 s on screen.
 
-## 6. Learn the words, and Spanish (6:45 to 7:45)
+If you're new here: V2Stack is where I build and ship one real product every week. Not a demo. The actual thing, live. Number one, Tactly, for overdue invoices. Number two, Verdict, a resume roast. Three, Compass, student visa status. Four, AgentFoundry, a chatbot builder. And five, Kurae, notes that file themselves. Look across them and there's a pattern. Every one uses AI, and every one is built so the AI can't invent things. Deal Desk is the strictest version of that idea. The calculator makes every number. The AI only reads your deal, explains a word, or helps you practise. And a guard checks every figure the AI writes. If a number isn't in your deal, the whole answer is thrown away. No account. Your numbers stay on your device. And it's free.
 
-Car buying has its own language. So there is a Learn page. Six short lessons, and about a hundred words, each one in plain language, tied to something from everyday life, with a question you can ask the dealer. There is a search, and a decoder where you paste what the dealer wrote and it points out the words.
+### c04. To chapter 3  `04-transition-1.mp3`
 
-And it is in Spanish. One tap on the calculator, and it changes language in place, and your choice is saved on the device. The home page, how it works, and the legal pages are written in Spanish too. I want to be honest about this. The Spanish is a beta. A model translated it, a second model translated it back so I could compare, and I fixed what that found. But no native speaker has reviewed it yet, and the site says so on every Spanish page.
+On screen: Transition card t1.
 
-## 7. The redesign, with proof (7:45 to 9:00)
+About 9 words, 4 s of voice, 4.2 s on screen.
 
-A few days ago I looked at this and thought it was cramped, and it looked like every other A I site. So I did something I do not usually do. For every kind of component in the site, buttons, tabs, tables, charts, accordions, search fields, I opened at least ten real examples, on real design sites, and wrote down what they did. Twenty kinds, two hundred and thirty seven screenshots, all saved in the project, so you can check my work.
+First, a real quote. One question at a time.
 
-The root cause of the cramped feel was not decoration. It was a text size that was too small, and layouts squeezed by screen height. After that, the changes were quiet. The four header controls became one soft group. Lists use thin lines instead of boxes around everything. The hundred words are an open list, not a hundred cards. There is a fine grain over the dark background so it feels like a surface. And I left out the things I saw everywhere and did not trust: glowing buttons, award badges, centred heroes with stars.
+### c05. 3 A real quote  `05-walk.mp3`
 
-Here is before, and here is after.
+On screen: /deal, I have a quote. Type 30,000, 7% tax, no extras, 60 months at 7.5%, no trade-in, 2,000 down. Show Your deal, then Show these figures as a table, then Things to check.
 
-## 8. How I checked it (9:00 to 10:00)
+About 280 words, 112 s of voice, 160 s on screen.
 
-Before recording block 8: the 404 cause is my best diagnosis (old project settings such as Framework Preset or Output Directory), not something I saw in your dashboard. Say in the video what you actually changed in Vercel, and edit the story below to match.
+I open the calculator and pick: I have a quote. It asks six questions, one at a time, and every word is explained where it appears. Question one: what did they quote first? A payment, or a price. I'll start from the price. Question two: what does it cost to drive away? Thirty thousand dollars, with seven percent sales tax. The out the door price is thirty two thousand, one hundred dollars. The bar shows the car, and the tax on top. Question three: what did they add on? Service contracts, window etching, the extras. I have none, so there's nothing to question here. Question four: how long is the loan? Sixty months, at seven point five percent. Each block is one month, and the interest shows in red. Question five: what about your trade in? No trade in, but two thousand dollars down. And here is the deal. I'd pay thirty eight thousand, one hundred and eighty nine dollars in total. Thirty thousand of that is the car. The other eight thousand, one hundred and eighty nine is tax and interest. Six hundred and three dollars a month, for sixty months. About twenty dollars a day. And this ring says sixteen in every hundred dollars I pay is interest. I checked it by hand, because that's the point. Thirty thousand, one hundred dollars financed, at seven point five percent, over sixty months, is six hundred and three a month. It matches. Under that is a chart, and if you can't read charts, one button shows the same figures as a table. Then the things worth checking, each one from a fixed rule. And a checklist for before you sign.
 
-How do I know it works? Two hundred and eighty nine automated tests pass. An accessibility audit finds no violations on the main pages, in the dark and the light screen. I checked the pages at phone width, and nothing scrolls sideways. And I opened the live site and walked it myself, which is how I found two things that I am fixing: the A I answers on the live site were falling back to plain text, and the Desk showed a dash when only the first offer was filled in.
+### c06. To chapter 4  `06-transition-2.mp3`
 
-And one story, because it cost me an evening. After I deployed, the site showed a four oh four. The code was fine. The problem was in the Vercel project settings, not in the app. I corrected the settings, redeployed, and it came up.
+On screen: Transition card t2.
 
-## 9. What is not done, and next week (10:00 to 10:40)
+About 9 words, 4 s of voice, 4.2 s on screen.
 
-So, what is not done. A native speaker has not reviewed the Spanish. I have not tested with a screen reader. And a few smaller things on the design list, like the pop up windows and some tooltips, are still on the list.
+Now the Desk, for when the numbers keep changing.
 
-The tool is free, there is no account, and the link is in the description. If you buy a car this year, put your real quote through it before you sign. And if you have a number a dealer used on you that I did not cover, tell me in the comments. This is week six of one real product a week. See you next week.
+### c07. 4 The Desk  `07-desk.mp3`
+
+On screen: Desk. Offer 1 is the 60-month quote. Offer 2 is the same car at 84 months. Show the payment falling and the total rising.
+
+About 117 words, 47 s of voice, 50 s on screen.
+
+Now the Desk. This is for when you're sitting in the chair and the numbers keep moving. Offer one is the first quote: sixty months. Offer two is what they come back with: the same car, but eighty four months. And there it is. The payment goes down, from six hundred and three to four hundred and sixty two dollars a month. And the total goes up, by about twenty six hundred dollars. The screen says it in plain words: the monthly payment is lower, but you pay more in total. That's the move I wanted you to see coming. Deal Desk moves one box at a time, and shows what each change did to the total.
+
+### c08. To chapter 5  `08-transition-3.mp3`
+
+On screen: Transition card t3.
+
+About 9 words, 4 s of voice, 4.2 s on screen.
+
+Next, the AI, and the rule it can't break.
+
+### c09. 5 The AI  `09-ai-and-the-guard.mp3`
+
+On screen: Ask about this deal, tap What should I look at first. Show the underlined figures and the Written by an AI line. Then the terminal: the guard test.
+
+About 134 words, 54 s of voice, 72 s on screen.
+
+Ask about this deal. I tap, what should I look at first. The answer uses only my own figures, and each one is underlined so I can find it on the page. It also says, in writing, that an AI wrote it. Here is the proof that this is more than a promise. This test gives the guard an answer with a number the AI made up, and checks that it's thrown away. It is. The same rule covers every AI feature: explaining a word, drafting a question for the dealer, even the practice conversation. The AI also has a daily free limit for each visitor, so this isn't an open tap. And when it runs out, or can't answer, you don't get an error. You get the plain version, written by the calculator.
+
+### c10. To chapter 6  `10-transition-4.mp3`
+
+On screen: Transition card t4.
+
+About 9 words, 4 s of voice, 4.2 s on screen.
+
+Car buying has its own language. Let's learn it.
+
+### c11. 6 Words and Spanish  `11-learn-and-spanish.mp3`
+
+On screen: /learn: six lessons, the open word list, search, the decoder. Then ES on the calculator, and the Spanish home page.
+
+About 125 words, 50 s of voice, 52 s on screen.
+
+There's a Learn page. Six short lessons, and about a hundred words, each in plain language, tied to something from everyday life, with a question you can ask the dealer. There's a search, and a decoder where you paste what the dealer wrote and it points out the words. It also works in Spanish. One tap, and the calculator changes language in place. The home page, how it works and the legal pages are written in Spanish too. And I want to be honest about this: the Spanish is a beta. A model translated it, a second model translated it back so I could compare, and I fixed what that found. But no native speaker has reviewed it yet, and every Spanish page says so.
+
+### c12. To chapter 7  `12-transition-5.mp3`
+
+On screen: Transition card t5.
+
+About 5 words, 2 s of voice, 4.2 s on screen.
+
+Now the redesign, with proof.
+
+### c13. 7 The redesign  `13-redesign.mp3`
+
+On screen: docs/research/COMPONENT_RESEARCH.md and a few of the 237 screenshots. Then before and after on the same page.
+
+About 131 words, 52 s of voice, 58 s on screen.
+
+A few days ago I looked at this and thought it was cramped. So for every kind of component, buttons, tabs, tables, charts, accordions, search fields, I opened at least ten real examples on real design sites and wrote down what they did. Twenty kinds. Two hundred and thirty seven screenshots. All saved in the project, so you can check my work. The real cause of the cramped feel wasn't decoration. It was text that was too small, and layouts squeezed by screen height. After that the changes were quiet. The four header controls became one soft group. Lists use thin lines instead of boxes around everything. And I left out the things I saw everywhere and didn't trust: glowing buttons, award badges, centred heroes with stars. Here's before, and after.
+
+### c14. To chapter 8  `14-transition-6.mp3`
+
+On screen: Transition card t6.
+
+About 9 words, 4 s of voice, 4.2 s on screen.
+
+How do I know it works? I tested it.
+
+### c15. 8 How I checked it  `15-how-i-checked-it.mp3`
+
+On screen: Terminal: npm test, 293 passing. Then the live site, the Desk with one offer, and the Vercel settings page (model name, site address).
+
+About 150 words, 60 s of voice, 62 s on screen.
+
+Two hundred and ninety three automated tests pass. An automated accessibility scan found no violations on the main pages of my local build. Then I opened the live site and used it, which is how I found what the tests couldn't. The Desk showed a dash when only the first offer was filled in. And the AI answers on the live site were quietly falling back to plain text. Two settings in my hosting dashboard were wrong: a model written as Haiku five point five, which is a display name and not a model name, and a site address setting with a letter missing, so the live pages pointed at localhost. I couldn't see the exact error, so I added a log line for it, and I made the code ignore a bad model value instead of breaking. That's why I test the real site, and not just the code.
+
+### c16. To chapter 9  `16-transition-7.mp3`
+
+On screen: Transition card t7.
+
+About 8 words, 3 s of voice, 4.2 s on screen.
+
+And now, number six goes on the shelf.
+
+### c17. 9 What's left  `17-not-done-and-close.mp3`
+
+On screen: A plain list on screen (the About page's honest-limits section, or a text card). Then the live link.
+
+About 84 words, 34 s of voice, 34 s on screen.
+
+So what's not done. A native speaker hasn't reviewed the Spanish. I haven't tested with a screen reader. And reading a photo of a dealer's worksheet is in there, but that gets its own video. The tool is free, there's no account, and the link is in the description. If you're buying a car this year, put your real quote through it before you sign. And if a dealer has used a number on you that I didn't cover, tell me in the comments.
+
+### c18. Shelf card  `18-shelf-card.mp3`
+
+On screen: The shelf card (kit: ?card=shelf), or the real v2stack.com/projects with No. 6 added.
+
+About 15 words, 6 s of voice, 8 s on screen.
+
+Five products shipped, each live, each with a walkthrough here. Deal Desk is number six.
+
+### c19. End card  `19-end-card.mp3`
+
+On screen: The end card (kit: ?card=end). Leave the slots empty for YouTube's end-screen elements.
+
+About 31 words, 12 s of voice, 18 s on screen.
+
+That was number six in V2Stack, where one real product ships every week. Subscribe to follow along, and if you want one built for your business, the email is on screen.
+
+## After you have the audio
+
+1. Drop every clip on its own track in the edit, in the order of the table.
+2. Check each clip against its screen time. A clip longer than its screen time means the screen needs a freeze frame or a slower cursor, not a faster voice.
+3. Add the cards from the kit (see `kit/README.md`) at the times in the table.
+4. Re-export the chapter timestamps for the description from the final edit.

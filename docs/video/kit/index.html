@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deal Desk video kit</title>
+<link rel="stylesheet" href="kit.css">
+</head>
+<body>
+<div class="shell" id="shell">
+  <aside class="panel">
+    <h1>Deal Desk video kit</h1>
+    <p>V2Stack No. 6. Click Play on a card, or press its number. For recording, open one card alone: <code>?card=t3&amp;clean=1</code>.</p>
+    <p id="now"></p>
+    <div class="row"><div><b>Play all cards</b><small id="total"></small></div><button id="all">Play all</button></div>
+    <div class="row"><div><b>Full screen</b><small>Records at your screen's size. 1920 x 1080 is ideal.</small></div><button id="fs" class="ghost">F</button></div>
+    <div id="list"></div>
+    <div class="keys">1 to 9: play that card<br>R: replay the card<br>F: full screen</div>
+  </aside>
+  <main class="view" id="view">
+    <div class="fit" id="fit">
+      <div class="stage" id="stage">
+        <div class="bar t"></div><div class="bar b"></div>
+        <div class="card" id="card"></div>
+        <canvas class="wipe" id="wipe" width="1920" height="1080"></canvas>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="vee.js"></script>
+<script src="cards.js"></script>
+</body>
+</html>

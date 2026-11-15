@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vee, all moods</title>
+<style>
+  body { margin: 0; padding: 24px; background: #171412; color: #f5f3ec; font: 14px/1.4 system-ui, sans-serif; }
+  h1 { font-size: 18px; margin: 0 0 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
+  figure { margin: 0; padding: 12px; background: #211c19; border-radius: 12px; text-align: center; }
+  canvas { image-rendering: pixelated; width: 168px; height: 180px; }
+  figcaption { margin-top: 6px; font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>Vee, every mood (sprite only)</h1>
+<div class="grid" id="grid"></div>
+<script src="vee.js"></script>
+<script>
+  const grid = document.getElementById("grid");
+  const moods = Vee.MOODS;
+  const cells = moods.map((m) => {
+    const f = document.createElement("figure");
+    const c = document.createElement("canvas");
+    c.width = 28; c.height = 30;
+    const cap = document.createElement("figcaption");
+    cap.textContent = m;
+    f.append(c, cap);
+    grid.append(f);
+    return { m, c };
+  });
+  let n = 0;
+  function tick() {
+    n++;
+    for (const { m, c } of cells) {
+      const face = Object.assign({}, Vee.MOODS_FACES ? Vee.MOODS_FACES[m] : {});
+      const sprite = Vee.buildSprite(Object.assign({ mood: m }, window.__faces[m], { flame: n % 3 }));
+      const x = c.getContext("2d");
+      x.clearRect(0, 0, 28, 30);
+      x.drawImage(sprite, 0, 0);
+    }
+  }
+  window.__faces = {
+    idle: { eyes: "open", brow: "flat", mouth: "smile", px: 0, py: 0 },
+    happy: { eyes: "happy", brow: "none", mouth: "big", blush: true, px: 0, py: 0, ears: true },
+    wow: { eyes: "wide", brow: "none", mouth: "o", bright: true, px: 0, py: 0 },
+    think: { eyes: "open", brow: "tilt", mouth: "flat", px: 1, py: -1 },
+    oops: { eyes: "open", brow: "sad", mouth: "sad", px: 0, py: 1 },
+    sleepy: { eyes: "half", brow: "none", mouth: "flat", px: 0, py: 1 },
+    wink: { eyes: "wink", brow: "none", mouth: "smile", blush: true, px: 0, py: 0 },
+    focus: { eyes: "open", brow: "mad", mouth: "flat", px: 0, py: 0 },
+  };
+  setInterval(tick, 100);
+  tick();
+</script>
+</body>
+</html>

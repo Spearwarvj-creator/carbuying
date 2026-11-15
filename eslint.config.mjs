@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The video kit is plain browser scripts for recording, not part of the site (and holds a minified file).
+    "docs/video/kit/**",
   ]),
 ]);
 

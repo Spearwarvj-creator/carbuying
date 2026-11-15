@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vee sticker</title>
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* A single Vee on a flat colour, to record and key over footage that Vee cannot be injected into (the terminal, a PDF).
+     ?bg=green is a chroma-key green (#00b140); ?bg=dark matches the cards; the default is transparent for looking at it. */
+  html, body { background: transparent; }
+  body.green { background: #00b140; }
+  body.dark { background: #171412; }
+</style>
+</head>
+<body>
+<script src="vee.js"></script>
+<script>
+  // ?say=THROWN AWAY   ?mood=happy|wow|oops|think|focus|wink|sleepy   ?stamp=NOPE   ?bg=green   ?x=0.85&y=0.8 (position as a fraction of the screen)   ?size=8
+  const q = new URLSearchParams(location.search);
+  if (q.get("bg")) document.body.className = q.get("bg");
+  const v = new Vee({ fixed: true, scale: +(q.get("size") || 8), x: innerWidth * +(q.get("x") || 0.85), y: innerHeight * +(q.get("y") || 0.78), look: false });
+  const mood = q.get("mood") || "happy";
+  v.moveTo(innerWidth * +(q.get("x") || 0.85), innerHeight * +(q.get("y") || 0.78), { snap: true });
+  v.enter("right");
+  v.after(250, () => v.mood(mood, 0).hop(0.9));
+  if (q.get("say")) v.after(700, () => v.say(q.get("say"), { ms: 3500, side: "left" }));
+  if (q.get("stamp")) v.after(900, () => v.stamp(q.get("stamp"), innerWidth * 0.5, innerHeight * 0.45));
+  if (mood === "happy") v.after(900, () => v.sparkle(v.x, v.y - 60, 12));
+</script>
+</body>
+</html>
