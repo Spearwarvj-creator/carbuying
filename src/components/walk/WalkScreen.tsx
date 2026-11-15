@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
 import { useState } from "react";
 import { Nums } from "@/components/Nums";
 import { AppFooter } from "@/components/AppFooter";
@@ -145,6 +146,15 @@ function Door() {
             </button>
           }
         />
+        <Link href="/learn" className="toolbtn">
+          <span className="quick-ico" aria-hidden="true">
+            <ListIcon size={22} />
+          </span>
+          <span className="door-text">
+            <b>{more.learnDoor.title}</b>
+            <span>{more.learnDoor.sub}</span>
+          </span>
+        </Link>
         <LeaseCheck
           trigger={
             <button type="button" className="toolbtn">

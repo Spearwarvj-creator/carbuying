@@ -15,6 +15,9 @@ import { PrintDeal } from "./walk/PrintDeal";
 import { ShareDeal } from "./walk/ShareDeal";
 import { DealChecks } from "./walk/DealChecks";
 import { CashCompare } from "./walk/CashCompare";
+import { RateCheck } from "./walk/RateCheck";
+import { Matters } from "./learn/Matters";
+import { useMediaQuery } from "./use-media-query";
 import { DeskBars } from "./walk/charts";
 
 const TABS: TabKey[] = ["deal", "compare", "target", "ask", "checks"];
@@ -29,6 +32,7 @@ export function DealScreen() {
   const offers = useDeal((s) => s.offers);
   const fromShare = useDeal((s) => s.fromShare);
   const names = useOfferNames();
+  const wide = useMediaQuery("(min-width: 900px)");
   const same = offers[0].price > 0 && JSON.stringify(offers[0]) === JSON.stringify(offers[1]);
 
   return (
@@ -39,6 +43,7 @@ export function DealScreen() {
         <h1 className="sr-only">{en.deskHeading}</h1>
         <div className="colB">
           <Result />
+          {wide && <Matters offer={offer} />}
           <DeskBars />
           <Trail />
         </div>
@@ -70,6 +75,7 @@ export function DealScreen() {
         <div className="colC">
           <DealChecks offer={offer} />
           <CashCompare offer={offer} />
+          <RateCheck apr={offer.apr} />
           <div className="deskactions" data-tour="share">
             <PrintDeal />
             <ShareDeal />
@@ -85,8 +91,10 @@ export function DealScreen() {
           {tab === "ask" && <AskView />}
           {tab === "checks" && (
             <>
+              <Matters offer={offer} />
               <DealChecks offer={offer} />
           <CashCompare offer={offer} />
+          <RateCheck apr={offer.apr} />
               <div className="deskactions" data-tour="share">
                 <PrintDeal />
                 <ShareDeal />

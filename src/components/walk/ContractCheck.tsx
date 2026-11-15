@@ -5,7 +5,8 @@ import { computeDeal, type Offer } from "@/engine";
 import type { Detected, FillKey } from "@/lib/extract/fields";
 
 const c = ai.contract;
-const money = (n: number) => `$${n.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+/** Whole dollars when there are no cents, otherwise always two places, so $523.90 is never shown as $523.9. */
+const money = (n: number) => `$${n.toLocaleString("en-US", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })}`;
 
 interface Row {
   key: FillKey;

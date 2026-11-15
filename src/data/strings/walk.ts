@@ -52,7 +52,7 @@ export const walk = {
   },
 
   check: {
-    title: "What did the dealer say?",
+    title: "What monthly payment are you looking at?",
     paymentLabel: "Monthly payment",
     monthsLabel: "Months",
     downLabel: "Paid up front",
@@ -66,8 +66,8 @@ export const walk = {
   },
 
   stage1: {
-    title: "What did the dealer say first?",
-    sub: "Dealers often work from four numbers at once. Pick the one they started with.",
+    title: "Where are you starting?",
+    sub: "Dealers often work from four numbers at once. Pick the one you started with.",
     payment: "A monthly payment",
     paymentSub: "Like 522 a month",
     price: "A price",
@@ -160,6 +160,9 @@ export const walk = {
     partAria: (label: string, n: number) => `${label} about ${n} in 100`,
     inHundred: (n: number) => `${n} in 100`,
     of100: "in 100",
+    stripAria: (label: string, n: number) => `${label} About ${n} of them are interest.`,
+    paymentsLabel: (n: number) => `${n} monthly payments`,
+    shareAria: (n: number) => `${n} of every 100 dollars is interest`,
   },
 
   need: {

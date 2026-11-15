@@ -4,12 +4,11 @@ import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransf
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { Slider } from "@/components/ui/Slider";
-import { site } from "@/data/strings/site";
+import { siteFor, type Locale } from "@/lib/site-locale";
 import { formatWhole, payment } from "@/engine";
 import { Car3D } from "./Car3D";
 import { HeroCar } from "./HeroCar";
 
-const r = site.home.road;
 const MIN = 36;
 const MAX = 84;
 const BASE = 60;
@@ -23,7 +22,8 @@ const ROWS = MAX / PER_ROW;
  * Why a road: it is the one picture where "longer" is felt as distance, and it fills the screen
  * the way the best sites in this space let one object own the hero.
  */
-export function Road({ principal, apr, down }: { principal: number; apr: number; down: number }) {
+export function Road({ principal, apr, down, locale = "en" }: { principal: number; apr: number; down: number; locale?: Locale }) {
+  const r = siteFor(locale).home.road;
   const reduce = useReducedMotion();
   const [months, setMonths] = useState(BASE);
   const touched = useRef(false);

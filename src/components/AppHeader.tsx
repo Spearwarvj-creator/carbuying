@@ -6,9 +6,10 @@ import { SiteMenu } from "@/components/site/SiteMenu";
 import { WalletIcon } from "@/components/ui/icons";
 import { Segmented } from "@/components/ui/Segmented";
 import { en } from "@/data/strings/en";
-import { site } from "@/data/strings/site";
 import { walk } from "@/data/strings/walk";
+import { useLang } from "@/lib/i18n";
 import { setMode, useMode } from "@/lib/mode";
+import { localePath, siteFor } from "@/lib/site-locale";
 import { openHelp } from "@/lib/onboarding";
 import { more } from "@/data/strings/more";
 import { InfoIcon } from "@/components/ui/icons";
@@ -36,9 +37,12 @@ export function ModeSwitch() {
  * the same two links. On a phone the links and the screen switches move into the menu.
  */
 export function AppHeader({ tag }: { tag?: string }) {
+  const lang = useLang();
+  const site = siteFor(lang);
+  const to = (p: string) => localePath(lang, p);
   return (
     <header className="top">
-      <Link href="/" className="brand" aria-label={`${en.appName}, home page`}>
+      <Link href={to("/")} className="brand" aria-label={`${en.appName}, home page`}>
         <span className="brand-mark" aria-hidden="true">
           <WalletIcon size={18} />
         </span>
@@ -50,8 +54,9 @@ export function AppHeader({ tag }: { tag?: string }) {
       </div>
       <div className="top-end">
         <nav className="top-links" aria-label={site.nav.main}>
-          <Link href="/how-it-works">{site.nav.how}</Link>
-          <Link href="/about">{site.nav.about}</Link>
+          <Link href={to("/how-it-works")}>{site.nav.how}</Link>
+          <Link href={to("/learn")}>{site.nav.learn}</Link>
+          <Link href={to("/about")}>{site.nav.about}</Link>
         </nav>
         <button type="button" className="top-help" onClick={openHelp} aria-label={more.guide.help}>
           <InfoIcon size={20} />
@@ -61,7 +66,7 @@ export function AppHeader({ tag }: { tag?: string }) {
           <Prefs language />
         </span>
         <span className="top-menu">
-          <SiteMenu language />
+          <SiteMenu language locale={lang} path="/deal" />
         </span>
       </div>
     </header>

@@ -44,7 +44,7 @@ export function TenSecondCheck({
 }) {
   const t = walk.check;
   const [pay, setPay] = useState(initial?.pay ?? 0);
-  const [months, setMonths] = useState(initial?.months ?? 72);
+  const [months, setMonths] = useState(initial?.months ?? 60);
   const [down, setDown] = useState(initial?.down ?? 0);
 
   function update(next: Partial<CheckValues>) {

@@ -11,6 +11,7 @@ import { applyToDesk, applyToWalk } from "@/lib/extract/apply";
 import { FILL_FIELDS, fit, type Detected, type FillKey } from "@/lib/extract/fields";
 import { parseSpoken } from "@/lib/extract/spoken";
 import { aiFetch, useAiOn } from "@/lib/ai-status";
+import { shrink } from "@/lib/image";
 import { CreditsLeft, LimitReached } from "@/components/ui/Credits";
 import { getLang } from "@/lib/i18n";
 import { useListen } from "@/lib/listen";
@@ -25,17 +26,6 @@ const ph = ai.photo;
 type Kind = keyof typeof ph.kinds;
 
 /** Shrinks a photo before it leaves the phone: at most 1600 px on the long side, as a JPEG. This also drops the photo's location data. */
-async function shrink(file: File): Promise<string> {
-  const bmp = await createImageBitmap(file);
-  const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
-  const c = document.createElement("canvas");
-  c.width = Math.round(bmp.width * scale);
-  c.height = Math.round(bmp.height * scale);
-  c.getContext("2d")!.drawImage(bmp, 0, 0, c.width, c.height);
-  bmp.close();
-  return c.toDataURL("image/jpeg", 0.82);
-}
-
 /**
  * Quick fill: say, type, paste or photograph the dealer's numbers and have them found, so the buyer does not
  * key them in one by one in the showroom. It only finds numbers. Every one is shown with where it came from

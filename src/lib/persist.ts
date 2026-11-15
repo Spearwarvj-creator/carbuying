@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { OfferSchema } from "@/engine";
+import { OfferSchema, type Offer } from "@/engine";
 import { useDeal } from "@/store/deal";
 import { STAGES, useWalk, type WalkView } from "@/store/walk";
 
@@ -64,6 +64,20 @@ function write() {
     else sessionStorage.removeItem(KEY);
   } catch {
     /* storage blocked: the calculator works, it just cannot keep the place */
+  }
+}
+
+/** The offer in this tab's saved place, for pages outside the calculator that want to speak about the buyer's deal. */
+export function readSessionOffer(): Offer | null {
+  try {
+    const raw = sessionStorage.getItem(KEY);
+    if (!raw) return null;
+    const p = Session.safeParse(JSON.parse(raw));
+    if (!p.success) return null;
+    const o = p.data.offers[p.data.editing];
+    return o.price > 0 ? (o as Offer) : null;
+  } catch {
+    return null;
   }
 }
 

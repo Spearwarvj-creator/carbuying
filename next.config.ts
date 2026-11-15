@@ -33,6 +33,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  // Two root layouts (English and Spanish) leave no single layout for the 404 page, so it is built on its own.
+  experimental: { globalNotFound: true },
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

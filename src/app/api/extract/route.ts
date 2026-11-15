@@ -4,7 +4,7 @@ import { MAX_IMAGE_CHARS, readDocument } from "@/server/extract";
 import { aiRoute } from "../_ai-route";
 
 const body = z.object({
-  kind: z.enum(["worksheet", "lender", "contract", "vin"]).default("worksheet"),
+  kind: z.enum(["worksheet", "lender", "contract", "vin", "text"]).default("worksheet"),
   images: z.array(z.string().max(MAX_IMAGE_CHARS + 100)).min(1).max(4),
 });
 

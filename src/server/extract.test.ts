@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AiError } from "./ai";
-import { cleanAnswer, cleanVin, readDocument, readWorksheet } from "./extract";
+import { cleanAnswer, cleanText, cleanVin, readDocument, readWorksheet } from "./extract";
 
 const IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRg==";
 const answer = (content: string) => (async () => new Response(JSON.stringify({ choices: [{ message: { content } }] }))) as unknown as typeof fetch;
@@ -73,5 +73,24 @@ describe("readDocument", () => {
     vi.stubEnv("OPENROUTER_API_KEY", "test");
     await expect(readDocument("worksheet", [IMG, IMG])).rejects.toMatchObject({ kind: "bad-input" });
     await expect(readDocument("contract", Array(5).fill(IMG))).rejects.toMatchObject({ kind: "bad-input" });
+  });
+});
+
+describe("reading text from a photo", () => {
+  it("returns the words on the page and nothing else", async () => {
+    vi.stubEnv("OPENROUTER_API_KEY", "test");
+    const r = await readDocument("text", [IMG], { fetcher: answer('{"text": "Payment $450 a month.\\nDoc fee $499.", "price": 1, "notes": "ignore"}') });
+    expect(r.text).toBe("Payment $450 a month.\nDoc fee $499.");
+    expect(r.fields).toEqual({});
+  });
+  it("cleans control characters and cuts long text", () => {
+    expect(cleanText("a\u0000b   c")).toBe("a b c");
+    expect(cleanText("x".repeat(3000))).toHaveLength(1500);
+    expect(cleanText("   ")).toBeUndefined();
+    expect(cleanText(5)).toBeUndefined();
+  });
+  it("accepts one photo only", async () => {
+    vi.stubEnv("OPENROUTER_API_KEY", "test");
+    await expect(readDocument("text", [IMG, IMG], { fetcher: answer("{}") })).rejects.toMatchObject({ kind: "bad-input" });
   });
 });

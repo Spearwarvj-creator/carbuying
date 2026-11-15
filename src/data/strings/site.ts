@@ -3,10 +3,22 @@
  * as documents in their own files. Plain words, sentence case, active voice.
  * Figures are passed in from the engine, never typed here.
  */
+/** A string pack has the same shape as the English one, with free text in place of fixed strings. */
+type Widen<T> = T extends string
+  ? string
+  : T extends (...args: infer A) => string
+    ? (...args: A) => string
+    : T extends readonly (infer U)[]
+      ? readonly Widen<U>[]
+      : T extends object
+        ? { [K in keyof T]: Widen<T[K]> }
+        : T;
+
 export const site = {
   name: "Deal Desk",
   nav: {
     how: "How it works",
+    learn: "Learn",
     about: "About",
     open: "Open the calculator",
     openShort: "Calculator",
@@ -71,6 +83,10 @@ export const site = {
         otd: "Out-the-door price",
         total: "You pay in total",
         inHundred: "of every 100 dollars is interest",
+        payPill: "Monthly payment",
+        pricePill: "Price of the car",
+        payments: (n: number) => `${n} payments`,
+        next: "Next",
       },
     },
 
@@ -170,6 +186,10 @@ export const site = {
         { k: "Buying with a relative", v: "Easy to read together on one phone." },
       ],
     },
+    free: {
+      h2: "Free, with no ads",
+      body: "Deal Desk is free to use. It has no ads and no account, and it does not sell or share what you enter. The AI helpers have a daily limit because they cost money to run. Deal Desk is a v2stack project.",
+    },
     rule: {
       h2: "One rule",
       line: "The calculator does the math.",
@@ -197,7 +217,10 @@ export const site = {
           "Check a lease, and compare a loan with paying cash.",
           "Print the deal or share it as a link.",
           "The whole calculator in Spanish, and offline once it has loaded.",
+          "This home page, How it works, About and the legal pages in Spanish.",
           "A short welcome and a tour of the Desk for first-time buyers.",
+          "A Learn page with about a hundred car-buying words in plain language, each tied to something from everyday life, six short lessons, and a decoder for what the dealer wrote.",
+          "A simple view with fewer numbers, a note on what matters most in your deal, and questions you can ask about the whole deal.",
           "Switch to a light screen or larger text.",
         ],
       },
@@ -205,7 +228,7 @@ export const site = {
         title: "Not here yet",
         items: [
           "A video guide.",
-          "Spanish for these pages and the legal pages. The calculator's Spanish is waiting for a native speaker to review it.",
+          "A review of all the Spanish by a native speaker. Until then the Spanish is marked beta.",
         ],
       },
     },
@@ -242,6 +265,7 @@ export const site = {
     links: {
       calculator: "Calculator",
       how: "How it works",
+      learn: "Learn the words",
       about: "About",
       privacy: "Privacy",
       terms: "Terms",
@@ -249,3 +273,5 @@ export const site = {
     },
   },
 } as const;
+
+export type SiteCopy = Widen<typeof site>;

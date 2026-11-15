@@ -12,6 +12,7 @@ import { ReadAloud } from "./walk/ReadAloud";
 import { ai } from "@/data/strings/ai";
 import { aiFetch, useAiOn } from "@/lib/ai-status";
 import { LoanCompare, OfferBars } from "./walk/charts";
+import { Gloss } from "./learn/Gloss";
 import { useMediaQuery } from "./use-media-query";
 import { CreditsLeft, LimitReached } from "@/components/ui/Credits";
 import { getLang } from "@/lib/i18n";
@@ -57,10 +58,10 @@ export function CompareView() {
   if (!ready) return <section className="view"><h2>{c.heading}</h2><p className="hint">{en.result.empty}</p></section>;
 
   const lowerOf = (a: number, b: number) => (a < b ? 0 : a > b ? 1 : -1);
-  const rows: Array<{ label: string; v: [string, string]; low: number }> = [
-    { label: c.rows.pay, v: [formatCents(d1.payCents), formatCents(d2.payCents)], low: lowerOf(d1.payCents, d2.payCents) },
-    { label: c.rows.months, v: [String(d1.offer.months), String(d2.offer.months)], low: -1 },
-    { label: c.rows.otd, v: [formatCents(d1.otdCents), formatCents(d2.otdCents)], low: lowerOf(d1.otdCents, d2.otdCents) },
+  const rows: Array<{ label: string; gloss?: string; v: [string, string]; low: number }> = [
+    { label: c.rows.pay, gloss: "monthly-payment", v: [formatCents(d1.payCents), formatCents(d2.payCents)], low: lowerOf(d1.payCents, d2.payCents) },
+    { label: c.rows.months, gloss: "loan-term", v: [String(d1.offer.months), String(d2.offer.months)], low: -1 },
+    { label: c.rows.otd, gloss: "otd", v: [formatCents(d1.otdCents), formatCents(d2.otdCents)], low: lowerOf(d1.otdCents, d2.otdCents) },
     { label: c.rows.total, v: [formatCents(d1.totalCents), formatCents(d2.totalCents)], low: lowerOf(d1.totalCents, d2.totalCents) },
   ];
   const payLow = lowerOf(d1.payCents, d2.payCents);
@@ -95,7 +96,7 @@ export function CompareView() {
         <tbody>
           {rows.map((r) => (
             <tr key={r.label}>
-              <th scope="row">{r.label}</th>
+              <th scope="row">{r.gloss ? <Gloss id={r.gloss}>{r.label}</Gloss> : r.label}</th>
               {[0, 1].map((i) => (
                 <td key={i} className="n num">
                   {r.low === i && <span className="mark">{c.lower}</span>}

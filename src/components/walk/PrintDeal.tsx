@@ -6,6 +6,8 @@ import { Btn } from "@/components/ui/Btn";
 import { ai } from "@/data/strings/ai";
 import { computeDeal, dealFlags, formatCents, type Offer } from "@/engine";
 import { offerName, useDeal } from "@/store/deal";
+import { more } from "@/data/strings/more";
+import { beforeItems } from "./BeforeYouSign";
 
 const p = ai.print;
 const useMounted = () => useSyncExternalStore(() => () => {}, () => true, () => false);
@@ -90,6 +92,12 @@ export function PrintDeal({ quotedPay = 0 }: { quotedPay?: number }) {
               </ol>
             </>
           )}
+          <h2>{more.before.title}</h2>
+          <ul className="print-list">
+            {beforeItems(deals[deals.length - 1].o).map((text) => (
+              <li key={text}>☐ {text}</li>
+            ))}
+          </ul>
           <p className="print-note">{p.note}</p>
         </div>,
         document.body,

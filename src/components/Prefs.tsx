@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { en } from "@/data/strings/en";
 import { more } from "@/data/strings/more";
+import { setDetail, useDetail } from "@/lib/detail";
 import { setLang, useLang } from "@/lib/i18n";
 
 function save(key: string, value: string) {
@@ -29,6 +30,7 @@ const isLight = () => document.documentElement.dataset.theme === "light";
  */
 export function Prefs({ language = false }: { language?: boolean }) {
   const lang = useLang();
+  const detail = useDetail();
   const large = useSyncExternalStore(subscribe, isLarge, () => false);
   const light = useSyncExternalStore(subscribe, isLight, () => false);
 
@@ -49,6 +51,11 @@ export function Prefs({ language = false }: { language?: boolean }) {
       {language && (
         <button type="button" lang={lang === "en" ? "es" : "en"} aria-label={lang === "en" ? more.lang.es : more.lang.en} onClick={() => void setLang(lang === "en" ? "es" : "en")}>
           {lang === "en" ? "ES" : "EN"}
+        </button>
+      )}
+      {language && (
+        <button type="button" aria-pressed={detail === "simple"} aria-label={`${more.detail.simple}: ${detail === "simple" ? more.detail.simpleNote : more.detail.switchTo}`} onClick={() => setDetail(detail === "simple" ? "full" : "simple")}>
+          {detail === "simple" ? more.detail.simpleShort : more.detail.fullShort}
         </button>
       )}
       <button type="button" aria-pressed={large} aria-label={`A+ ${en.largerText.toLowerCase()}`} onClick={toggleText}>

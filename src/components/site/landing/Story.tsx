@@ -5,11 +5,11 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { CalendarIcon, FlagIcon, PlusBoxIcon, ReceiptIcon, SwapIcon, TagIcon } from "@/components/ui/icons";
 import { StepBadge, MoneyBar, PaymentStrip, ShareRing, type BarPart } from "@/components/walk/graphics";
-import { site } from "@/data/strings/site";
-import { walk } from "@/data/strings/walk";
+import { siteFor, type Locale } from "@/lib/site-locale";
+import type { SiteCopy } from "@/data/strings/site";
 import { formatWhole } from "@/engine";
 
-const s = site.home.story;
+type StoryCopy = SiteCopy["home"]["story"];
 
 export interface StoryData {
   otd: number;
@@ -31,14 +31,14 @@ const ART = [
 ] as const;
 
 /** What each step looks like inside the Walk, built from the same graphics the Walk uses. */
-function Scene({ i, d }: { i: number; d: StoryData }) {
+function Scene({ i, d, s }: { i: number; d: StoryData; s: StoryCopy }) {
   const p = s.phone;
   switch (i) {
     case 0:
       return (
         <div className="sc sc-choice">
-          <span className="sc-pill" data-on="true">Monthly payment</span>
-          <span className="sc-pill">Price of the car</span>
+          <span className="sc-pill" data-on="true">{p.payPill}</span>
+          <span className="sc-pill">{p.pricePill}</span>
           <span className="sc-field num">$ 522</span>
         </div>
       );
@@ -68,7 +68,7 @@ function Scene({ i, d }: { i: number; d: StoryData }) {
       return (
         <div className="sc">
           <span className="sc-label">{p.paymentsLabel}</span>
-          <PaymentStrip months={d.months} interestBlocks={d.interestBlocks} caption={`${d.months} payments`} />
+          <PaymentStrip months={d.months} interestBlocks={d.interestBlocks} caption={p.payments(d.months)} />
         </div>
       );
     case 4:
@@ -103,7 +103,7 @@ function Scene({ i, d }: { i: number; d: StoryData }) {
   }
 }
 
-function Frame({ i, children }: { i: number; children: ReactNode }) {
+function Frame({ i, s, children }: { i: number; s: StoryCopy; children: ReactNode }) {
   const a = ART[i];
   return (
     <div className="phone-ui">
@@ -118,7 +118,7 @@ function Frame({ i, children }: { i: number; children: ReactNode }) {
             <i key={x.name} data-on={k <= i} />
           ))}
         </span>
-        <span className="phone-next">{walk.next}</span>
+        <span className="phone-next">{s.phone.next}</span>
       </div>
     </div>
   );
@@ -128,7 +128,8 @@ function Frame({ i, children }: { i: number; children: ReactNode }) {
  * Six steps on the left, one phone on the right that shows the step you are reading. On a phone
  * the picture sits inside each step instead. The active step is found with IntersectionObserver.
  */
-export function Story({ data }: { data: StoryData }) {
+export function Story({ data, locale = "en" }: { data: StoryData; locale?: Locale }) {
+  const s = siteFor(locale).home.story;
   const [active, setActive] = useState(0);
   const refs = useRef<(HTMLLIElement | null)[]>([]);
 
@@ -154,8 +155,8 @@ export function Story({ data }: { data: StoryData }) {
               <p>{it.body}</p>
             </div>
             <div className="story-inline phone-ui-wrap" aria-hidden="true">
-              <Frame i={i}>
-                <Scene i={i} d={data} />
+              <Frame i={i} s={s}>
+                <Scene i={i} d={data} s={s} />
               </Frame>
             </div>
           </li>
@@ -171,8 +172,8 @@ export function Story({ data }: { data: StoryData }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, ease: [0.2, 0.7, 0.2, 1] }}
           >
-            <Frame i={active}>
-              <Scene i={active} d={data} />
+            <Frame i={active} s={s}>
+              <Scene i={active} d={data} s={s} />
             </Frame>
           </motion.div>
         </div>

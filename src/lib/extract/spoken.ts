@@ -100,6 +100,9 @@ const num = (m: RegExpExecArray, i = 1): number => {
   return m[i + 1] ? base * 1000 : base;
 };
 
+/** True when the number just found is followed by a rate or a term. A small number like that is a rate, not an amount of money. */
+const startsUnit = (m: RegExpExecArray): boolean => /^\s*(?:%|percent|per\s*cent|for\b|(?:months?|mos?\b|years?|yr))/i.test(m.input.slice(m.index + m[0].length));
+
 interface Rule {
   key: FillKey | "taxAmount";
   re: RegExp;
@@ -121,13 +124,14 @@ const RULES: Rule[] = [
   { key: "apr", re: new RegExp(String.raw`(\d+(?:\.\d+)?)\s*(?:%|percent|per cent)`, "i"), ok: (v) => v <= 40 },
   { key: "monthlyPayment", re: new RegExp(`${N}\\s*(?:a|per|each|/)\\s*month`, "i") },
   { key: "monthlyPayment", re: new RegExp(String.raw`(?<!down )(?:monthly\s+)?payments?\s*(?:is|of|will be|are)?\D{0,10}?${N}`, "i") },
-  { key: "down", re: new RegExp(String.raw`(?:down\s*payment|down|cash down|up\s*front|upfront)\s*(?:is|of|was)?\D{0,12}?${N}`, "i") },
+  { key: "down", re: new RegExp(String.raw`(?:down\s*payment|down|cash down|up\s*front|upfront)\s*(?:is|of|was)?\D{0,12}?${N}`, "i"), ok: (v, m) => !(v <= 40 && startsUnit(m)) },
   { key: "down", re: new RegExp(`${N}\\s*(?:down|up\\s*front|upfront)`, "i") },
   { key: "tradePayoff", re: new RegExp(String.raw`(?:still\s+)?(?:owe|owed|payoff|pay\s*off)\s*(?:is|of|about)?\D{0,12}?${N}`, "i") },
   { key: "tradePayoff", re: new RegExp(`${N}\\s*(?:still\\s+)?(?:owed|payoff)`, "i") },
+  { key: "tradeAllowance", re: new RegExp(`${N}\\s*(?:for|on)\\s+(?:my|the|our)\\s+trade(?:\\s*in)?`, "i") },
   { key: "tradeAllowance", re: new RegExp(String.raw`(?:trade(?:\s*in)?|trading(?:\s*in)?)\s*(?:value|allowance|is worth|worth|is|at|for)?\D{0,12}?${N}`, "i") },
   { key: "fees", re: new RegExp(String.raw`(?:doc(?:umentation)?\s*fees?|dealer\s*fees?|fees?)\s*(?:is|of|are|total)?\D{0,12}?${N}`, "i") },
-  { key: "addons", re: new RegExp(String.raw`(?:add\s*ons?|extras?|warranty|protection|service contract|coating|accessories)\s*(?:is|are|of|total|cost)?\D{0,12}?${N}`, "i") },
+  { key: "addons", re: new RegExp(String.raw`(?:add\s*ons?|extras?|warranty|protection|service contract|coating|accessories|gap(?:\s+insurance)?|nitrogen|tint(?:ing)?|etching|undercoating|sealant|tire\s+and\s+wheel|appearance\s+package)\s*(?:is|are|of|total|cost)?\D{0,12}?${N}`, "i") },
   { key: "price", re: new RegExp(String.raw`(?:selling\s*price|sale\s*price|price|asking|sticker|msrp|car (?:is|costs)|costs)\s*(?:is|of|was|at)?\D{0,12}?${N}`, "i") },
 ];
 
@@ -256,6 +260,17 @@ export function parseSpoken(input: string, current?: { price?: number }, lang: "
   for (const rule of rules) {
     if (rule.key !== "taxAmount" && found[rule.key]) continue;
     if (rule.key === "taxAmount" && taxAmount !== null) continue;
+    if (rule.key === "fees" || rule.key === "addons") {
+      // Several fees or extras may be said ("doc fee 799, title 85"): they are added together, as the worksheet total is.
+      const hits = [...text.matchAll(new RegExp(rule.re.source, "gi"))].filter((h) => !rule.ok || rule.ok(num(h as RegExpExecArray), h as RegExpExecArray));
+      if (hits.length === 0) continue;
+      const total = hits.reduce((sum, h) => sum + num(h as RegExpExecArray), 0);
+      const froms = hits.map((h) => h[0].trim().replace(/\s+/g, " "));
+      for (const h of hits) text = text.slice(0, h.index) + " ".repeat(h[0].length) + text.slice((h.index ?? 0) + h[0].length);
+      const kept = fit(rule.key, total);
+      if (kept !== null) found = { ...found, [rule.key]: { value: kept, from: froms.join(" + ") } };
+      continue;
+    }
     const m = rule.re.exec(text);
     if (!m) continue;
     let v = num(m);

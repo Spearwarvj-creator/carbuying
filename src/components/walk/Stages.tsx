@@ -26,6 +26,11 @@ import { Slider } from "@/components/ui/Slider";
 import { MonthChips, TenSecondCheck } from "./Check";
 import { FourSquare, MoneyBar, PaymentStrip, ShareRing, StepBadge, type BarPart } from "./graphics";
 import { EquityBars, LoanPicture, TermChart } from "./charts";
+import { RateCheck } from "./RateCheck";
+import { PriceFromOtd } from "./PriceFromOtd";
+import { BeforeYouSign } from "./BeforeYouSign";
+import { Everyday, Matters } from "@/components/learn/Matters";
+import { moneyFor, useDetail } from "@/lib/detail";
 import { MoneyField } from "./MoneyField";
 import { Term } from "./Term";
 import { DealChecks } from "./DealChecks";
@@ -177,7 +182,20 @@ export function Stage2() {
             }}
           />
         )}
+        <ZipTax
+          onUse={(pct) => {
+            set({ taxRate: pct / 100 });
+            setTaxKey((k) => k + 1);
+          }}
+        />
         <MoneyField label={t.fees} prefix="$" value={o.fees} onChange={(n) => set({ fees: n })} hint={t.feesHint} learn={<Term k="docFee" />} />
+        <PriceFromOtd
+          offer={o}
+          onUse={(price) => {
+            set({ price });
+            setPriceKey((k) => k + 1);
+          }}
+        />
         <Disclosure title={more.taxAmount.more} className="taxhelp">
           <TaxAmount
             offer={o}
@@ -190,12 +208,6 @@ export function Stage2() {
             <input type="checkbox" checked={o.feesTaxed} onChange={(e) => set({ feesTaxed: e.target.checked })} />
             <span>{ai.tax.feesTaxed}</span>
           </label>
-          <ZipTax
-            onUse={(pct) => {
-              set({ taxRate: pct / 100 });
-              setTaxKey((k) => k + 1);
-            }}
-          />
         </Disclosure>
       </div>
       <div className="col-b">
@@ -317,6 +329,7 @@ export function Stage4() {
             setRateEntered(true);
           }}
         />
+        {o.apr > 0 && rateEntered && <RateCheck apr={o.apr} />}
         {ready && (
           <Disclosure title={t.guess.title} className="guess">
             <p>{o.months <= 60 ? t.guess.askLonger(altMonths) : t.guess.askShorter(altMonths)}</p>
@@ -445,6 +458,7 @@ export function Stage6() {
   const quotedPay = useWalk((s) => s.quotedPay);
   const vehicle = useDeal((s) => s.vehicle);
   const aiOn = useAiOn();
+  const detail = useDetail();
   const b = costBreakdown(o);
   const share = d.totalCents > 0 ? Math.round((b.interestCents / d.totalCents) * 100) : 0;
   const extrasReal = extrasRealCostCents(o);
@@ -472,6 +486,11 @@ export function Stage6() {
       <div className="col-a">
         <StageHead title={t.title} icon={<FlagIcon size={26} />} tone="interest" />
         <Readout label={t.totalLabel} value={d.total} tot />
+        <p className="line inshort">
+          <Nums text={more.inShort(formatWhole(d.total), formatWhole(o.price), formatWhole(Math.max(d.total - o.price, 0)), moneyFor(detail, d.payCents), o.months, o.apr)} />
+        </p>
+        <Matters offer={o} />
+        <Everyday offer={o} />
         {vehicle && (
           <p className="line">
             {vehicle.year} {vehicle.make} {vehicle.model}
@@ -482,7 +501,7 @@ export function Stage6() {
         <dl className="facts">
           <div>
             <dt>{t.facts.pay}</dt>
-            <dd className="num">{formatCents(d.payCents)}</dd>
+            <dd className="num">{moneyFor(detail, d.payCents)}</dd>
           </div>
           <div>
             <dt>{t.facts.months}</dt>
@@ -545,9 +564,16 @@ export function Stage6() {
       <div className="col-b">
         <ShareRing share={share} label={t.parts.interest} />
         <MoneyBar parts={parts} />
-        <LoanPicture offer={o} />
+        {detail === "full" ? (
+          <LoanPicture offer={o} />
+        ) : (
+          <Disclosure title={more.detail.show} className="moredetail">
+            <LoanPicture offer={o} />
+          </Disclosure>
+        )}
         <DealChecks offer={o} quotedPay={quotedPay} />
         <CashCompare offer={o} />
+        <BeforeYouSign offer={o} />
         <Disclosure title={t.showMath} className="math">
           <dl>
             {parts

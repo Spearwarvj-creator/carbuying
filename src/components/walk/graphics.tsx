@@ -6,6 +6,7 @@ import { Nums } from "@/components/Nums";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { DownIcon, SwapIcon, TagIcon, WalletIcon } from "@/components/ui/icons";
 import { walk } from "@/data/strings/walk";
+import { useLang } from "@/lib/i18n";
 
 /**
  * Payment strip: one block per monthly payment, twelve to a row, so each row is a year.
@@ -25,15 +26,16 @@ export function PaymentStrip({
   /** Names for the two colours, when the coloured blocks are not interest (for example, the cost of extras). */
   keys?: { loan: string; interest: string };
 }) {
+  useLang();
   const reduce = useReducedMotion();
   const blocks = Math.max(0, Math.round(months));
   const interest = Math.min(Math.max(Math.round(interestBlocks), 0), blocks);
-  const label = caption ?? `${blocks} monthly payments`;
+  const label = caption ?? walk.graphics.paymentsLabel(blocks);
   // The whole fill-in takes the same time for 36 blocks or 84.
   const step = blocks > 0 ? Math.min(0.012, 0.6 / blocks) : 0;
   return (
     <figure className="strip">
-      <div className="strip-grid" role="img" aria-label={interest ? `${label} About ${interest} of them are interest.` : label}>
+      <div className="strip-grid" role="img" aria-label={interest ? walk.graphics.stripAria(label, interest) : label}>
         {Array.from({ length: blocks }, (_, i) => (
           <motion.span
             key={i}
@@ -75,6 +77,7 @@ export interface BarPart {
  * so the buyer watches a part take a bigger or smaller share.
  */
 export function MoneyBar({ parts, showShare = true }: { parts: BarPart[]; showShare?: boolean }) {
+  useLang();
   const reduce = useReducedMotion();
   const shown = parts.filter((p) => p.cents > 0);
   const total = shown.reduce((s, p) => s + p.cents, 0) || 1;
@@ -115,13 +118,14 @@ const inHundred = (n: number) => String(Math.round(n));
  * centre counts up. A ring suits a single part of a whole; the bar above it shows all the parts.
  */
 export function ShareRing({ share, label }: { share: number; label: string }) {
+  useLang();
   const reduce = useReducedMotion();
   const r = 46;
   const c = 2 * Math.PI * r;
   const clamped = Math.min(Math.max(share, 0), 100);
   return (
     <figure className="share">
-      <svg viewBox="0 0 120 120" role="img" aria-label={`${Math.round(clamped)} of every 100 dollars is interest`}>
+      <svg viewBox="0 0 120 120" role="img" aria-label={walk.graphics.shareAria(Math.round(clamped))}>
         <circle cx="60" cy="60" r={r} className="share-track" />
         <motion.circle
           cx="60"
@@ -146,6 +150,7 @@ export function ShareRing({ share, label }: { share: number; label: string }) {
 
 /** The dealer's four-box worksheet. `lit` marks the box the buyer started from; the mark slides when it changes. */
 export function FourSquare({ lit, values }: { lit?: "price" | "trade" | "down" | "pay" | null; values?: Partial<Record<"price" | "trade" | "down" | "pay", string>> }) {
+  useLang();
   const reduce = useReducedMotion();
   const b = walk.stage1.boxes;
   const cells = [

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { Prefs } from "@/components/Prefs";
-import { site } from "@/data/strings/site";
+import { localePath, siteFor, type Locale } from "@/lib/site-locale";
 
-const f = site.footer;
-
-export function SiteFooter() {
+export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
+  const site = siteFor(locale);
+  const f = site.footer;
+  const to = (p: string) => localePath(locale, p);
   return (
     <footer className="s-foot s-wrap">
       <div className="s-foot-top">
@@ -17,13 +18,16 @@ export function SiteFooter() {
             <h2>{f.pages}</h2>
             <ul>
               <li>
-                <Link href="/deal">{f.links.calculator}</Link>
+                <Link href={to("/deal")}>{f.links.calculator}</Link>
               </li>
               <li>
-                <Link href="/how-it-works">{f.links.how}</Link>
+                <Link href={to("/how-it-works")}>{f.links.how}</Link>
               </li>
               <li>
-                <Link href="/about">{f.links.about}</Link>
+                <Link href={to("/learn")}>{f.links.learn}</Link>
+              </li>
+              <li>
+                <Link href={to("/about")}>{f.links.about}</Link>
               </li>
             </ul>
           </div>
@@ -31,13 +35,13 @@ export function SiteFooter() {
             <h2>{f.legal}</h2>
             <ul>
               <li>
-                <Link href="/privacy">{f.links.privacy}</Link>
+                <Link href={to("/privacy")}>{f.links.privacy}</Link>
               </li>
               <li>
-                <Link href="/terms">{f.links.terms}</Link>
+                <Link href={to("/terms")}>{f.links.terms}</Link>
               </li>
               <li>
-                <Link href="/accessibility">{f.links.accessibility}</Link>
+                <Link href={to("/accessibility")}>{f.links.accessibility}</Link>
               </li>
             </ul>
           </div>

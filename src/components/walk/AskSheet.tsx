@@ -10,6 +10,7 @@ import { aiFetch, useAiOn } from "@/lib/ai-status";
 import { CreditsLeft, LimitReached } from "@/components/ui/Credits";
 import { more } from "@/data/strings/more";
 import { getLang } from "@/lib/i18n";
+import { AutoGloss } from "@/components/learn/Gloss";
 import { ReadAloud } from "./ReadAloud";
 
 const t = ai.ask;
@@ -97,7 +98,9 @@ export function AskSheet({ trigger, topic, title, context, figures }: { trigger:
             )}
             {answer && (
               <div className="qf-answer" aria-live="polite">
-                <p>{answer.text}</p>
+                <p>
+                  <AutoGloss text={answer.text} />
+                </p>
                 <p className="hint">{answer.source === "ai" ? t.ai : t.template}</p>
                 <ReadAloud text={answer.text} lang={lang} />
               </div>

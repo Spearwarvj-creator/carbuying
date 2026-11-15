@@ -1,0 +1,452 @@
+/* ---------- Learn hub and everyday pictures (lh-, la-, gcard) ---------- */
+.la {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.la .ink {
+  stroke: var(--text);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+.la .w {
+  fill: var(--panel);
+}
+.la .a {
+  fill: color-mix(in oklab, var(--c-car) 62%, var(--panel));
+}
+.la .b {
+  fill: color-mix(in oklab, var(--yellow) 85%, var(--panel));
+}
+.la .c {
+  fill: color-mix(in oklab, var(--up) 70%, var(--panel));
+}
+.la .d {
+  fill: color-mix(in oklab, var(--down) 70%, var(--panel));
+}
+.la .e {
+  fill: color-mix(in oklab, var(--c-extras) 65%, var(--panel));
+}
+
+/* The small card that opens when a word is tapped anywhere in the app. */
+.gcard {
+  display: grid;
+  gap: 8px;
+  max-height: min(34rem, 80dvh);
+  overflow-y: auto;
+}
+.gcard .p {
+  margin: 0;
+}
+.gcard-row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--c-car) 10%, var(--panel));
+}
+.gcard-daily {
+  font-size: var(--t-sm);
+}
+.gcard-mine {
+  padding: 8px 10px;
+  border-left: 3px solid var(--yellow);
+  background: var(--panel);
+  border-radius: 0 10px 10px 0;
+}
+
+/* The page */
+.lh {
+  display: grid;
+  gap: 40px;
+  padding-block: 8px 72px;
+}
+.lh-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.lh-lang {
+  flex: none;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1.5px solid var(--edge);
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--text);
+}
+.lh-lang:hover {
+  background: var(--panel);
+}
+.lh-deal {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--ink-2);
+}
+.lh h2 {
+  margin: 0 0 6px;
+  font-size: var(--t-xl);
+}
+.lh-lead {
+  margin: 0 0 14px;
+  max-width: 62ch;
+  color: var(--ink-2);
+  font-size: var(--t-md);
+}
+.lh-label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+}
+
+/* Lessons */
+.lh-lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lh-lesson {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+}
+.lh-lesson:hover {
+  border-color: var(--c-car);
+}
+.lh-lesson-art {
+  display: block;
+  padding: 6px;
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--c-car) 12%, var(--panel));
+}
+.lh-lesson-text {
+  display: grid;
+  gap: 2px;
+}
+.lh-lesson-text b {
+  font-size: var(--t-md);
+}
+.lh-lesson-text span {
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+}
+.lh-lesson-text small {
+  color: var(--text);
+  font-weight: 700;
+}
+.lh-dialog {
+  gap: 10px;
+}
+@media (min-width: 700px) {
+  .lh-dialog {
+    width: min(40rem, calc(100vw - 48px));
+  }
+}
+.lh-lesson-body {
+  display: grid;
+  gap: 12px;
+}
+.lh-lesson-pic {
+  width: min(11rem, 60%);
+  margin-inline: auto;
+  padding: 8px;
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--c-car) 12%, var(--panel));
+}
+.lh-step,
+.lh-q {
+  margin: 0;
+  font-size: var(--t-md);
+  line-height: 1.45;
+}
+.lh-q {
+  font-weight: 700;
+}
+.lh-a {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--down);
+  background: var(--panel);
+  border-radius: 0 10px 10px 0;
+}
+.lh-check {
+  display: grid;
+  gap: 10px;
+}
+.lh-lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Decode */
+.lh-decode {
+  display: grid;
+  gap: 10px;
+}
+.lh-result {
+  display: grid;
+  gap: 12px;
+}
+.lh-found {
+  margin: 0;
+  font-weight: 700;
+}
+.lh-decoded {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  font-size: var(--t-md);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.lh-found-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lh-found-list li {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+}
+.lh-found-list p {
+  margin: 2px 0 0;
+}
+.lh-daily-small {
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.lh-mine-small {
+  font-size: var(--t-sm);
+  font-weight: 600;
+}
+.lh-translate {
+  display: grid;
+  gap: 10px;
+}
+
+/* Dictionary */
+.lh-tools {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.lh-search {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1.5px solid var(--edge);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-md);
+}
+.lh-search:focus-visible {
+  outline: 3px solid var(--total-fg);
+  outline-offset: 2px;
+}
+.lh-group {
+  margin-bottom: 26px;
+}
+.lh-group-h {
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid var(--line);
+  font-size: var(--t-lg);
+}
+.lh-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  align-items: start;
+}
+.lh-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel);
+  scroll-margin-top: 16px;
+}
+.lh-card:target,
+.lh-card[data-open="true"] {
+  border-color: var(--c-car);
+}
+.lh-art {
+  padding: 4px;
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--c-car) 14%, var(--ground));
+}
+.lh-card h3 {
+  margin: 0;
+  font-size: var(--t-lg);
+  line-height: 1.1;
+}
+.lh-plain {
+  margin: 4px 0 0;
+  font-size: var(--t-md);
+}
+.lh-mine,
+.lh-more > div {
+  display: grid;
+}
+.lh-daily p,
+.lh-mine p,
+.lh-more p {
+  margin: 0;
+}
+.lh-daily {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--c-car) 10%, var(--ground));
+}
+.lh-daily p {
+  font-size: var(--t-md);
+}
+.lh-mine {
+  padding: 8px 12px;
+  border-left: 3px solid var(--yellow);
+  background: var(--ground);
+  border-radius: 0 10px 10px 0;
+  font-weight: 600;
+}
+.lh-more {
+  display: grid;
+  gap: 10px;
+}
+.lh-ask {
+  font-weight: 600;
+}
+.lh-related {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lh-related a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--text);
+}
+.lh-toggle {
+  justify-self: start;
+}
+.lh-none {
+  padding: 20px 0;
+  color: var(--ink-2);
+}
+
+@media (max-width: 600px) {
+  .lh-head {
+    flex-direction: column;
+  }
+  .lh {
+    gap: 32px;
+  }
+}
+
+/* What matters most, everyday lines, details */
+.matters {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 12px 14px;
+  border: 1.5px solid var(--yellow);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--yellow) 10%, var(--panel));
+}
+.matters-ico {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: var(--on-yellow);
+}
+.matters h2 {
+  margin: 0 0 2px;
+  font-size: var(--t-md);
+}
+.matters p {
+  margin: 0;
+}
+.matters-why {
+  margin-top: 4px;
+  font-size: var(--t-sm);
+}
+.everyday {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-2);
+}
+.moredetail {
+  margin-top: 4px;
+}
+.checks-ask-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 10px;
+}
+
+/* Where the words come from, and the Spanish beta note. Quiet text: it matters, but it is not the page. */
+.lh-sources {
+  margin-block: 28px 0;
+  max-width: 62ch;
+}
+.lh-beta {
+  margin-block: 8px 0;
+  max-width: 62ch;
+}

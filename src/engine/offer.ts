@@ -129,3 +129,19 @@ export function checkOffer(offer: Offer): string[] {
   if (parsed.success) return [];
   return parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`);
 }
+
+/**
+ * The selling price that gives a stated out-the-door total, for a buyer who was only told that total. It undoes
+ * computeDeal's tax rule: otd = price + tax + fees + add-ons, with tax on the price plus any taxed add-ons and fees (less
+ * the trade-in allowance where only the difference is taxed). Never below zero.
+ */
+export function priceFromOtd(
+  o: Pick<Offer, "fees" | "addons" | "taxRate" | "addonsTaxed" | "feesTaxed" | "tradeAllowance" | "taxDifferenceOnly">,
+  otd: number,
+): number {
+  const extra = (o.addonsTaxed ? o.addons : 0) + (o.feesTaxed ? o.fees : 0) - (o.taxDifferenceOnly ? o.tradeAllowance : 0);
+  let price = (otd - o.fees - o.addons - o.taxRate * extra) / (1 + o.taxRate);
+  // Tax is never negative: if the taxed amount would be below zero, no tax is charged at all.
+  if (price + extra < 0) price = otd - o.fees - o.addons;
+  return Math.max(Math.round(price * 100) / 100, 0);
+}

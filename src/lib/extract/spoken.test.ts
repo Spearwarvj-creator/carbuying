@@ -60,4 +60,28 @@ describe("parseSpoken", () => {
   it("records what it heard, so the buyer can check it", () => {
     expect(parseSpoken("down 3000").down?.from).toBe("down 3000");
   });
+  it("keeps a number that comes before the word down, even when a rate follows", () => {
+    const r = v("price thirty one five hundred, three thousand down, seven point nine for seventy two months");
+    expect(r.down).toBe(3000);
+    expect(r.months).toBe(72);
+    expect(r.price).toBe(31500);
+  });
+  it("still reads down followed by an amount", () => {
+    expect(v("down 3000, 7.9 percent for 60 months")).toMatchObject({ down: 3000, apr: 7.9, months: 60 });
+    expect(v("price 31,500 down 3,000")).toMatchObject({ price: 31500, down: 3000 });
+  });
+  it("adds several extras together, as the worksheet total does", () => {
+    const r = parseSpoken("extended warranty 2,400, paint protection 995, nitrogen 199");
+    expect(r.addons?.value).toBe(3594);
+    expect(r.addons?.from).toContain("+");
+  });
+  it("adds several fees together", () => {
+    expect(v("doc fee 799 and title fee 85")).toMatchObject({ fees: 884 });
+  });
+  it("reads GAP and similar extras", () => {
+    expect(v("gap insurance 695").addons).toBe(695);
+  });
+  it("reads a trade-in said the way people say it", () => {
+    expect(v("sticker 34k, they gave me 8 grand for my trade but I owe 11 thousand")).toMatchObject({ price: 34000, tradeAllowance: 8000, tradePayoff: 11000 });
+  });
 });

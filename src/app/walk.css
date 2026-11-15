@@ -1692,7 +1692,8 @@
   text-underline-offset: 6px;
   text-decoration-thickness: 2px;
 }
-@media (min-width: 640px) {
+/* The text, theme, language and view switches need about 880px beside the Walk and Desk switch in Spanish. Below that the menu holds them. */
+@media (min-width: 880px) {
   .top-prefs {
     display: block;
   }
@@ -1702,8 +1703,8 @@
     min-height: 60px;
   }
 }
-/* The links, the Help button and the screen switches need about 1180px beside the Walk and Desk switch. Below that the menu holds them. */
-@media (min-width: 1180px) {
+/* The links, the Help button and the screen switches need about 1400px beside the Walk and Desk switch. Below that the menu holds them. */
+@media (min-width: 1400px) {
   .top-links {
     display: flex;
     gap: clamp(14px, 2vw, 1.75rem);
@@ -1817,7 +1818,7 @@
 .app-foot a {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
+  min-height: 44px;
   color: var(--ink-2);
   text-underline-offset: 3px;
 }
@@ -2681,7 +2682,7 @@
 .top-help span {
   display: none;
 }
-@media (min-width: 1180px) {
+@media (min-width: 1400px) {
   .top-help {
     display: inline-flex;
     justify-content: center;
@@ -2690,7 +2691,7 @@
   }
 }
 /* The word beside the icon only where the longer Spanish label still clears the Walk and Desk switch. */
-@media (min-width: 1400px) {
+@media (min-width: 1720px) {
   .top-help span {
     display: inline;
   }
@@ -3396,4 +3397,78 @@
 .vz-compact .vz-extra {
   border-radius: 6px;
   border-width: 1.5px;
+}
+
+/* ---------- Rate check, before you sign, summary ---------- */
+.rc-avg {
+  fill: var(--edge);
+}
+.rc-avg.on {
+  fill: var(--text);
+}
+.rc-you {
+  stroke: var(--panel);
+  stroke-width: 3;
+}
+.rc-you.up {
+  fill: var(--up);
+}
+.rc-you.down {
+  fill: var(--down);
+}
+.rc-you.near {
+  fill: var(--yellow);
+}
+.rc-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rc-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.rate p,
+.sign p {
+  margin: 0;
+}
+.rate {
+  gap: 10px;
+}
+.sign-list {
+  display: grid;
+  gap: 10px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.inshort {
+  font-size: var(--t-md);
+}
+.otdhelp {
+  margin-top: 4px;
+}
+.print-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Stepper dots keep their look, with a 44px area to tap. */
+.rail-dot::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+}
+
+/* Chart words follow the large text setting, since they are drawn inside the picture. */
+html[data-text="large"] .vz-t {
+  font-size: 15.5px;
+}
+html[data-text="large"] .vz-t.num {
+  font-size: 20px;
 }
