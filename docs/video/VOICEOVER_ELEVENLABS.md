@@ -43,7 +43,7 @@ Clip 15 describes two dashboard problems I found: `MODEL_VISION` was set to the 
 | c12 | `12-transition-5` | 7:33 | 4.2 s | 2 s | 5 | To chapter 7 (Card) |
 | c13 | `13-redesign` | 7:37 | 58 s | 52 s | 131 | 7 The redesign (Screen) |
 | c14 | `14-transition-6` | 8:36 | 4.2 s | 4 s | 9 | To chapter 8 (Card) |
-| c15 | `15-how-i-checked-it` | 8:40 | 62 s | 60 s | 150 | 8 How I checked it (Terminal + screen) |
+| c15 | `15-how-i-checked-it` | 8:40 | 66 s | 64 s | 159 | 8 How I checked it (Terminal + screen) |
 | c16 | `16-transition-7` | 9:42 | 4.2 s | 3 s | 8 | To chapter 9 (Card) |
 | c17 | `17-not-done-and-close` | 9:46 | 34 s | 34 s | 84 | 9 What's left (Screen) |
 | c18 | `18-shelf-card` | 10:20 | 8 s | 6 s | 15 | Shelf card (Card) |
@@ -151,7 +151,7 @@ Now the redesign, with proof.
 
 ### c13. 7 The redesign  `13-redesign.mp3`
 
-On screen: docs/research/COMPONENT_RESEARCH.md and a few of the 237 screenshots. Then before and after on the same page.
+On screen: The animation card (kit: ?card=redesign). No research footage: the card shows the 20 kinds, the 237 screenshots and the quiet changes. Then a short before and after if you have one.
 
 About 131 words, 52 s of voice, 58 s on screen.
 
@@ -167,11 +167,11 @@ How do I know it works? I tested it.
 
 ### c15. 8 How I checked it  `15-how-i-checked-it.mp3`
 
-On screen: Terminal: npm test, 293 passing. Then the live site, the Desk with one offer, and the Vercel settings page (model name, site address).
+On screen: The animation card (kit: ?card=checks). No terminal or Vercel footage: the card shows the tests, the live-site problems and "deployed through Vercel".
 
-About 150 words, 60 s of voice, 62 s on screen.
+About 159 words, 64 s of voice, 66 s on screen.
 
-Two hundred and ninety three automated tests pass. An automated accessibility scan found no violations on the main pages of my local build. Then I opened the live site and used it, which is how I found what the tests couldn't. The Desk showed a dash when only the first offer was filled in. And the AI answers on the live site were quietly falling back to plain text. Two settings in my hosting dashboard were wrong: a model written as Haiku five point five, which is a display name and not a model name, and a site address setting with a letter missing, so the live pages pointed at localhost. I couldn't see the exact error, so I added a log line for it, and I made the code ignore a bad model value instead of breaking. That's why I test the real site, and not just the code.
+Two hundred and ninety three automated tests pass. An automated accessibility scan found no violations on the main pages of my local build. When I push to GitHub, Vercel deploys the site. Then I opened the live version and used it, which is how I found what the tests couldn't. The Desk showed a dash when only the first offer was filled in. And the AI answers on the live site were quietly falling back to plain text. Two settings in my Vercel dashboard were wrong: a model written as Haiku five point five, which is a display name and not a model name, and a site address setting with a letter missing, so the live pages pointed at localhost. I couldn't see the exact error, so I added a log line for it, and I made the code ignore a bad model value instead of breaking. That's why I test the real site, and not just the code.
 
 ### c16. To chapter 9  `16-transition-7.mp3`
 

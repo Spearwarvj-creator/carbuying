@@ -51,9 +51,9 @@ Everything else was checked on the live site on 15 November: all pages return 20
 | 6:37 | **Transition 4** | "Words, and Español" | |
 | 6:41 | 6 Words and Spanish | Learn, the decoder, ES | Says HOLA |
 | 7:33 | **Transition 5** | "The redesign" | |
-| 7:37 | 7 The redesign | The research notes, before and after | Squashed before, happy after |
+| 7:37 | 7 The redesign | Animation card (no footage), then before and after | Oops, wow, focus, happy |
 | 8:36 | **Transition 6** | "How I checked" | |
-| 8:40 | 8 How I checked it | Terminal tests; the live-site problems; the settings | Focus face |
+| 8:40 | 8 How I checked it | Animation card: tests, Vercel deploy, live-site problems | Celebrates the green tests |
 | 9:42 | **Transition 7** | "On the shelf" | |
 | 9:46 | 9 What is left | Plain list, then the link | |
 | 10:20 | **Shelf card** | Tactly to Kurae, then No. 6 lands | Carries the tile in |
@@ -98,13 +98,9 @@ Vee is injected as an overlay on the live site (see "Recording" below). The call
 **6. Words and Spanish.** Learn page; open one lesson; use the decoder; search one word. Then tap ES on the calculator and `v.say("HOLA")`, then the `/es` home page.
 - Say the Spanish-beta honesty line looking at the page, not at Vee.
 
-**7. The redesign.** `docs/research/COMPONENT_RESEARCH.md` and four or five of the 237 screenshots (pick ones with clearly different components). Then the before and after, same page, same width.
-- Before: `v.mood("oops",3000)`. After: `v.celebrate()`.
-- For the "before" footage, run the previous commit on port 3200 (commands below).
+**7. The redesign.** No research footage (you decided it is not needed on screen). Play the animation card `kit/index.html?card=redesign&clean=1` (56 s): "It felt cramped", then 20 kinds and 237 screenshots counting up (237 squares fill in), the real cause (text too small, layouts squeezed by height), the quiet changes (header group, thin lines, what was left out), then "Before, and after". Follow it with a short before and after of the same page if you have one.
 
-**8. How I checked it.** Terminal: `npm test` (or `npx vitest run`) showing 293 passing. Then the Desk with only Offer 1 filled in (the dash story, now fixed), then the Vercel settings page with the values blurred, then the live AI answering.
-- Focus face during the tests; `v.celebrate()` on the green line.
-- Blur every secret on the Vercel page. Show names only, never a key or token.
+**8. How I checked it.** No terminal or Vercel footage (also not needed). Play `kit/index.html?card=checks&clean=1` (66 s): 293 tests pass (293 squares fill in), the accessibility scan on the local build, "Deployed through Vercel" (push, build, deploy, test), the two live-site problems, the two wrong settings and the fix, and "Test the real site". The voice says it deploys through Vercel; nothing from the Vercel dashboard is shown. For the guard test, key a sticker over a short terminal clip, or use `kit/sticker.html?stamp=THROWN%20AWAY` on its own.
 
 **9. What is left.** A plain on-screen list: Spanish review, screen reader test, photo reading (its own video). Then the live link, then the shelf card, then the end card.
 

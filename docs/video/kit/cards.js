@@ -328,6 +328,157 @@
     },
   });
 
+  /* ---------- two explainer cards: voice plus animation, no screen footage (clips 13 and 15) ---------- */
+  const exShow = (id) => document.querySelectorAll(".ex .bt").forEach((e) => e.classList.toggle("on", e.id === id));
+  function exHead(text, sub) {
+    const h = document.getElementById("exh");
+    const sb = document.getElementById("exs");
+    h.textContent = "";
+    sb.classList.remove("on");
+    typeInto(h, text, 28);
+    if (sub) at(text.length * 36 + 200, () => { sb.textContent = sub; sb.classList.add("on"); });
+  }
+  function exCount(id, n, ms) {
+    const el = document.getElementById(id);
+    const t0 = performance.now();
+    const mine = token;
+    const step = (now) => {
+      if (mine !== token) return;
+      const p = Math.min(1, (now - t0) / ms);
+      el.textContent = Math.round(n * p);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  function exFill(id, n, ms) {
+    const cells = document.getElementById(id).children;
+    const t0 = performance.now();
+    const mine = token;
+    const step = (now) => {
+      if (mine !== token) return;
+      const p = Math.min(1, (now - t0) / ms);
+      const k = Math.floor(n * p);
+      for (let i = 0; i < k; i++) cells[i].classList.add("on");
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const exRow = (tag, kind, text, id) => `<div class="ex-row" id="${id}"><span class="tg ${kind}">${tag}</span><span class="tx">${text}</span></div>`;
+  const rowOn = (id) => document.getElementById(id).classList.add("on");
+
+  CARDS.push({
+    id: "redesign",
+    name: "The redesign (animation for clip 13)",
+    dur: 56000,
+    voice: "Clip 13: I thought it was cramped, so I looked at real examples of every component. Twenty kinds, two hundred and thirty seven screenshots. The real cause was small text and squeezed layouts. Then the changes were quiet. Here is before, and after.",
+    build() {
+      const widths = [92, 70, 100, 55, 85, 100, 40, 76, 94, 60, 100, 48, 88, 100, 66, 80, 52, 96];
+      layer.innerHTML = `
+        <div class="ex rd">
+          ${badge(6, 6)}
+          <div class="kick">Chapter 07 of 09</div>
+          <div class="hd pix" id="exh"></div><div class="sb" id="exs"></div>
+          <div class="bt" id="rdA"><div class="rd-cram">${widths.map((w) => `<i style="width:${w}%"></i>`).join("")}</div>
+            <div class="rd-cap"><p>Small text. Tight layout.</p><p>Everything fit. Nothing could breathe.</p></div></div>
+          <div class="bt" id="rdB">
+            <div class="rd-nums">
+              <div><div class="big" id="n20">0</div><div class="lbl">Kinds of component</div></div>
+              <div><div class="big" id="n237">0</div><div class="lbl">Screenshots, saved</div></div>
+              <div><div class="big">10+</div><div class="lbl">Real examples of each</div></div>
+            </div>
+            <div class="rd-grid" id="g237">${"<i></i>".repeat(237)}</div>
+            <div class="note" style="position:absolute;left:0;bottom:0;width:800px">Buttons, tabs, tables, charts, accordions, search fields and more.</div>
+          </div>
+          <div class="bt" id="rdC"><div class="rd-two">
+            <div class="rd-panel"><h3>Text too small</h3><div class="rd-aa"><span>Aa</span><span>Aa</span></div><p class="note" style="margin-top:30px">Body text was a size you squint at. Now it is larger everywhere.</p></div>
+            <div class="rd-panel"><h3>Squeezed by screen height</h3><div class="rd-stack"><div class="sq"><i></i><i></i><i></i><i></i><i></i><b>Before</b></div><div class="ok"><i></i><i></i><i></i><i></i><i></i><b>After</b></div></div><p class="note" style="margin-top:30px">Layouts stopped fighting for the last pixel of height.</p></div>
+          </div></div>
+          <div class="bt" id="rdD"><div class="ex-rows">
+            ${exRow("Done", "", "The four header controls became one soft group.", "rr1")}
+            ${exRow("Done", "", "Lists use thin lines instead of boxes around everything.", "rr2")}
+            ${exRow("Left out", "no", "Glowing buttons, award badges, centred heroes with stars.", "rr3")}
+          </div></div>
+          <div class="bt" id="rdE"><div class="ex-ba"><div class="box">Before</div><div class="ar">&gt;</div><div class="box after">After</div></div></div>
+        </div>`;
+      vee.S = 6;
+      vee.moveTo(1690, 250, { snap: true });
+      wipe(false, 520);
+      at(400, () => { exHead("IT FELT CRAMPED"); exShow("rdA"); vee.mood("oops", 6000); });
+      at(8000, () => { exHead("20 KINDS. 10+ EACH."); exShow("rdB"); vee.wow(); exCount("n20", 20, 2400); exCount("n237", 237, 5200); exFill("g237", 237, 6500); });
+      at(24000, () => { exHead("THE REAL CAUSE"); exShow("rdC"); vee.mood("focus", 10000); });
+      at(36000, () => { exHead("THEN, QUIET CHANGES"); exShow("rdD"); vee.mood("happy", 2500); });
+      at(37200, () => rowOn("rr1"));
+      at(41500, () => rowOn("rr2"));
+      at(45500, () => { rowOn("rr3"); vee.stamp("SKIPPED", 1180, 760); vee.mood("wink", 2500); });
+      at(50500, () => { exHead("BEFORE, AND AFTER"); exShow("rdE"); vee.celebrate(); });
+      at(55000, () => endWipe(800));
+    },
+  });
+
+  CARDS.push({
+    id: "checks",
+    name: "How I checked it (animation for clip 15)",
+    dur: 66000,
+    voice: "Clip 15: 293 tests pass; the accessibility scan on my local build; Vercel deploys when I push; the live site showed a dash and plain-text AI answers; a model named Haiku 5.5 and a misspelled site address; test the real site.",
+    build() {
+      layer.innerHTML = `
+        <div class="ex ck">
+          ${badge(6, 6)}
+          <div class="kick">Chapter 08 of 09</div>
+          <div class="hd pix" id="exh"></div><div class="sb" id="exs"></div>
+          <div class="bt" id="ckA">
+            <div class="rd-nums" style="width:700px"><div><div class="big" id="n293">0</div><div class="lbl">Automated tests pass</div></div><div class="note">One test is skipped on purpose.</div></div>
+            <div class="ck-grid" id="g293">${"<i></i>".repeat(294)}</div>
+          </div>
+          <div class="bt" id="ckB"><div class="ex-rows">
+            ${exRow("No violations", "", "An automated accessibility scan, on the main pages.", "cr1")}
+            ${exRow("Note", "wn", "My local build. This is not a screen reader test.", "cr2")}
+          </div></div>
+          <div class="bt" id="ckE">
+            <div class="ck-steps">
+              <div class="ck-step" id="cs1"><b>Push</b><span>My code goes to GitHub.</span></div>
+              <div class="ck-step" id="cs2"><b>Build</b><span>Vercel builds the site.</span></div>
+              <div class="ck-step" id="cs3"><b>Deploy</b><span>Vercel puts it live.</span></div>
+              <div class="ck-step" id="cs4"><b>Test</b><span>I use the live site.</span></div>
+            </div>
+            <div class="ck-bar"><i id="cbar"></i></div>
+          </div>
+          <div class="bt" id="ckC"><div class="ex-rows">
+            ${exRow("Found", "no", "The Desk showed a dash when only Offer 1 was filled in.", "cf1")}
+            ${exRow("Found", "no", "On the live site, the AI quietly fell back to plain text.", "cf2")}
+          </div></div>
+          <div class="bt" id="ckD"><div class="ex-rows">
+            ${exRow("Setting", "no", "A model named &ldquo;Haiku 5.5&rdquo;: a display name, not a model name.", "cd1")}
+            ${exRow("Setting", "no", "A site address setting missing a letter: pages pointed at localhost.", "cd2")}
+            ${exRow("Fixed", "", "A log line for the reason, and code that ignores a bad model value.", "cd3")}
+          </div></div>
+          <div class="bt" id="ckF"><div class="ex-ba"><div class="box after">Test the real site</div></div></div>
+        </div>`;
+      vee.S = 6;
+      vee.moveTo(1690, 250, { snap: true });
+      wipe(false, 520);
+      at(400, () => { exHead("293 TESTS PASS"); exShow("ckA"); vee.mood("happy", 3000); exCount("n293", 293, 5200); exFill("g293", 293, 6000); });
+      at(6800, () => document.getElementById("g293").lastElementChild.classList.add("on"));
+      at(7800, () => { exHead("ACCESSIBILITY SCAN"); exShow("ckB"); vee.mood("focus", 6000); });
+      at(8800, () => rowOn("cr1"));
+      at(11500, () => rowOn("cr2"));
+      at(15200, () => { exHead("DEPLOYED THROUGH VERCEL"); exShow("ckE"); vee.mood("idle"); });
+      at(16000, () => document.getElementById("cs1").classList.add("on"));
+      at(17200, () => { document.getElementById("cs2").classList.add("on"); document.getElementById("cbar").style.width = "70%"; });
+      at(18400, () => document.getElementById("cs3").classList.add("on"));
+      at(19600, () => { document.getElementById("cs4").classList.add("on"); document.getElementById("cbar").style.width = "100%"; vee.celebrate(); });
+      at(22500, () => { exHead("THEN THE LIVE SITE"); exShow("ckC"); vee.wow(); });
+      at(24000, () => rowOn("cf1"));
+      at(29000, () => { rowOn("cf2"); vee.oops(); });
+      at(36500, () => { exHead("TWO SETTINGS WERE WRONG"); exShow("ckD"); vee.mood("focus", 6000); });
+      at(38000, () => rowOn("cd1"));
+      at(44000, () => rowOn("cd2"));
+      at(52000, () => { rowOn("cd3"); vee.mood("happy", 3000); });
+      at(59500, () => { exHead("WHY I TEST THE LIVE SITE"); exShow("ckF"); vee.celebrate(); vee.stamp("NOT JUST THE CODE", 960, 900); });
+      at(65000, () => endWipe(800));
+    },
+  });
+
   /* ---------- the player ---------- */
   function stop() {
     token++;

@@ -16,7 +16,7 @@ Then open http://localhost:8765/index.html (the panel with every card), and pres
 | File | What it is |
 | --- | --- |
 | `serve.py` | A tiny local server that never caches (use this, not a plain file open or a caching server, so edits always show) |
-| `index.html`, `kit.css`, `cards.js` | The 1920 x 1080 stage and the cards: start, seven transitions (`t1` to `t7`), the shelf, the end |
+| `index.html`, `kit.css`, `cards.js` | The 1920 x 1080 stage and the cards: start, seven transitions (`t1` to `t7`), the shelf, the end, and two voice-over animation cards (`redesign`, `checks`) that stand in for screen footage |
 | `vee.js` | Vee, the mascot (and a pixel font, speech bubbles, a pointer ring, headlight beams, sparkles and a stamp). Readable source |
 | `vee.min.js` | The same, minified (about 20 KB). This is the file you paste into a page's console |
 | `sticker.html` | One Vee on a flat colour, to key over footage Vee cannot be injected into (the terminal) |
@@ -31,14 +31,14 @@ Then open http://localhost:8765/index.html (the panel with every card), and pres
 
 | Parameter | Does |
 | --- | --- |
-| `card` | `start`, `t1` to `t7`, `shelf`, `end` |
+| `card` | `start`, `t1` to `t7`, `shelf`, `end`, and the two animation cards `redesign` (56 s, for clip 13) and `checks` (66 s, for clip 15) |
 | `clean=1` | Hides the panel; the stage fills the window (press F for full screen) |
 | `noend=1` | Keeps the finished card on screen instead of wiping it away. Handy for a still frame |
 | `guides=1` | Shows dashed boxes where YouTube's end-screen elements will go (end card) |
 
 Record each card as its own clip, full screen at 1920 x 1080. Keys: `R` replays, `F` full screen, `1` to `9` plays that card. The browser tab must be visible while recording; a hidden tab slows its animations.
 
-Card lengths: start 7 s, transitions 4.2 s, shelf 8 s, end 18 s. Each card opens with a pixel wipe revealing it and closes with a wipe covering it, in V2Stack terracotta. Cut your footage underneath the wipe so it looks planned.
+Card lengths: start 7 s, transitions 4.2 s, shelf 8 s, end 18 s, redesign 56 s, checks 66 s. Each card opens with a pixel wipe revealing it and closes with a wipe covering it, in V2Stack terracotta. Cut your footage underneath the wipe so it looks planned.
 
 ## Vee on a live page
 
