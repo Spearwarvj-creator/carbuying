@@ -65,7 +65,9 @@ export async function explain(input: z.infer<typeof askInput>, opts: { fetcher?:
         fetcher: opts.fetcher,
       })
     ).trim();
-    return numbersAreAllowed(text, [...input.figures, ...allowedFrom(context, earlier, input.question)]) ? { text, source: "ai" } : template;
+    if (numbersAreAllowed(text, [...input.figures, ...allowedFrom(context, earlier, input.question)])) return { text, source: "ai" };
+    console.error("[ai] explain answer dropped by the numbers guard"); // no text, only the fact, so a dropped answer can be told apart from a failed call
+    return template;
   } catch (e) {
     if (e instanceof AiError && e.kind === "limit") throw e;
     return template;

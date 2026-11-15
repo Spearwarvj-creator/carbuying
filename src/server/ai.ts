@@ -62,10 +62,17 @@ export async function chat({ job, system, user, maxTokens = 400, json = false, t
     }),
     signal: AbortSignal.timeout(job === "vision" ? 30_000 : 20_000),
     cache: "no-store",
-  }).catch(() => {
+  }).catch((e: unknown) => {
+    // Why a call failed, never what was in it: only the kind of failure is written, so a missing key or a timeout can be found in the host's logs.
+    console.error(`[ai] ${job} call failed before an answer: ${e instanceof Error ? e.name : "unknown"}`);
     throw new AiError("The model did not answer", "upstream");
   });
-  if (!res.ok) throw new AiError("The model did not answer", "upstream");
+  if (!res.ok) {
+    // The provider's own error line (for example "No auth credentials found" or "Insufficient credits"), cut short. It holds no part of the request.
+    const detail = await res.text().then((t) => (JSON.parse(t) as { error?: { message?: string } }).error?.message ?? "").catch(() => "");
+    console.error(`[ai] ${job} call refused: status ${res.status} ${detail.slice(0, 120)}`);
+    throw new AiError("The model did not answer", "upstream");
+  }
   const body = (await res.json().catch(() => null)) as { choices?: { message?: { content?: string } }[] } | null;
   const content = body?.choices?.[0]?.message?.content;
   if (typeof content !== "string" || !content.trim()) throw new AiError("The model sent an answer we could not use", "upstream");
