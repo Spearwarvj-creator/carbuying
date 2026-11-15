@@ -58,7 +58,7 @@ export function AppHeader({ tag }: { tag?: string }) {
           <Link href={to("/learn")}>{site.nav.learn}</Link>
           <Link href={to("/about")}>{site.nav.about}</Link>
         </nav>
-        <button type="button" className="top-help" onClick={openHelp} aria-label={more.guide.help}>
+        <button type="button" className="top-help" onClick={openHelp} aria-label={more.guide.help} title={more.guide.help}>
           <InfoIcon size={20} />
           <span>{more.guide.help}</span>
         </button>

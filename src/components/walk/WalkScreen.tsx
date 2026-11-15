@@ -261,6 +261,9 @@ function Rail() {
           );
         })}
       </ol>
+      <p className="rail-count" aria-hidden="true">
+        {walk.stepOf(stage, STAGES)}: {walk.stepNames[stage - 1]}
+      </p>
     </nav>
   );
 }

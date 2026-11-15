@@ -83,12 +83,18 @@ a.brand {
   text-decoration: none;
   white-space: nowrap;
 }
-.s-navlink:hover,
+/* The current page sits on a soft pill, which is also its touch target (navigation research, section 7). */
+.s-navlink {
+  padding: 0 14px;
+  border-radius: 10px;
+}
+.s-navlink:hover {
+  color: var(--text);
+  background: color-mix(in oklab, var(--text) 8%, transparent);
+}
 .s-navlink[aria-current="page"] {
   color: var(--text);
-  text-decoration: underline;
-  text-underline-offset: 6px;
-  text-decoration-thickness: 2px;
+  background: var(--panel);
 }
 .s-short {
   display: none;
@@ -115,19 +121,26 @@ a.brand {
   justify-content: center;
   min-height: 52px;
   padding: 0 1.5rem;
-  border: 2px solid var(--text);
-  border-radius: 8px;
+  border: 1.5px solid var(--text);
+  border-radius: 12px;
   background: var(--text);
   color: var(--ground);
   font-weight: 700;
   font-size: var(--t-md);
   text-decoration: none;
   text-align: center;
-  transition: background-color 0.15s, color 0.15s;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
 }
+/* The primary dims a little on hover instead of flipping to an empty outline, and its arrow moves: buttons research, section 13. */
 .s-btn:hover {
-  background: transparent;
-  color: var(--text);
+  background: color-mix(in oklab, var(--text) 84%, var(--ground));
+  border-color: color-mix(in oklab, var(--text) 84%, var(--ground));
+}
+.s-btn svg {
+  transition: translate 0.2s var(--ease);
+}
+.s-btn:hover svg {
+  translate: 3px 0;
 }
 .s-btn-ghost {
   background: transparent;
@@ -720,7 +733,7 @@ a.brand {
   gap: 1.5rem;
 }
 .s-foot-cols h2 {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.75rem;
   font-size: var(--t-sm);
   font-weight: 600;
   color: var(--ink-2);
@@ -735,8 +748,11 @@ a.brand {
   align-items: center;
   min-height: 44px;
   color: var(--text);
-  font-weight: 600;
+  font-weight: 500;
   text-underline-offset: 4px;
+}
+.s-foot-cols a:hover {
+  text-decoration: underline;
 }
 .s-foot-base {
   display: flex;

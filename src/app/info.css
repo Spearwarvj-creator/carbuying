@@ -87,19 +87,20 @@
 }
 
 /* Two ways in */
+/* No box around each way in: the picture is the one raised thing, the words sit on the page, and a hairline divides the two. */
 .mode {
   display: grid;
-  gap: 6px;
-  padding: clamp(16px, 2vw, 1.75rem);
-  border: 1.5px solid var(--edge);
-  border-radius: 24px;
-  background: var(--panel);
-  box-shadow: var(--lift);
+  gap: 8px;
+  align-content: start;
+}
+.two > .mode + .mode {
+  padding-left: clamp(16px, 2.4vw, 2.5rem);
+  border-left: 1px solid var(--line);
 }
 .mode-art {
   height: clamp(110px, 12vw, 170px);
-  margin-bottom: 8px;
-  border-radius: 14px;
+  margin-bottom: 12px;
+  border-radius: 20px;
   background: color-mix(in oklab, var(--c-car) 10%, var(--ground));
   display: grid;
   place-items: center;
@@ -128,7 +129,7 @@
 .iconlist {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(14px, 2vw, 1.75rem) clamp(16px, 2.4vw, 2.5rem);
+  gap: clamp(20px, 2.4vw, 2.25rem) clamp(24px, 3.2vw, 3.5rem);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -136,8 +137,18 @@
 .iconlist li {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 14px;
+  gap: 16px;
   align-items: start;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+/* In these lists the icon is a plain line icon, not a tinted tile: a feature list, not a row of buttons. */
+.ch .badge {
+  width: auto;
+  height: auto;
+  margin-top: 0.1em;
+  border-radius: 0;
+  background: none;
 }
 .iconlist b {
   display: block;
@@ -145,7 +156,10 @@
   line-height: 1.2;
 }
 .iconlist span:not(.badge) {
+  display: block;
+  margin-top: 4px;
   color: var(--ink-2);
+  line-height: 1.5;
 }
 .statement {
   display: grid;
@@ -178,7 +192,7 @@
 }
 .i-trail-track {
   display: block;
-  height: 30px;
+  height: 18px;
   border-radius: 9px;
   background: color-mix(in oklab, var(--line) 40%, transparent);
   overflow: hidden;
@@ -219,30 +233,51 @@
   font-size: var(--f-num-lg);
 }
 
-/* Compare */
+/* Compare: a ledger, not three equal cards. Each row names the measure, shows it for the example deal, and says what it is. */
 .compare {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(12px, 1.6vw, 1.5rem);
+  grid-template-columns: minmax(0, 1fr);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .compare li {
   display: grid;
-  align-content: start;
-  gap: 8px;
-  padding: clamp(14px, 1.6vw, 1.5rem);
-  border: 1.5px solid var(--edge);
-  border-radius: 20px;
-  background: var(--panel);
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "i k f"
+    ". d d";
+  align-items: baseline;
+  column-gap: 16px;
+  row-gap: 6px;
+  padding: clamp(18px, 2vw, 28px) 0;
+  border-top: 1px solid var(--line);
+}
+.compare li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.compare .badge {
+  grid-area: i;
+  align-self: center;
 }
 .compare b {
+  grid-area: k;
   font-size: var(--t-lg);
   line-height: 1.2;
 }
-.compare span:not(.badge) {
+.compare .fig {
+  grid-area: f;
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: var(--f-num-lg);
+  line-height: 1;
+  text-align: right;
+}
+.compare .desc {
+  grid-area: d;
+  max-width: 46ch;
   color: var(--ink-2);
+  line-height: 1.5;
 }
 
 /* Levers and words */
@@ -389,9 +424,14 @@
 }
 @media (max-width: 719px) {
   .two,
-  .iconlist,
-  .compare {
+  .iconlist {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .two > .mode + .mode {
+    padding-left: 0;
+    padding-top: 28px;
+    border-left: 0;
+    border-top: 1px solid var(--line);
   }
   .i-trail li {
     grid-template-columns: minmax(0, 1fr) auto;

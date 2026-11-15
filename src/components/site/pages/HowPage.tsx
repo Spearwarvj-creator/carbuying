@@ -7,7 +7,7 @@ import { ArrowIcon, PercentIcon, PlusBoxIcon, ReceiptIcon, SceneDesk, SceneQuote
 import { StepBadge } from "@/components/walk/graphics";
 import { en } from "@/data/strings/en";
 import { es } from "@/data/strings/es";
-import { formatSignedCents, type TrailKey } from "@/engine";
+import { formatSignedCents, formatWhole, type TrailKey } from "@/engine";
 import { getExample } from "@/lib/example";
 import { localePath, siteFor, type Locale } from "@/lib/site-locale";
 
@@ -37,7 +37,7 @@ export function HowPage({ locale }: { locale: Locale }) {
   const to = (p: string) => localePath(locale, p);
   const trailNames = locale === "es" ? es.en.trailSteps : en.trailSteps;
   // The trail comes from the engine on the example deal, so no figure here is typed by hand.
-  const { trail } = getExample();
+  const { trail, d2 } = getExample();
   const rows = trail.steps
     .filter((s) => s.cents !== 0)
     .sort((a, b) => Math.abs(b.cents) - Math.abs(a.cents))
@@ -111,7 +111,8 @@ export function HowPage({ locale }: { locale: Locale }) {
               <li key={it.k}>
                 <StepBadge icon={COMPARE_ART[i].icon} tone={COMPARE_ART[i].tone} />
                 <b>{it.k}</b>
-                <span>{it.v}</span>
+                <span className="fig num">{[formatWhole(d2.total), formatWhole(d2.pay), formatWhole(d2.otd)][i]}</span>
+                <span className="desc">{it.v}</span>
               </li>
             ))}
           </ul>

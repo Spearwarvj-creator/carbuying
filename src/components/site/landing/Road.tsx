@@ -112,6 +112,7 @@ export function Road({ principal, apr, down, locale = "en" }: { principal: numbe
             step={1}
             label={r.sliderLabel}
             format={r.months}
+            ticks={[36, 48, 60, 72, 84]}
             onChange={(n) => {
               touched.current = true;
               setMonths(n);

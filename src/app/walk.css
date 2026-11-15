@@ -33,7 +33,7 @@
   height: 100dvh;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
-  padding: 0 16px;
+  padding: 0 20px;
 }
 .walk[data-view="door"],
 .walk[data-view="check"] {
@@ -44,7 +44,7 @@
   overflow-x: hidden; /* the slide-in offset must not make a sideways scrollbar */
   overflow-y: auto;
   /* Room for the 5px focus ring, which overflow would otherwise clip at the edge. */
-  padding: 8px 6px 16px;
+  padding: 16px 6px 40px;
   margin-inline: -6px;
 }
 .walk-page {
@@ -75,7 +75,7 @@
 .tg {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
 }
 .tg-item {
   position: relative;
@@ -112,9 +112,9 @@
 .tg[data-variant="pill"] {
   flex-wrap: nowrap;
   gap: 0;
-  padding: 3px;
-  border: 1.5px solid var(--edge);
-  border-radius: 12px;
+  padding: 4px;
+  border: 0;
+  border-radius: 14px;
   background: var(--panel);
 }
 .tg[data-variant="pill"] .tg-item {
@@ -122,7 +122,7 @@
   min-height: 44px;
   justify-content: center;
   padding: 0 12px;
-  border-radius: 9px;
+  border-radius: 10px;
   font-size: var(--t-sm);
   font-weight: 600;
   white-space: nowrap;
@@ -155,17 +155,17 @@
 .tg[data-variant="cards"] {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 14px;
 }
 .tg[data-variant="cards"] .tg-item {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 8px;
-  min-height: 92px;
-  padding: 12px 14px;
+  gap: 10px;
+  min-height: 108px;
+  padding: 18px 20px;
   border: 1.5px solid var(--edge);
-  border-radius: 16px;
+  border-radius: 18px;
   background: var(--panel);
   text-align: left;
 }
@@ -254,7 +254,7 @@
 .stagehead {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 18px;
 }
 .stagehead h1 {
   margin: 0;
@@ -264,8 +264,9 @@
   text-wrap: balance;
 }
 .stagehead .sub {
-  margin: 6px 0 0;
+  margin: 10px 0 0;
   font-size: var(--t-md);
+  line-height: 1.5;
   color: var(--ink-2);
   text-wrap: pretty;
 }
@@ -289,13 +290,13 @@
 .stage {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 32px;
 }
 .col-a,
 .col-b {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   min-width: 0;
 }
 /* On a phone the running summary already shows this number, so the step does not repeat it. */
@@ -360,9 +361,9 @@
 }
 .walk .hint {
   margin: 0;
-  font-size: var(--t-sm);
+  font-size: var(--t-base);
   color: var(--ink-2);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 .opt {
   color: var(--ink-2);
@@ -450,7 +451,7 @@
 .mf {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
   align-items: flex-start;
 }
 .mf-head {
@@ -462,7 +463,8 @@
 }
 .mf label,
 .mf .lab {
-  font-size: var(--t-sm);
+  font-weight: 600;
+  font-size: var(--t-base);
   color: var(--ink-2);
 }
 .mf .learn {
@@ -473,21 +475,22 @@
   align-items: center;
   gap: 4px;
   max-width: 100%;
-  min-height: 56px;
-  padding: 2px 14px;
-  border: 1.5px solid var(--edge);
-  border-radius: 12px;
+  min-height: 64px;
+  padding: 2px 18px;
+  border: 1px solid var(--edge);
+  border-radius: 14px;
   background: var(--panel);
   transition: border-color 0.18s ease, background-color 0.18s ease;
 }
 .mf .box:hover {
   border-color: var(--text);
 }
+/* One two-pixel ring in the accent colour, no gap (inputs research, section 3). */
 .mf .box:focus-within {
   border-color: var(--total-fg);
   background: var(--panel-2);
-  outline: 3px solid var(--total-fg);
-  outline-offset: 2px;
+  outline: 2px solid var(--total-fg);
+  outline-offset: 0;
 }
 .mf input {
   field-sizing: content;
@@ -580,7 +583,7 @@
 }
 .doors {
   display: grid;
-  gap: 12px;
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -591,13 +594,17 @@
   align-items: center;
   gap: 14px;
   width: 100%;
-  padding: 6px 14px 6px 6px;
-  border: 1.5px solid var(--line);
-  border-radius: 20px;
-  background: var(--panel);
+  padding: 20px 8px 20px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
   text-align: left;
-  box-shadow: var(--lift);
-  transition: border-color 0.2s ease, translate 0.25s var(--ease), background-color 0.2s ease;
+  transition: background-color 0.2s ease;
+}
+/* The three ways in are rows of one list, not three boxes: a hairline above each, the picture as the only raised thing. */
+.doors li:last-child .doorbtn {
+  border-bottom: 1px solid var(--line);
 }
 .door-art {
   display: block;
@@ -639,9 +646,7 @@
 }
 @media (hover: hover) {
   .doorbtn:hover {
-    border-color: var(--text);
-    background: var(--panel-2);
-    translate: 0 -3px;
+    background: color-mix(in oklab, var(--panel) 70%, transparent);
   }
   .doorbtn:hover .door-go {
     translate: 4px 0;
@@ -717,8 +722,8 @@
 .mbar-row {
   display: flex;
   gap: 3px;
-  height: 36px;
-  border-radius: 10px;
+  height: 28px;
+  border-radius: 9px;
   overflow: hidden;
 }
 .mbar .mseg {
@@ -867,10 +872,15 @@
 }
 
 /* ---------- Disclosure (Radix Collapsible) ---------- */
+/* A disclosure is a hairline row, not a box: question left, a marker right, the answer in the quiet colour (accordions research, section 11). */
 .disc {
-  border: 1.5px solid var(--line);
-  border-radius: 16px;
-  background: var(--panel);
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+}
+.disc:last-of-type {
+  border-bottom: 1px solid var(--line);
 }
 .disc-trigger {
   display: flex;
@@ -878,10 +888,10 @@
   justify-content: space-between;
   gap: 12px;
   width: 100%;
-  min-height: 48px;
-  padding: 0 16px;
+  min-height: 56px;
+  padding: 0 4px;
   font-size: var(--t-md);
-  font-weight: 700;
+  font-weight: 600;
   text-align: left;
 }
 .disc-chev {
@@ -904,12 +914,13 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 0 16px 14px;
+  padding: 0 4px 18px;
+  color: var(--ink-2);
 }
 .disc-inner p {
   margin: 0;
   font-size: var(--t-md);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 @keyframes disc-open {
   from {
@@ -1240,27 +1251,27 @@
 }
 @media (min-width: 900px) {
   .walk {
-    padding: 0 28px;
+    padding: 0 clamp(32px, 4.5vw, 80px);
   }
   .walk-main {
-    padding: 12px 0 20px;
+    padding: 32px 0 56px;
   }
   /* Both columns stretch to one height, up to 40rem, so a step fills the window instead of floating in it. */
   .stage {
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    gap: clamp(28px, 5vw, 6rem);
+    gap: clamp(40px, 6vw, 8rem);
     align-items: stretch;
     min-height: clamp(22rem, calc(100dvh - 15rem), 40rem);
   }
   .col-a {
-    gap: 18px;
+    gap: 28px;
     justify-content: center;
   }
   .col-b {
-    gap: 16px;
+    gap: 22px;
     justify-content: center;
-    padding: clamp(20px, 2.6vw, 44px);
+    padding: clamp(28px, 3.4vw, 56px);
   }
   /* The worksheet grows to fill its panel. */
   .col-b .four {
@@ -1313,13 +1324,13 @@
   .doors {
     gap: 14px;
   }
-  /* The cards grow with the screen's height, so a tall window is filled by the cards, not left empty above and below them. */
+  /* A fixed size, so the three ways in keep their room and the tools beneath them are never pushed off the screen. */
   .door-art {
-    width: clamp(132px, 22vh, 280px);
-    height: clamp(96px, 16vh, 210px);
+    width: 132px;
+    height: 96px;
   }
   .doors {
-    gap: clamp(14px, 2.4vh, 28px);
+    gap: 0;
   }
   .door-text b {
     font-size: var(--t-xl);
@@ -1487,46 +1498,6 @@
     display: none;
   }
 }
-@media (max-width: 599px) and (max-height: 700px) {
-  .stagehead .sub {
-    display: none;
-  }
-  .col-a,
-  .col-b {
-    gap: 8px;
-  }
-}
-
-/* ---------- Short desktop screens: tighten the big fields so a step still fits ---------- */
-@media (min-width: 900px) and (max-height: 820px) {
-  .mf .box {
-    min-height: 64px;
-  }
-  .mf input {
-    font-size: var(--t-2xl);
-  }
-  .tg[data-variant="chips"] .tg-item {
-    min-height: 52px;
-  }
-  .tg[data-variant="cards"] .tg-item {
-    min-height: 96px;
-  }
-  .col-a {
-    gap: 12px;
-  }
-  .col-b {
-    padding: 16px 20px;
-    gap: 12px;
-  }
-  .strip-grid {
-    max-width: 30rem;
-    gap: 4px;
-  }
-  .check-total {
-    font-size: var(--t-3xl);
-  }
-}
-
 /* ---------- Motion off ---------- */
 @media (prefers-reduced-motion: reduce) {
   .walk *,
@@ -1656,9 +1627,9 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   height: auto;
-  min-height: 52px;
+  min-height: 68px;
 }
 .top-mid {
   display: flex;
@@ -1692,19 +1663,19 @@
   text-underline-offset: 6px;
   text-decoration-thickness: 2px;
 }
-/* The text, theme, language and view switches need about 880px beside the Walk and Desk switch in Spanish. Below that the menu holds them. */
-@media (min-width: 880px) {
+/* The text, theme, language and view switches need about 1000px beside the Walk and Desk switch in Spanish. Below that the menu holds them. */
+@media (min-width: 1000px) {
   .top-prefs {
     display: block;
   }
 }
 @media (min-width: 900px) {
   .top {
-    min-height: 60px;
+    min-height: 72px;
   }
 }
-/* The links, the Help button and the screen switches need about 1400px beside the Walk and Desk switch. Below that the menu holds them. */
-@media (min-width: 1400px) {
+/* The three links need about 1900px beside the Walk and Desk switch and the switches, in Spanish. Below that the menu holds them. */
+@media (min-width: 1900px) {
   .top-links {
     display: flex;
     gap: clamp(14px, 2vw, 1.75rem);
@@ -1913,42 +1884,6 @@
   }
 }
 
-/* Laptop screens are short. Under 940 px tall the steps tighten so the whole step, result included, stays in view. */
-@media (min-width: 900px) and (max-height: 940px) {
-  .col-a {
-    gap: 12px;
-  }
-  .stagehead h1 {
-    font-size: var(--t-xl);
-  }
-  .tg[data-variant="cards"] .tg-item {
-    min-height: 68px;
-  }
-  .mf .box {
-    min-height: 50px;
-  }
-  .mf input {
-    font-size: var(--t-xl);
-  }
-}
-@media (min-width: 900px) and (max-height: 800px) {
-  .col-a {
-    gap: 8px;
-  }
-  .stagehead .sub {
-    font-size: var(--t-sm);
-  }
-  .tg[data-variant="cards"] .tg-item {
-    min-height: 56px;
-  }
-  .mf .box {
-    min-height: 44px;
-  }
-  .check-total {
-    font-size: var(--t-3xl);
-  }
-}
-
 /* The slider thumb is drawn 28 px wide, but a finger gets a 44 px target around it. */
 .slider-thumb {
   position: relative;
@@ -1986,19 +1921,6 @@
   }
   .cols[data-tab="deal"] .row {
     height: 40px;
-  }
-}
-
-/* Very short laptop windows (720 px tall): the one-line explanation under each step title gives way, so the step stays whole. */
-@media (min-width: 900px) and (max-height: 740px) {
-  .stagehead h1 {
-    font-size: var(--t-lg);
-  }
-  .stagehead .sub {
-    display: none;
-  }
-  .col-a {
-    gap: 6px;
   }
 }
 
@@ -2154,7 +2076,7 @@
 /* ---------- Checks, explanations, practice, tone, ZIP and saving ---------- */
 .checks {
   display: grid;
-  gap: 10px;
+  gap: 18px;
 }
 .checks-head {
   display: flex;
@@ -2168,19 +2090,20 @@
 }
 .checks-list {
   display: grid;
-  gap: 10px;
+  gap: 28px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .checks-list li {
   display: grid;
-  gap: 6px;
+  gap: 10px;
   justify-items: start;
-  padding: 12px 14px;
-  border: 1.5px solid var(--line);
-  border-left-width: 5px;
-  border-radius: 14px;
+  padding: 4px 0 4px 20px;
+  border: 0;
+  border-left: 4px solid var(--line);
+  border-radius: 0;
+  line-height: 1.5;
   background: var(--panel);
 }
 .checks-list li[data-sev="high"] {
@@ -2279,11 +2202,20 @@
   border-collapse: collapse;
   font-size: var(--t-sm);
 }
+.qf-compare th {
+  color: var(--ink-2);
+  font-weight: 600;
+}
 .qf-compare th,
 .qf-compare td {
-  padding: 8px 6px;
+  padding: 14px 8px;
   border-bottom: 1px solid var(--line);
   text-align: left;
+  line-height: 1.4;
+}
+.qf-compare td:not(:first-child) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 .qf-compare tr[data-status="differ"] td,
 .qf-compare tr[data-status="differ"] th {
@@ -2488,35 +2420,38 @@
 /* The door: three ways in, and two tools beneath them, smaller. */
 .door-main {
   display: grid;
-  gap: 14px;
+  gap: 36px;
   min-width: 0;
 }
 .door-tools {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 0 32px;
 }
 .toolbtn {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
-  padding: 10px 12px;
-  border: 1.5px solid var(--c-car);
-  border-radius: 16px;
-  background: color-mix(in oklab, var(--c-car) 10%, var(--panel));
+  padding: 16px 4px 16px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
   text-align: left;
-  transition: translate 0.25s var(--ease);
 }
-.toolbtn:hover {
-  translate: 0 -2px;
+.toolbtn:hover .door-text b {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
 }
 .toolbtn .door-text b {
   font-size: var(--t-md);
 }
 .toolbtn .door-text span {
-  font-size: var(--t-sm);
+  font-size: var(--t-base);
+  line-height: 1.4;
 }
 .nudge {
   display: grid;
@@ -3065,7 +3000,7 @@
 .vz-over,
 .vz-split {
   display: grid;
-  gap: 10px;
+  gap: 14px;
   margin: 0;
 }
 .vz-hint {
@@ -3092,7 +3027,7 @@
 }
 .vz-track {
   position: relative;
-  height: 36px;
+  height: 28px;
 }
 .vz-bar {
   height: 100%;
@@ -3471,4 +3406,171 @@ html[data-text="large"] .vz-t {
 }
 html[data-text="large"] .vz-t.num {
   font-size: 20px;
+}
+
+/* In the Desk the offers chart sits on its own raised panel, like a chart card, so it reads as one object (the Walk's result panel already is one). */
+.colB .vz-offers {
+  padding: 20px 22px;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+/* Underline tabs: for moving between parts of one page, such as the Learn groups (tabs research, section 5). Plain words, the chosen one bold with a line that slides under it. */
+.tg[data-variant="tabs"] {
+  flex-wrap: nowrap;
+  gap: 0 28px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+  scrollbar-width: none;
+}
+.tg[data-variant="tabs"] .tg-item {
+  min-height: 52px;
+  padding: 0 2px;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font-size: var(--t-md);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.tg[data-variant="tabs"] .tg-item[data-state="on"] {
+  color: var(--text);
+  font-weight: 700;
+}
+.tg[data-variant="tabs"] .tg-thumb {
+  inset: auto 0 -1px 0;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--text);
+}
+@media (hover: hover) {
+  .tg[data-variant="tabs"] .tg-item[data-state="off"]:hover {
+    color: var(--text);
+  }
+}
+
+/* The table behind a picture: a plain disclosure under the chart, for people who cannot rely on the colours (charts research, section 10). */
+.vz-table {
+  margin-top: 14px;
+}
+.vz-table summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink-2);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.vz-table .qf-compare {
+  margin-top: 6px;
+}
+
+/* Tick labels under a slider, at the real step marks (sliders research, section 4). */
+.slider-ticks {
+  position: absolute;
+  inset: calc(100% + 2px) 0 auto;
+  height: 22px;
+  pointer-events: none;
+}
+.slider-ticks > span {
+  position: absolute;
+  translate: -50% 0;
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* A thin meter for the day's free AI uses: the words at the left, the bar under them, a quiet track (progress research, section 20). */
+.credits-meter {
+  display: grid;
+  gap: 8px;
+  max-width: 24rem;
+}
+.credits-meter p {
+  margin: 0;
+}
+.credits-bar {
+  display: block;
+  height: 6px;
+  border-radius: 6px;
+  background: var(--line);
+  overflow: hidden;
+}
+.credits-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--c-car);
+  transition: width 0.4s var(--ease);
+}
+
+/* "Step 2 of 6: Price" in words, for screens where the dots cannot carry the names (steppers research, section 19). */
+.rail-count {
+  margin: 6px 0 0;
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+  font-weight: 600;
+}
+@media (min-width: 900px) {
+  .rail-count {
+    display: none;
+  }
+}
+
+/* The Learn search: a magnifier at the left, the count at the right, inside one border (search research, section 15). */
+.lh-field {
+  position: relative;
+}
+.lh-field-ico {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--ink-2);
+  pointer-events: none;
+}
+.lh-field .lh-search {
+  padding-left: 46px;
+  padding-right: 8.5rem;
+}
+.lh-field-count {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+/* Severity words on the checks sit on a soft tint, with a dot of the same colour, so the word and the colour agree (badges research, section 18). */
+.checks-sev {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 12px 3px 10px;
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--sev, var(--line)) 18%, transparent);
+  color: var(--text);
+}
+.checks-sev::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sev, var(--ink-2));
+}
+.checks-list li[data-sev="high"] {
+  --sev: var(--up);
+}
+.checks-list li[data-sev="check"] {
+  --sev: var(--yellow);
+}
+.checks-list li[data-sev="info"] {
+  --sev: var(--c-car);
 }

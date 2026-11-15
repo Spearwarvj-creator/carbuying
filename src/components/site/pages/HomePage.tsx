@@ -4,14 +4,12 @@ import { HopFour } from "@/components/site/landing/HopFour";
 import { Road } from "@/components/site/landing/Road";
 import { Story, type StoryData } from "@/components/site/landing/Story";
 import { SitePage } from "@/components/site/SitePage";
-import { ArrowIcon, CheckIcon, LockIcon, ListIcon } from "@/components/ui/icons";
+import { ArrowIcon } from "@/components/ui/icons";
 import { es } from "@/data/strings/es";
 import { walk } from "@/data/strings/walk";
 import { costBreakdown, extrasRealCostCents, formatWhole, paymentEquivalents } from "@/engine";
 import { getExample } from "@/lib/example";
 import { localePath, siteFor, type Locale } from "@/lib/site-locale";
-
-const TRUST_ICONS = [<CheckIcon key="a" size={26} />, <LockIcon key="b" size={26} />, <ListIcon key="c" size={26} />];
 
 /** The home page, in either language. Every figure on it comes from the engine, never typed here. */
 export function HomePage({ locale }: { locale: Locale }) {
@@ -91,11 +89,8 @@ export function HomePage({ locale }: { locale: Locale }) {
 
       <section className="trust s-wrap" aria-label={locale === "es" ? "Por qué es fácil confiar" : "Why it is easy to trust"}>
         <ul>
-          {h.trust.map((t, i) => (
+          {h.trust.map((t) => (
             <li key={t.title}>
-              <span className="trust-ico" aria-hidden="true">
-                {TRUST_ICONS[i]}
-              </span>
               <b>{t.title}</b>
               <span>{t.body}</span>
             </li>

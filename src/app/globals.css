@@ -76,14 +76,20 @@ html[data-text="large"] {
   box-sizing: border-box;
 }
 
+/* The root stays at the browser's own size (16px by default). It was 15px, which shrank every rem on the site, and the body text was 14px with tight lines. */
+html {
+  font-size: 100%;
+}
 html,
 body {
   margin: 0;
   background: var(--ground);
   color: var(--text);
   font-family: var(--font-text);
-  font-size: var(--t-sm);
-  line-height: 1.3;
+}
+body {
+  font-size: var(--t-base);
+  line-height: 1.45;
 }
 
 /* The calculator is one fixed screen and never scrolls the page. Site pages scroll normally. */
@@ -154,18 +160,33 @@ button {
   color: var(--ink-2);
   white-space: nowrap;
 }
+/* The four header controls (language, view, text size, screen) are one capsule of quiet buttons, as the switches and toggles research found: no outline round each, the chosen state raised. See docs/research/COMPONENT_RESEARCH.md section 6. */
 .tools {
   display: flex;
-  gap: 6px;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--panel);
 }
 .tools button {
   min-width: 44px;
   height: 44px;
-  border: 1.5px solid var(--edge);
-  border-radius: 6px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-2);
   font-weight: 600;
   font-size: var(--t-sm);
-  padding: 0 8px;
+  padding: 0 10px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.tools button:hover {
+  color: var(--text);
+  background: color-mix(in oklab, var(--text) 10%, transparent);
+}
+.tools button[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--ground);
 }
 
 .cols {
@@ -225,11 +246,21 @@ button {
 .deltas {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 16px 28px;
+  margin-top: 16px;
+}
+/* A statistic tile: the label on top, the figure, a hairline, then what changed. Laid out after a "statistics card" seen on 21st.dev. */
+.delta {
+  padding: 0;
+}
+@media (max-width: 599px) {
+  .deltas {
+    gap: 12px;
+  }
 }
 .delta .v {
   display: block;
+  margin-top: 6px;
   font-size: var(--t-xl);
   line-height: 1;
 }
@@ -239,7 +270,9 @@ button {
   gap: 6px;
   font-size: var(--t-sm);
   font-weight: 600;
-  margin-top: 2px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
 }
 .delta.down .n,
 .delta.down .v {
@@ -258,8 +291,9 @@ button {
   flex: none;
 }
 .hint {
-  margin-top: 6px;
-  font-size: var(--t-sm);
+  margin-top: 10px;
+  font-size: var(--t-base);
+  line-height: 1.5;
   color: var(--ink-2);
 }
 
@@ -330,9 +364,9 @@ button {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 8px;
-  padding-top: 10px;
-  font-size: var(--t-sm);
+  gap: 6px 14px;
+  padding-top: 4px;
+  font-size: var(--t-base);
   color: var(--ink-2);
 }
 .seg {
@@ -728,7 +762,7 @@ button {
     font-size: var(--t-xs);
   }
   .tools {
-    gap: 4px;
+    gap: 2px;
   }
   .tools button {
     padding: 0 6px;
@@ -772,16 +806,19 @@ button {
     order: 2;
     display: flex;
     flex-direction: column;
+    gap: 28px;
   }
   .colC {
     order: 3;
     display: block;
     overflow-y: auto;
   }
+  /* Every column scrolls on its own, so nothing is cut off on a short window, and each has room to breathe. */
   .cols > div {
-    padding: 12px 28px;
+    padding: 28px clamp(24px, 2.6vw, 48px) 40px;
     border-left: 1px solid var(--line);
     min-height: 0;
+    overflow-y: auto;
   }
   .cols > div.colA {
     border-left: 0;
@@ -796,11 +833,13 @@ button {
     grid-auto-rows: 1fr;
     flex: 1;
     min-height: 0;
-    padding: 8px 0 12px;
-    gap: 14px;
+    padding: 12px 0 16px;
+    gap: 18px;
   }
   .field {
-    padding: 10px 20px;
+    padding: 14px 22px;
+    min-height: 5.5rem;
+    border-radius: 12px;
   }
   .field .v {
     font-size: min(8vh, 4rem);
@@ -809,7 +848,7 @@ button {
     font-size: var(--t-md);
   }
   .result {
-    padding: 0 0 24px;
+    padding: 0 0 32px;
   }
   .total .big,
   .total .dash {
@@ -828,11 +867,12 @@ button {
     font-size: var(--t-md);
   }
   .trail {
-    flex: 1;
+    flex: 1 0 auto;
     min-height: 0;
     display: flex;
     flex-direction: column;
     border-bottom: 0;
+    padding: 20px 0 8px;
   }
   .trail h2 {
     font-size: var(--t-md);
@@ -840,8 +880,10 @@ button {
   .trail .row {
     flex: 1;
     height: auto;
+    min-height: 3.5rem;
     max-height: 7.5rem;
     grid-template-columns: 11rem minmax(0, 1fr) auto;
+    gap: 16px;
   }
   .row .a {
     font-size: min(5vh, 2.5rem);
@@ -883,4 +925,26 @@ button {
 .view .headline .num,
 .card .big .num {
   font-size: 1.15em;
+}
+
+/*
+ * Film grain over the whole site. The night-glass ground was one flat colour, so panels and pictures had nothing to sit
+ * in. A fine grain gives it a surface without a gradient. It is a static tile, ignores the pointer, and is left out
+ * of print.
+ */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+@media print {
+  body::after {
+    display: none;
+  }
 }

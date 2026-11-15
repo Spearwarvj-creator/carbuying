@@ -110,9 +110,18 @@ export function LearnHub() {
           <label htmlFor="lh-search" className="qf-label">
             {ui.searchLabel}
           </label>
-          <input id="lh-search" type="search" className="lh-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={ui.searchPlaceholder} autoComplete="off" />
+          <div className="lh-field">
+            <svg className="lh-field-ico" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+              <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="2" />
+              <path d="m13 13 4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <input id="lh-search" type="search" className="lh-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={ui.searchPlaceholder} autoComplete="off" />
+            <span className="lh-field-count" aria-hidden="true">
+              {ui.count(shown.length)}
+            </span>
+          </div>
           <Segmented
-            variant="chips"
+            variant="tabs"
             label={ui.cats.price}
             value={cat}
             onChange={setCat}

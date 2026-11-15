@@ -95,6 +95,43 @@ export function OfferBars({ offers, names, intro, caption = true, compact = fals
           <Nums text={diff > 0 ? v.money.moreBy(rows[longer].name, whole(diff)) : v.money.same} />
         </figcaption>
       )}
+      {!compact && (
+        <details className="vz-table">
+          <summary>{v.money.asTable}</summary>
+          <table className="qf-compare">
+            <thead>
+              <tr>
+                <th scope="col">{v.money.tablePart}</th>
+                {rows.map((r, i) => (
+                  <th key={i} scope="col">
+                    {r.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {used.map((k) => (
+                <tr key={k}>
+                  <th scope="row">{partLabel(k)}</th>
+                  {rows.map((r, i) => (
+                    <td key={i} className="num">
+                      {whole(r.parts.find((p) => p.key === k)!.cents)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+              <tr>
+                <th scope="row">{v.money.total}</th>
+                {rows.map((r, i) => (
+                  <td key={i} className="num">
+                    {whole(r.total)}
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </details>
+      )}
     </figure>
   );
 }

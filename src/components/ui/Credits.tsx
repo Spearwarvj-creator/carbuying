@@ -13,7 +13,15 @@ const c = more.credits;
 export function CreditsLeft({ className = "hint" }: { className?: string }) {
   const credits = useCredits();
   if (!credits) return null;
-  return <p className={className}>{c.left(credits.left, credits.limit)}</p>;
+  const share = credits.limit > 0 ? Math.max(0, Math.min(1, credits.left / credits.limit)) : 0;
+  return (
+    <div className="credits-meter">
+      <p className={className}>{c.left(credits.left, credits.limit)}</p>
+      <span className="credits-bar" aria-hidden="true">
+        <i style={{ width: `${share * 100}%` }} />
+      </span>
+    </div>
+  );
 }
 
 /** Where to reach us for more free uses: YouTube and email when they are set, the contact page otherwise. */

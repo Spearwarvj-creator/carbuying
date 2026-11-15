@@ -678,6 +678,8 @@ export const es: Pack = {
         hint: "Las dos barras usan la misma escala. Una barra más larga significa que paga más en total.",
         one: "A dónde va el dinero en este trato.",
         total: "Total",
+        asTable: "Mostrar estas cifras como tabla",
+        tablePart: "Parte",
         extra: "extra",
         moreBy: (name: string, amount: string) => `${name} cuesta ${amount} más en total.`,
         same: "Las dos ofertas cuestan lo mismo en total.",

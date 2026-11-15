@@ -14,6 +14,7 @@ export function Slider({
   step,
   label,
   format,
+  ticks,
 }: {
   value: number;
   onChange: (n: number) => void;
@@ -22,6 +23,8 @@ export function Slider({
   step: number;
   label: string;
   format?: (n: number) => string;
+  /** Values to name under the track, at their real positions (sliders research, section 4). */
+  ticks?: number[];
 }) {
   return (
     <RSlider.Root
@@ -36,6 +39,15 @@ export function Slider({
         <RSlider.Range className="slider-range" />
       </RSlider.Track>
       <RSlider.Thumb className="slider-thumb" aria-label={label} aria-valuetext={format ? format(value) : undefined} />
+      {ticks && (
+        <span className="slider-ticks" aria-hidden="true">
+          {ticks.map((t) => (
+            <span key={t} className="num" style={{ left: `${((t - min) / (max - min)) * 100}%` }}>
+              {t}
+            </span>
+          ))}
+        </span>
+      )}
     </RSlider.Root>
   );
 }

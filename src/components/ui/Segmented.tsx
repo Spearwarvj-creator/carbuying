@@ -17,7 +17,8 @@ export interface SegOption<T extends string | number> {
  * One choice from a short list. Built on Radix ToggleGroup, so it is a real radio group with
  * arrow-key movement, roving focus and the right roles. The chosen item carries a thumb that
  * slides between options (a shared-layout animation), which shows where the choice moved.
- * Variants: pill (header switch), chips (months), cards (a bigger choice with an icon and a line).
+ * Variants: pill (a soft capsule for a few states of one thing), chips (months), cards (a bigger choice with an icon and a line),
+ * tabs (underlined words, for moving between parts of a page).
  */
 export function Segmented<T extends string | number>({
   value,
@@ -31,7 +32,7 @@ export function Segmented<T extends string | number>({
   onChange: (v: T) => void;
   options: SegOption<T>[];
   label: string;
-  variant?: "pill" | "chips" | "cards";
+  variant?: "pill" | "chips" | "cards" | "tabs";
   className?: string;
 }) {
   const uid = useId();

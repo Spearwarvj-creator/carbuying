@@ -106,6 +106,8 @@ export const more = {
       hint: "Both bars use the same scale. A longer bar means you pay more in total.",
       one: "Where the money goes in this deal.",
       total: "Total",
+      asTable: "Show these figures as a table",
+      tablePart: "Part",
       extra: "extra",
       moreBy: (name: string, amount: string) => `${name} costs ${amount} more in total.`,
       same: "Both offers cost the same in total.",

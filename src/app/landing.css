@@ -657,37 +657,51 @@
   padding-block: clamp(48px, 7vw, 6rem);
   border-top: 1px solid var(--line);
 }
+/* Three plain facts set as type, divided by hairlines. No icon tiles: the words are the content. */
 .trust ul {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(20px, 3vw, 3rem);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .trust li {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-rows: auto auto;
-  column-gap: 16px;
-  align-items: center;
+  align-content: start;
+  gap: 10px;
+  padding-inline: clamp(20px, 3vw, 3rem);
 }
-.trust-ico {
-  grid-row: 1 / 3;
-  display: grid;
-  place-items: center;
-  width: 3.4rem;
-  height: 3.4rem;
-  border-radius: 16px;
-  background: color-mix(in oklab, var(--c-car) 16%, var(--panel));
-  color: var(--c-car);
+.trust li:first-child {
+  padding-left: 0;
+}
+.trust li + li {
+  border-left: 1px solid var(--line);
 }
 .trust li b {
-  font-size: var(--t-lg);
-  line-height: 1.2;
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-size: var(--f-num-md);
+  line-height: 1;
 }
-.trust li span:not(.trust-ico) {
+.trust li span {
+  max-width: 28ch;
   color: var(--ink-2);
+  line-height: 1.5;
+}
+@media (max-width: 719px) {
+  .trust ul {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+  .trust li,
+  .trust li:first-child {
+    padding-inline: 0;
+  }
+  .trust li + li {
+    padding-top: 28px;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
 }
 .trust-more {
   margin: clamp(20px, 3vw, 2.5rem) 0 0;
@@ -790,4 +804,9 @@
   .sc-bar {
     animation: none;
   }
+}
+
+/* Room under the loan length slider for its tick labels (36, 48, 60, 72, 84). */
+.dock-ctl .slider {
+  margin-bottom: 22px;
 }

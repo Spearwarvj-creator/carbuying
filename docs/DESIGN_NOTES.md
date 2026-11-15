@@ -118,3 +118,22 @@ Removed from the landing: the comparison table, the example readout card, the "a
 Class-name collision caught: the landing's `.sheet` clashed with the Walk's Radix sheet; renamed `.wsheet`. Reduced motion: tile transitions, the wheel spin and the story bars stop, and the auto-stretch does not run.
 
 Not done: the car and scenes are drawn, not photographs; no generated imagery was used. How it works and About are still text pages and have not been redesigned.
+
+## Spacing pass, 14 November 2026
+
+The calculator felt cramped. Causes found and fixed:
+
+- **Root font size was 15px** (`html, body { font-size: var(--t-sm) }`), which shrank every rem on the site, and body text was 14px at line height 1.3. The root is now the browser's 16px; body text is 16px at 1.45.
+- **Height-based squeezing.** Media queries under 940, 820, 800 and 740 pixels tall cut the gaps to 12, 8 and 6 pixels and hid the sub-headings so a step would fit one screen. Those rules are gone. The main area scrolls instead, and steps keep their room.
+- **Gaps and padding raised** to a calmer rhythm: Walk columns 20 to 28px apart, stages 32px, number boxes 64px tall with 10px between label and box, cards 18 to 20px padded, doors and shortcuts 16px apart, page edges `clamp(32px, 4.5vw, 80px)` on desktop.
+- **Desk columns scroll on their own** (the centre column was cut off on a 900px-tall window) and have 28px between blocks.
+- **Learn hub** sections 48 to 88px apart, cards 20px padded.
+- **Header** is taller (68 to 72px). Because text is larger, the Spanish header needed new breakpoints: the screen switches show from 1000px, the three links from 1900px (the menu holds them below that).
+
+References looked at in Chrome: Wise (currency converter: 72px fields, 40px rhythm, one centred card), 21st.dev (card and form categories), motionsites.ai (dashboards), Bankrate (the cramped counter-example). Nothing was copied; the lesson was room around one focal number and fewer boxes per screen.
+
+Individual components opened on 21st.dev after the first pass (not the category pages): Statistics Card 2 (label, figure, hairline, then "vs last month"), Stepper (inline titles under dots, thin joining line), the sign-in form (label above a field, 24px between groups), Pricing Section (one dark highlighted card, a pill switch) and Airbnb's radar chart (a chart on its own tinted card with padding). What was used: the Desk's two figures are now statistic tiles in that order, with the change under a hairline, and the offers chart sits on its own panel. The stepper and fields already matched, so they only got more room.
+
+## Component redo, 15 November 2026
+
+Every kind of component in the site was checked against at least ten real examples on 21st.dev and motionsites.ai before it was redesigned. The evidence, the decisions and what was and was not applied are in `docs/research/COMPONENT_RESEARCH.md`; the 237 screenshots taken are in `docs/research/shots/` with `INDEX.md` pairing each to its page. A film grain was added over the whole site (`body::after` in `globals.css`) in place of gradients, so the dark ground has a surface.
