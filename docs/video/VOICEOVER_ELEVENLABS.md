@@ -71,7 +71,7 @@ This is number six in V2Stack, where I build and ship one real product every wee
 
 ### c03. 2 V2Stack  `03-v2stack-and-the-rule.mp3`
 
-On screen: v2stack.com/projects, scrolling the five products slowly. Then the Deal Desk About page, the line about numbers.
+On screen: Stay on carbuying: the home page scrolled slowly to the footer line "Deal Desk is a v2stack project", then the About page, the line about numbers. No v2stack.com pages.
 
 About 134 words, 54 s of voice, 58 s on screen.
 
@@ -191,7 +191,7 @@ So what's not done. A native speaker hasn't reviewed the Spanish. I haven't test
 
 ### c18. Shelf card  `18-shelf-card.mp3`
 
-On screen: The shelf card (kit: ?card=shelf), or the real v2stack.com/projects with No. 6 added.
+On screen: The shelf card (kit: ?card=shelf).
 
 About 15 words, 6 s of voice, 8 s on screen.
 

@@ -23,7 +23,7 @@ A lower monthly payment can still cost you more, and the dealer talks about the 
 
 | # | Item | Why | State |
 | --- | --- | --- | --- |
-| 1 | Add No. 6 to v2stack.com | Chapter 2 and the shelf scene show it. If it is not live, use the shelf card instead | Entry written in `V2STACK_ENTRY.md`. The site's code is not on this Mac. |
+| 1 | No. 6 on v2stack.com | Not needed for this video: V2Stack is only mentioned in the voice, and no v2stack.com page is shown. Add it after publishing | Entry is ready in `V2STACK_ENTRY.md` |
 | 2 | Vercel settings: delete `MODEL_VISION`, `MODEL_TEXT`, `MODEL_FALLBACK` (or set the real names), rename `EXT_PUBLIC_SITE_URL` to `NEXT_PUBLIC_SITE_URL`, delete `NEXT_PUBLIC_YOUTUBE_URL` until the video exists, rename `LOBAL_DAILY_CREDITS` to `GLOBAL_DAILY_CREDITS`, rotate the Upstash token | Clip 15 tells this story. The live AI already answers after the code fix | Confirm each change, then redeploy |
 | 3 | Reset the app's saved state, then reload | A fresh viewer sees the welcome screen. In a console on the live site: `localStorage.removeItem("dd-mode"); localStorage.removeItem("dd-seen"); sessionStorage.clear()` | Do it before every take |
 | 4 | Skip the first-visit guide and the Desk tour once | They cover the screen | Click Skip |
@@ -40,7 +40,7 @@ Everything else was checked on the live site on 15 November: all pages return 20
 | --- | --- | --- | --- |
 | 0:00 | Hook | Home page, the Loan length slider dragged from 36 to 84 months | Points at the payment, then the total |
 | 0:38 | **Start card** | "DEAL DESK" in pixel type, the V2Stack No. 5 badge rolling to No. 6 | Flies in, winks |
-| 0:45 | 2 V2Stack, and the one rule | v2stack.com/projects, the five products; then the About page line | Rides along beside each product |
+| 0:45 | 2 V2Stack, and the one rule | Stay on carbuying: the home page scrolled slowly to the footer line "Deal Desk is a v2stack project", then the About page line about numbers | Points at the footer line, then the About line |
 | 1:43 | **Transition 1** | Chapter 03 of 09, "A real quote" | Drives to post 03 |
 | 1:47 | 3 A real quote | The six-question Walk, then Your deal | Hovers at each answer |
 | 4:27 | **Transition 2** | "The Desk" | |
@@ -70,9 +70,10 @@ Vee is injected as an overlay on the live site (see "Recording" below). The call
 - At 84 months: `v.wow(); v.say("$491 A MONTH. HALF.")`, then `v.goTo({text:"$44,246"},{side:"left",point:true}); v.oops(); v.say("BUT $5,645 MORE IN TOTAL")`.
 - Pattern interrupt: cut to the start card the moment you say "before you sign".
 
-**2. V2Stack, and the one rule.** Open v2stack.com/projects. Scroll slowly so each product holds for 4 to 5 seconds as you name it. Then open the Deal Desk About page and rest on the sentence about the calculator making the numbers.
-- On each product, `v.goTo({text:"Tactly"},{side:"right"})` and so on for Verdict, Compass, AgentFoundry, Kurae; `v.mood("happy",900)` as each is named.
+**2. V2Stack, and the one rule.** No v2stack.com footage: stay on the Deal Desk site, so the viewer never leaves the product. While you name the five products, scroll the home page slowly down to the footer line "Deal Desk is a v2stack project" and rest there. Then open the About page and rest on the sentence about the calculator making the numbers.
+- At the footer line: `v.goTo({text:"v2stack project"},{point:true}); v.mood("happy",1200); v.say("NO. 6 IN V2STACK")`.
 - At "every one is built so the AI can't invent things": `v.mood("focus",2500)`.
+- On the About page: `v.goTo({text:"makes every number"},{side:"right",point:true})` (use whatever words the sentence really contains).
 - At "thrown away": `v.stamp("THROWN AWAY")`.
 - Keep this chapter under 60 seconds. It is the part a new viewer might skip, so end it on the rule.
 
@@ -117,13 +118,12 @@ The cards start and finish with a pixel wipe in V2Stack terracotta, so in the ed
 Hardware and setup: your screen recorder at 1920 x 1080, 30 fps, system audio off (the voice is added later), microphone off.
 
 Order to record (batch by page, so you only reset state a few times):
-1. Home page: the hook slider, then the Deal Desk About page.
-2. v2stack.com/projects (once No. 6 is live).
-3. Calculator: Walk, then Desk, then Ask about this deal, then Learn and Spanish.
-4. Terminal: guard test, full tests.
-5. Research folder and before/after.
-6. Vercel settings (secrets blurred).
-7. The cards, each as its own clip.
+1. Home page: the hook slider, then the scroll to the footer, then the About page.
+2. Calculator: Walk, then Desk, then Ask about this deal, then Learn and Spanish.
+3. Terminal: guard test, full tests.
+4. Research folder and before/after.
+5. Vercel settings (secrets blurred).
+6. The cards, each as its own clip.
 
 Putting Vee on a page. Chrome will not load a script from your own computer onto an https page, so Vee is pasted in:
 
