@@ -4,7 +4,7 @@ Channel: https://www.youtube.com/@v2_stack. Promise: "One real product a week. N
 
 This is version 2. What changed from version 1: the video now opens the way your Kurae video does ("This is number six in V2Stack..."), V2Stack is a spine of the video and not a footnote (five products, a shared rule, and No. 6 joining the shelf), seven transition cards sit between the chapters, there is a start card and an end card, and a pixel car called **Vee** hovers in the live scenes. The hook figures were replaced with the ones the home page itself shows.
 
-Read with: `VOICEOVER_ELEVENLABS.md` (what you say), `kit/README.md` (the cards and Vee), `V2STACK_ENTRY.md` (the No. 6 entry for v2stack.com).
+Read with: `voice/beats.json` (what you say, one entry per voice beat), `kit/README.md` (the cards and Vee), `V2STACK_ENTRY.md` (the No. 6 entry for v2stack.com).
 
 ## The one idea
 

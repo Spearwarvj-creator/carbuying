@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Renders docs/video/VOICEOVER_ELEVENLABS.md to one mp3 per clip with ElevenLabs.",
+  "description": "Renders beats.json to one mp3 per voice beat with ElevenLabs.",
   "dependencies": { "@elevenlabs/elevenlabs-js": "^2.76.0" }
 }
