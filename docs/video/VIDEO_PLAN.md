@@ -4,7 +4,7 @@ Channel: https://www.youtube.com/@v2_stack. Promise: "One real product a week. N
 
 This is version 2. What changed from version 1: the video now opens the way your Kurae video does ("This is number six in V2Stack..."), V2Stack is a spine of the video and not a footnote (five products, a shared rule, and No. 6 joining the shelf), seven transition cards sit between the chapters, there is a start card and an end card, and a pixel car called **Vee** hovers in the live scenes. The hook figures were replaced with the ones the home page itself shows.
 
-Read with: `voice/beats.json` (what you say, one entry per voice beat), `kit/README.md` (the cards and Vee), `V2STACK_ENTRY.md` (the No. 6 entry for v2stack.com).
+Read with: `voice/beats.json` (what you say, one entry per voice beat), `kit/README.md` (the cards and Vee), `../V2STACK_ADD_PROJECT.md` (the No. 6 entry for v2stack.com).
 
 ## The one idea
 
@@ -17,13 +17,13 @@ A lower monthly payment can still cost you more, and the dealer talks about the 
 - Every product page ends with "What it deliberately is not". That habit is the brand, so this video ends with Deal Desk's own "not" list.
 - The site also has 690 free tools in 15 suites (the Money suite has loans and mortgages) and an assistant called Vupo. One line of cross-promotion is fine; do not spend more.
 - Your own words from the Kurae video that I reuse exactly: "This is number five in V2Stack, where I build and ship one real product every week" and "Subscribe to follow along, and if you want one built for your business, the email is on screen."
-- The site currently says "Five shipped so far". It becomes six when No. 6 goes live (see `V2STACK_ENTRY.md`).
+- The site currently says "Five shipped so far". It becomes six when No. 6 goes live (see `../V2STACK_ADD_PROJECT.md`).
 
 ## Before you record
 
 | # | Item | Why | State |
 | --- | --- | --- | --- |
-| 1 | No. 6 on v2stack.com | Not needed for this video: V2Stack is only mentioned in the voice, and no v2stack.com page is shown. Add it after publishing | Entry is ready in `V2STACK_ENTRY.md` |
+| 1 | No. 6 on v2stack.com | Not needed for this video: V2Stack is only mentioned in the voice, and no v2stack.com page is shown. Add it after publishing | Entry is ready in `../V2STACK_ADD_PROJECT.md` |
 | 2 | Vercel settings: delete `MODEL_VISION`, `MODEL_TEXT`, `MODEL_FALLBACK` (or set the real names), rename `EXT_PUBLIC_SITE_URL` to `NEXT_PUBLIC_SITE_URL`, delete `NEXT_PUBLIC_YOUTUBE_URL` until the video exists, rename `LOBAL_DAILY_CREDITS` to `GLOBAL_DAILY_CREDITS`, rotate the Upstash token | Clip 15 tells this story. The live AI already answers after the code fix | Confirm each change, then redeploy |
 | 3 | Reset the app's saved state, then reload | A fresh viewer sees the welcome screen. In a console on the live site: `localStorage.removeItem("dd-mode"); localStorage.removeItem("dd-seen"); sessionStorage.clear()` | Do it before every take |
 | 4 | Skip the first-visit guide and the Desk tour once | They cover the screen | Click Skip |
