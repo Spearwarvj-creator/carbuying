@@ -2,15 +2,16 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { LocaleSync } from "@/components/site/LocaleSync";
 import { RootShell } from "@/components/site/RootShell";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 // The Spanish half of the site. Its pages sit under /es and say so to search engines (see alternates in each page).
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: { default: "Deal Desk", template: "%s | Deal Desk" },
-  openGraph: { siteName: "Deal Desk", type: "website", locale: "es_US" },
+  openGraph: { siteName: "Deal Desk", type: "website", locale: "es_US", images: [SHARE_IMAGE] },
   appleWebApp: { capable: true, title: "Deal Desk", statusBarStyle: "black-translucent" },
   icons: { apple: "/icons/apple-touch-icon.png" },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: [SHARE_IMAGE] },
   description: "Escriba lo que dice el vendedor. Vea en dólares adónde se movió el dinero, y qué pedir después.",
 };
 

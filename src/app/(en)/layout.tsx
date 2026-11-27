@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { RootShell } from "@/components/site/RootShell";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 // The live domain is not settled yet; set NEXT_PUBLIC_SITE_URL when it is, so share images resolve.
 export const metadata: Metadata = {
@@ -8,10 +9,10 @@ export const metadata: Metadata = {
   title: { default: "Deal Desk", template: "%s | Deal Desk" },
   // Each page names itself as the canonical address, resolved against metadataBase; pages with a Spanish twin say so themselves.
   alternates: { canonical: "./" },
-  openGraph: { siteName: "Deal Desk", type: "website", locale: "en_US" },
+  openGraph: { siteName: "Deal Desk", type: "website", locale: "en_US", images: [SHARE_IMAGE] },
   appleWebApp: { capable: true, title: "Deal Desk", statusBarStyle: "black-translucent" },
   icons: { apple: "/icons/apple-touch-icon.png" },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: [SHARE_IMAGE] },
   description: "Enter what the dealer says. See in dollars where the money moved, and what to ask for next.",
 };
 
